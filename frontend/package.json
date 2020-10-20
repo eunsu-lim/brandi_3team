@@ -16,7 +16,6 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^7.2.1",
