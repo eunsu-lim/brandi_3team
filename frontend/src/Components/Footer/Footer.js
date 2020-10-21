@@ -15,9 +15,13 @@ export default function Footer() {
 }
 
 const FooterBox = styled.footer`
-  color: #222;
+  position: absolute;
+  bottom: 0;
+  padding: 10px 20px 5px 20px;
+  width: 100%;
   background-color: #35363a;
   p {
-    color: #222;
+    color: #999ba2;
+    font-size: 12px;
   }
 `;

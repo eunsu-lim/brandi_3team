@@ -8,6 +8,7 @@ export default function Header() {
         <LogoBox>
           <LogoImg />
         </LogoBox>
+        <Stage>Staging (Staging)</Stage>
       </HeaderLeft>
       <HeaderRight>
         <LoginAccount>intern_master</LoginAccount>
@@ -18,13 +19,20 @@ export default function Header() {
 
 const HeaderBox = styled.header`
   ${({ theme }) => theme.flex("space-between", "center")};
+  z-index: 1;
+  position: fixed;
+  left: 0;
+  top: 0;
   padding: 0 20px;
+  width: 100vw;
   height: 45px;
   background-color: #873b53;
   color: #fff;
 `;
 
-const HeaderLeft = styled.div``;
+const HeaderLeft = styled.div`
+  ${({ theme }) => theme.flex("flex-start", "center")};
+`;
 
 const LogoBox = styled.a`
   width: 100px;
@@ -39,6 +47,13 @@ const LogoImg = styled.h1`
   height: 45px;
   border: 0;
   outline: none;
+`;
+
+const Stage = styled.span`
+  margin-left: 24px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
 `;
 
 const HeaderRight = styled.div``;
