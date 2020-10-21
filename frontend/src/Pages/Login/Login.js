@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import LoginForm from "./Components/LoginForm";
 
 function Login() {
   return (
@@ -8,9 +9,7 @@ function Login() {
         <Logo>
           <img alt="logo" src="../../public/images/logo_seller_admin_1.png" />
         </Logo>
-        <Form>
-          <h3>브랜디 어드민 로그인</h3>
-        </Form>
+        <LoginForm />
       </Content>
     </Wrapper>
   );
@@ -27,12 +26,6 @@ const Content = styled.div`
   margin: auto;
   padding: 65px 0 50px;
   width: 700px;
-
-  h3 {
-    margin-bottom: 25px;
-    font-size: 24px;
-    font-weight: 700;
-  }
 `;
 
 const Logo = styled.div`
@@ -42,13 +35,4 @@ const Logo = styled.div`
   img {
     width: 130px;
   }
-`;
-
-const Form = styled.form`
-  margin: 0 auto;
-  padding: 64px 30px 0 30px;
-  width: 380px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 31px 0 rgba(0, 0, 0, 0.1);
 `;
