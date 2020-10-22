@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 import SelectFilterData from "../../Data/SelectFilterData";
 import DateFilterData from "../../Data/DateFilterData";
 import SellerAttriFilterData from "../../Data/SellerAttriFilterData";
 import styled from "styled-components";
 
 function FilterArea() {
+  const [currentIndex, setCurrentIndex] = useState(2);
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
     <FilterSection>
       {/* 세부 항목, Select Box */}
@@ -25,10 +30,20 @@ function FilterArea() {
         {/* 간편 날짜 설정 버튼 목록 */}
         <SimpleDateBtn>
           {DateFilterData.map((el, index) => (
-            <input key={index} type="button" value={el.value} />
+            <DateInput
+              onClick={() => setCurrentIndex(index)}
+              key={index}
+              backgroundColor={currentIndex === index}
+              type="button"
+              value={el.value}
+            />
           ))}
         </SimpleDateBtn>
-        <DatePicker>
+        <DatePicker
+        //   selected={startDate}
+        //   onChange={(date) => setStartDate(date)}
+        // /
+        >
           <input type="text" placeholder="클릭해주세요." />
           <span> ~ </span>
           <input type="text" placeholder="클릭해주세요." />
@@ -39,42 +54,18 @@ function FilterArea() {
         <label htmlFor="">셀러속성:</label>
         <SellerAttriBtn>
           {SellerAttriFilterData.map((el, index) => (
-            <button type="button">{el.value}</button>
+            <AttriBtn key={index} type="button">
+              {el.value}
+            </AttriBtn>
           ))}
         </SellerAttriBtn>
       </SellerAttri>
-      <SellerClass>
-        <label htmlFor="">셀러구분:</label>
-        <SellerClassBtn>
-          <button type="button">전체</button>
-          <button type="button">일반</button>
-          <button type="button">헬피</button>
-          <div>
-            <input type="radio" />
-            <span>전체</span>
-            <input type="radio" />
-            <span>헬피1</span>
-            <input type="radio" />
-            <span>헬피2</span>
-          </div>
-        </SellerClassBtn>
-      </SellerClass>
-      {/* 배송구분 여부 */}
-      <DeliveryDivision>
-        <label htmlFor="">배송구분:</label>
-        <DeliveryDivisionBtn>
-          <button type="button">전체</button>
-          <button type="button">일반배송</button>
-          <button type="button">오늘출발</button>
-          <button type="button">새벽도착</button>
-          <button type="button">저녁도착</button>
-        </DeliveryDivisionBtn>
-      </DeliveryDivision>
+
       {/* 검색, 초기화 버튼 영역 */}
-      <SearchInitialzationBtn>
-        <input type="button" value="검색" />
-        <input type="button" value="초기화" />
-      </SearchInitialzationBtn>
+      <SearchInitializationBtn>
+        <SearchInitializationInput type="button" value="검색" />
+        <SearchInitializationInput type="button" value="초기화" />
+      </SearchInitializationBtn>
     </FilterSection>
   );
 }
@@ -103,6 +94,7 @@ const SelectFilter = styled.select`
 `;
 
 const FilterKeyword = styled.input`
+  width: 33.3%;
   padding: 6px 10px;
   font-size: 13px;
   border-radius: 4px;
@@ -125,23 +117,25 @@ const DateFilter = styled.div`
 const SimpleDateBtn = styled.div`
   width: auto;
   margin-right: 15px;
+`;
 
-  input {
-    margin: 0 3px;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    background-color: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
+const DateInput = styled.input`
+  margin: 0 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ? "#428bca" : "#fff"};
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
 
-    &:hover {
-      color: #333;
-      background-color: #e6e6e6;
-      border-color: #adadad;
-    }
+  &:hover {
+    color: #333;
+    background-color: ${({ backgroundColor }) =>
+      backgroundColor ? "#428bca" : "#e6e6e6"};
+    border-color: #adadad;
   }
 `;
 
@@ -170,23 +164,23 @@ const DatePicker = styled.div`
 
 const SellerAttri = styled(DateFilter)``;
 
-const SellerAttriBtn = styled.div`
-  button {
-    margin: 0 3px;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    background-color: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
+const SellerAttriBtn = styled.div``;
 
-    &:hover {
-      color: #333;
-      background-color: #e6e6e6;
-      border-color: #adadad;
-    }
+const AttriBtn = styled.button`
+  margin: 0 3px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
   }
 `;
 
@@ -200,30 +194,38 @@ const SellerClassBtn = styled(SellerAttriBtn)`
 
 const DeliveryDivision = styled(DateFilter)``;
 const DeliveryDivisionBtn = styled(SellerAttriBtn)``;
+const DivisionBtn = styled(AttriBtn)``;
+const DeliveryBtn = styled(AttriBtn)``;
 
-const SearchInitialzationBtn = styled.div`
+const SearchInitializationBtn = styled.div`
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
+`;
 
-  input {
-    padding: 6px 50px;
-    margin: 0 2px;
-    border-radius: 0px;
-    font-size: 14px;
-    font-weight: 400;
-    border: none;
-    outline: none;
-    cursor: pointer;
+const SearchInitializationInput = styled.input`
+  padding: 6px 50px;
+  margin: 0 2px;
+  border-radius: 0px;
+  font-size: 14px;
+  font-weight: 400;
+  border: none;
+  outline: none;
+  cursor: pointer;
 
-    :nth-child(1) {
-      background-color: #428bca;
-      color: #fff;
-    }
+  :nth-child(1) {
+    background-color: #428bca;
+    color: #fff;
+  }
 
+  &:nth-child(2) {
     &:hover {
       color: #333;
       background-color: #e6e6e6;
       border-color: #adadad;
     }
+  }
+  &:hover {
+    opacity: 0.9;
   }
 `;

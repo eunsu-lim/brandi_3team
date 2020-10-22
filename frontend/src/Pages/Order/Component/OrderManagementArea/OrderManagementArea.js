@@ -2,6 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { List } from "@styled-icons/open-iconic/List";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
+import { ChevronsLeft } from "@styled-icons/boxicons-regular/ChevronsLeft";
+import { ChevronLeft } from "@styled-icons/boxicons-regular/ChevronLeft";
+import { ChevronRight } from "@styled-icons/boxicons-regular/ChevronRight";
+import { ChevronsRight } from "@styled-icons/boxicons-regular/ChevronsRight";
 
 function OrderManagementArea() {
   return (
@@ -9,11 +13,11 @@ function OrderManagementArea() {
     <OrderManagementSection>
       <OrderListNav>
         <ul>
-          <ListMenu size="16" />
+          <List size="16" />
           <li>주문관리</li>
-          <ArrowForward size="13" />
+          <ArrowForwardIos size="13" />
           <li>상품준비 관리</li>
-          <ArrowForward size="13" />
+          <ArrowForwardIos size="13" />
           <li>상품준비 리스트</li>
         </ul>
 
@@ -29,7 +33,9 @@ function OrderManagementArea() {
             <select name="" id="">
               <option value="10">10개씩보기</option>
               <option value="20">20개씩보기</option>
-              <option value="50">50개씩보기</option>
+              <option value="50" selected>
+                50개씩보기
+              </option>
               <option value="100">100개씩보기</option>
               <option value="150">150개씩보기</option>
             </select>
@@ -41,9 +47,9 @@ function OrderManagementArea() {
         <div>
           <span>전체 조회건 수 : </span>
           <span>1,220 건</span>
-          <OrderProcessBtn className="firstBtn">배송준비처리</OrderProcessBtn>
-          <OrderProcessBtn>주문취소처리</OrderProcessBtn>
-          <OrderProcessBtn>배송처리</OrderProcessBtn>
+          {/* <OrderProcessBtn>배송준비처리</OrderProcessBtn>
+          <OrderProcessBtn>주문취소처리</OrderProcessBtn> */}
+          <OrderProcessBtn className="firstBtn">배송처리</OrderProcessBtn>
         </div>
         <div>
           <ExcelDownloadBtn>전체주문 엑셀다운로드</ExcelDownloadBtn>
@@ -55,7 +61,7 @@ function OrderManagementArea() {
         <table>
           <thead>
             <tr>
-              <th>
+              <th style={{ width: "19px" }}>
                 <div>
                   <span>
                     <input type="checkbox" />
@@ -145,27 +151,49 @@ function OrderManagementArea() {
           </tbody>
 
           {/* 페이지네이션 영역 */}
-          <div className="tfoot">
-            <ul>
-              <li>
-                <a href="">1</a>
-              </li>
-              <li>
-                <a href="">2</a>
-              </li>
-              <li>
-                <a href="">Next</a>
-              </li>
-            </ul>
-          </div>
+          <tfoot>
+            <tr>
+              <td>
+                <li>
+                  <a href="">
+                    <ChevronsLeft size="18" />
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <ChevronLeft size="18" />
+                  </a>
+                </li>
+                <li>
+                  <a href="">1</a>
+                </li>
+                <li>
+                  <a href="">2</a>
+                </li>
+                <li>
+                  <a href="">3</a>
+                </li>
+                <li>
+                  <a href="">
+                    <ChevronRight size="18" />
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <ChevronsRight size="18" />
+                  </a>
+                </li>
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </DataTableArea>
       {/* 하단 작업 버튼 영역 */}
       <BottomArea>
-        <div>
+        {/* <div>
           <OrderProcessBtn>배송준비처리</OrderProcessBtn>
           <OrderProcessBtn>주문취소처리</OrderProcessBtn>
-        </div>
+        </div> */}
         <div>
           <ExcelDownloadBtn>전체주문 엑셀다운로드</ExcelDownloadBtn>
           <ExcelDownloadBtn>선택주문 엑셀다운로드</ExcelDownloadBtn>
@@ -178,10 +206,6 @@ function OrderManagementArea() {
 export default OrderManagementArea;
 
 const OrderManagementSection = styled.section``;
-
-const ListMenu = styled(List)``;
-
-const ArrowForward = styled(ArrowForwardIos)``;
 
 const OrderListNav = styled.nav`
   display: flex;
@@ -230,6 +254,12 @@ const OrderProcessBtn = styled.button`
   line-height: 1.5;
   color: #fff;
   font-size: 12px;
+  outline: none;
+  border: none;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const ExcelDownloadBtn = styled.button`
@@ -241,22 +271,26 @@ const ExcelDownloadBtn = styled.button`
   background-color: #5cb85c;
   color: #fff;
   font-size: 12px;
+  outline: none;
+  border: none;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const BottomArea = styled.footer`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 `;
 
 const DataTableArea = styled.article`
-  width: 100%;
   margin: 10px 0;
   border: 1px solid #dddddd;
+  overflow: scroll;
 
   table {
     width: 100%;
-    display: block;
-    overflow-x: auto;
     white-space: nowrap;
   }
 
@@ -265,6 +299,11 @@ const DataTableArea = styled.article`
     border: 1px solid #ddd;
     padding: 8px;
     border-collapse: collapse;
+    vertical-align: middle;
+
+    &:first-child {
+      width: 19px;
+    }
   }
 
   th {
@@ -274,6 +313,7 @@ const DataTableArea = styled.article`
   }
 
   tr {
+    /* width: 100%; */
     input {
       width: 19px;
       height: 19px;
@@ -294,7 +334,34 @@ const DataTableArea = styled.article`
     }
   }
 
-  .tfoot {
+  tfoot {
+    display: flex;
+    padding: 8px;
     margin: 10px 0;
+
+    td {
+      display: flex;
+      border: none;
+
+      li {
+        list-style: none;
+        margin-left: -1px;
+        padding: 6px 12px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #428bca;
+
+        &:nth-child(1) {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
+
+        cursor: pointer;
+        &:hover,
+        &:active {
+          background-color: #f9f9f9;
+        }
+      }
+    }
   }
 `;

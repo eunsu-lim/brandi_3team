@@ -19,12 +19,13 @@ const SelectFilterData = [
     value: "휴대폰번호",
   },
   {
-    value: "셀러명",
-  },
-  {
     value: "----------------",
     disabled: "disabled",
   },
+  {
+    value: "셀러명",
+  },
+
   {
     value: "상품명",
   },
