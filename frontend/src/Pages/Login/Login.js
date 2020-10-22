@@ -6,9 +6,11 @@ function Login() {
   return (
     <Wrapper>
       <Content>
+        {/* 브랜디 로고 */}
         <Logo>
           <img alt="logo" src="../../public/images/logo_seller_admin_1.png" />
         </Logo>
+        {/* 로그인 form Component 분리 */}
         <LoginForm />
       </Content>
     </Wrapper>

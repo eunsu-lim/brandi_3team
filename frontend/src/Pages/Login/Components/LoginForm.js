@@ -12,13 +12,16 @@ export default function LoginForm() {
   return (
     <LoginFormWrapper onSubmit={handleSubmit(onSubmit)}>
       <h3>브랜디 어드민 로그인</h3>
+      {/* Id Input */}
       <IdInput ref={register({ required: true })} isError={errors.username} />
       {errors.username && <span>아이디를 입력해주세요.</span>}
+      {/* Password Input */}
       <PasswordInput
         ref={register({ required: true })}
         isError={errors.password}
       />
       {errors.password && <span>비밀번호를 입력해주세요.</span>}
+      {/* 로그인 Btn & 회원가입 */}
       <FormActions />
     </LoginFormWrapper>
   );

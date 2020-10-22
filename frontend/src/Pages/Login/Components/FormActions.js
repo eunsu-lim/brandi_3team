@@ -5,7 +5,9 @@ import styled from "styled-components";
 function FormActions() {
   return (
     <FormActionsWrapper>
+      {/* 로그인 Btn */}
       <button type="submit">로그인</button>
+      {/* 회원가입 Btn */}
       <Join>
         <p>아직 셀러가 아니신가요?</p>
         <Link to="/signup">
