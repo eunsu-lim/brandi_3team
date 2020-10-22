@@ -1,27 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NAVMENU from "./NavMenu";
-import MenuItem from "./MenuItem";
+import MenuItem from "./Components/MenuItem";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { ArrowDropRight } from "@styled-icons/remix-line";
 
 export default function Nav() {
   const [isSideBar, setIsSideBar] = useState(false);
+  const [isSubMenuOpen, setSubMenuOpen] = useState(false);
+  const [listId, setListId] = useState();
 
+  const handleBar = () => {
+    setIsSideBar(!isSideBar);
+    setSubMenuOpen(!isSubMenuOpen);
+    // setListId();
+  };
+
+  const handleSubMenu = (idx) => {
+    setListId(idx);
+    listId === idx && setSubMenuOpen(!isSubMenuOpen);
+  };
+
+  const handleSideMenu = (idx) => {
+    setListId(idx);
+    listId === idx ? setSubMenuOver(true) : setSubMenuOver(false);
+  };
+
+  // useEffect(() => {
+  //   isSideBar && handleSubMenu;
+  // }, [isSideBar]);
+
+  console.log("Toggle >>>>>>", isSideBar);
   return (
     <NavMenuList isSideBar={isSideBar}>
-      <MenuToggle onClick={() => setIsSideBar(!isSideBar)}>
+      <MenuToggle onClick={() => handleBar()}>
         <ArrowDropRight color="black" isSideBar={isSideBar} />
       </MenuToggle>
+      {/* 메뉴 리스트 영역 */}
       <MenuBox isSideBar={isSideBar}>
-        {NAVMENU.map((nav, i) => {
-          console.log(nav.subMenu);
+        {NAVMENU.map((nav, idx) => {
           return (
             <MenuItem
-              key={i}
+              key={idx}
+              index={idx}
+              listId={listId}
               menuIcon={nav.menuIcon}
               menuTitle={nav.menuTitle}
               subMenu={nav.subMenu}
               isSideBar={isSideBar}
+              isSubMenuOpen={isSubMenuOpen}
+              setSubMenuOpen={setSubMenuOpen}
+              handleSubMenu={handleSubMenu}
+              handleSideMenu={handleSideMenu}
             />
           );
         })}
@@ -55,9 +87,4 @@ const MenuToggle = styled.div`
 const MenuBox = styled.ul`
   margin-top: 98px;
   width: 100%;
-  li {
-    span {
-      //display: ${({ isSideBar }) => (isSideBar ? "none" : "block")};
-    }
-  }
 `;

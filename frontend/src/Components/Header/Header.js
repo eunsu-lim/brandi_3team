@@ -8,7 +8,6 @@ export default function Header() {
         <LogoBox>
           <LogoImg />
         </LogoBox>
-        <Stage>Staging (Staging)</Stage>
       </HeaderLeft>
       <HeaderRight>
         <LoginAccount>intern_master</LoginAccount>
@@ -47,13 +46,6 @@ const LogoImg = styled.h1`
   height: 45px;
   border: 0;
   outline: none;
-`;
-
-const Stage = styled.span`
-  margin-left: 24px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
 `;
 
 const HeaderRight = styled.div``;
