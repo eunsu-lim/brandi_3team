@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,16 @@ import { Comment } from "@styled-icons/fa-regular";
 function JoinForm() {
   const { register, handleSubmit, watch, errors } = useForm();
   const onSubmit = (data) => console.log(data);
+  const [password, setPassword] = useState("");
+  const [rPassword, setRpassword] = useState("");
+
+  const handlePassword = (password) => {
+    setPassword(password.target.value);
+  };
+
+  const handleRpassword = (Rpassword) => {
+    setRpassword(Rpassword.target.value);
+  };
 
   return (
     <JoinFormWrap>
@@ -25,9 +35,16 @@ function JoinForm() {
             name="sellerId"
             type="text"
             placeholder="아이디"
-            ref={register({ required: true })}
+            ref={register({ required: true, minLength: 5 })}
           />
-          {errors.sellerId && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerId && errors.sellerId.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* 최소 길이 에러 메세지 */}
+          {errors.sellerId && errors.sellerId.type === "minLength" && (
+            <ErrorMsg>아이디의 최소 길이는 5글자입니다.</ErrorMsg>
+          )}
         </SellerId>
         {/* 셀러 Password Input */}
         <SellerPassword isError={errors.sellerPassword}>
@@ -36,18 +53,40 @@ function JoinForm() {
             name="sellerPassword"
             type="password"
             placeholder="비밀번호"
-            ref={register({ required: true })}
+            ref={register({
+              required: true,
+              pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+            })}
+            onChange={handlePassword}
           />
-          {errors.sellerPassword && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerPassword &&
+            errors.sellerPassword.type === "required" && (
+              <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+            )}
+          {/* 유효성 검사 에러 메세지 */}
+          {errors.sellerPassword &&
+            errors.sellerPassword.type === "pattern" && (
+              <ErrorMsg>
+                비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야
+                합니다.
+              </ErrorMsg>
+            )}
         </SellerPassword>
         {/* 셀러 Password 재입력 Input */}
-        <SellerRpassword>
+        <SellerRpassword isError={password !== rPassword}>
           <Check />
           <input
             name="sellerRpassword"
             type="password"
             placeholder="비밀번호 재입력"
+            ref={register()}
+            onChange={handleRpassword}
           />
+          {/* password과 rPassword 입력할 때마다 state로 상태 관리, 값 불일치 시 에러 메세지 */}
+          {password !== rPassword && (
+            <ErrorMsg>비밀번호가 일치하지 않습니다.</ErrorMsg>
+          )}
         </SellerRpassword>
         <h4>담당자 정보</h4>
         <SellerInfo>(*실제 샵을 운영하시는 분)</SellerInfo>
@@ -56,11 +95,26 @@ function JoinForm() {
           <Phone />
           <input
             name="sellerPhone"
-            type="text"
+            type="tel"
             placeholder="핸드폰번호"
-            ref={register({ required: true })}
+            ref={register({
+              required: true,
+              pattern: /[0-9]{3}-[0-9]{4}-[0-9]{4}/,
+              maxLength: 13,
+            })}
           />
-          {errors.sellerPhone && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerPhone && errors.sellerPhone.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* 000-0000-0000 형식이 아닐 경우 에러 메세지 */}
+          {errors.sellerPhone && errors.sellerPhone.type === "pattern" && (
+            <ErrorMsg>올바른 정보를 입력해주세요. (ex. 000-0000-0000)</ErrorMsg>
+          )}
+          {/* 하이픈 포함 최대 13자리 넘을 경우 에러 메세지 */}
+          {errors.sellerPhone && errors.sellerPhone.type === "maxLength" && (
+            <ErrorMsg>올바른 정보를 입력해주세요. (ex. 000-0000-0000)</ErrorMsg>
+          )}
         </SellerPhone>
         <PhoneInfo>
           <InformationCircle />
@@ -107,9 +161,19 @@ function JoinForm() {
             name="sellerName"
             type="text"
             placeholder="셀러명 (상호)"
-            ref={register({ required: true })}
+            ref={register({
+              required: true,
+              pattern: /^[가-힣|a-z|A-Z|0-9|\*]+$/,
+            })}
           />
-          {errors.sellerName && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerName && errors.sellerName.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* 한글(자음, 모음 조합), 영문, 숫자 정규식 에러 메세지 */}
+          {errors.sellerName && errors.sellerName.type === "pattern" && (
+            <ErrorMsg>한글,영문,숫자만 입력해주세요.</ErrorMsg>
+          )}
         </SellerName>
         {/* 영문 셀러명 Input */}
         <SellerEnName isError={errors.sellerEnName}>
@@ -118,9 +182,16 @@ function JoinForm() {
             name="sellerEnName"
             type="text"
             placeholder="영문 셀러명 (영문상호)"
-            ref={register({ required: true })}
+            ref={register({ required: true, pattern: /^[a-z|0-9|\*]+$/ })}
           />
-          {errors.sellerEnName && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerEnName && errors.sellerEnName.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* 영문, 숫자 정규식 에러 메세지 */}
+          {errors.sellerEnName && errors.sellerEnName.type === "pattern" && (
+            <ErrorMsg>셀러 영문명은 소문자만 입력가능합니다.</ErrorMsg>
+          )}
         </SellerEnName>
         {/* 고객센터 전화번호 Input */}
         <SellerTel isError={errors.sellerTel}>
@@ -129,9 +200,18 @@ function JoinForm() {
             name="sellerTel"
             type="text"
             placeholder="고객센터 전화번호"
-            ref={register({ required: true })}
+            ref={register({ required: true, pattern: /^[0-9 \-]+$/ })}
           />
-          {errors.sellerTel && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerTel && errors.sellerTel.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* 숫자, 하이픈 정규식 에러 메세지 */}
+          {errors.sellerTel && errors.sellerTel.type === "pattern" && (
+            <ErrorMsg>
+              고객센터 전화번호는 숫자와 하이픈만 입력가능합니다.
+            </ErrorMsg>
+          )}
         </SellerTel>
         {/* 사이트 URL Input */}
         <SellerSite isError={errors.sellerSite}>
@@ -140,9 +220,21 @@ function JoinForm() {
             name="sellerSite"
             type="text"
             placeholder="사이트 URL"
-            ref={register({ required: true })}
+            ref={register({
+              required: true,
+              pattern: /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/,
+            })}
           />
-          {errors.sellerSite && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+          {/* 필수 입력 에러 메세지 */}
+          {errors.sellerSite && errors.sellerSite.type === "required" && (
+            <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+          )}
+          {/* URL 정규식 에러 메세지 */}
+          {errors.sellerSite && errors.sellerSite.type === "pattern" && (
+            <ErrorMsg>
+              올바른 주소를 입력해주세요. (ex. http://www.brandi.co.kr)
+            </ErrorMsg>
+          )}
         </SellerSite>
         {/* 카카오톡 ID Input */}
         <SellerKakao>
@@ -345,7 +437,7 @@ const CancelBtn = styled(SubmitBtn)`
 
 const ErrorMsg = styled.span`
   display: inline-block;
-  margin: 8px 12px;
+  margin: 8px 0 8px 12px;
   font-size: 13px;
   color: #a94442;
 `;
