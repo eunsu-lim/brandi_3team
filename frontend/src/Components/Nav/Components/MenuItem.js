@@ -9,28 +9,33 @@ export default function MenuItem({
   subMenu,
   isSideBar,
   isSubMenuOpen,
+  isSideMenuOver,
   setSubMenuOpen,
+  setSideMenuOver,
   handleSubMenu,
+  handleSideMenu,
   index,
   listId,
 }) {
   return (
     <Fragment>
-      {/* <ListItem active={listId === index}></ListItem> */}
-
       {isSideBar ? (
         <ListItem
-          active={listId === index && isSubMenuOpen}
-          onMouseEnter={() => handleSubMenu(index)}
-          onMouseLeave={() => handleSubMenu(false)}
+          active={listId === index}
+          onMouseEnter={() => handleSideMenu(index)}
+          onMouseLeave={() => handleSideMenu(false)}
         >
-          <ListMenu active={listId === index} isSideBar={isSideBar}>
+          <ListMenu
+            active={listId === index}
+            isSideBar={isSideBar}
+            isSideMenuOver={isSideMenuOver}
+          >
             {menuIcon}
-            {listId === index && <span>{menuTitle}</span>}
+            {isSideMenuOver && <span>{menuTitle}</span>}
           </ListMenu>
 
-          {subMenu && index === listId && (
-            <SubMenu isSubMenuOpen={isSubMenuOpen} isSideBar={isSideBar}>
+          {subMenu && index === listId && isSideMenuOver && (
+            <SubMenu isSideBar={isSideBar}>
               {subMenu.map((list, idx) => {
                 return (
                   <li key={idx}>
@@ -60,7 +65,7 @@ export default function MenuItem({
             <SubMenu
               isSubMenuOpen={isSubMenuOpen}
               isSideBar={isSideBar}
-              onMouseLeave={() => setSubMenuOpen(false)}
+              // onMouseLeave={() => setSubMenuOpen(false)}
             >
               {subMenu.map((list, idx) => {
                 return (
@@ -78,10 +83,10 @@ export default function MenuItem({
 }
 
 const ListItem = styled.li`
-  ${({ theme }) => theme.flex("flex-start", "center", "column")};
+  ${({ theme }) => theme.flex("flex-start", null, "column")};
   position: relative;
-  width: ${({ onMouseEnter, isSideBar }) =>
-    onMouseEnter && isSideBar ? "215px" : ""};
+  /* width: ${({ active, isSideMenuOver }) =>
+    active && isSideMenuOver ? "215px" : ""}; */
   font-weight: 300;
   font-size: 14px;
   color: #eee;
@@ -91,6 +96,8 @@ const ListItem = styled.li`
   cursor: pointer;
   &:hover {
     background-color: #27272b;
+    width: ${({ isSideBar }) => (isSideBar ? "215px" : "")};
+    border: ${({ isSideBar }) => (isSideBar ? "1px solid blue" : "")};
   }
   span {
     margin-left: 8px;
@@ -100,7 +107,7 @@ const ListItem = styled.li`
 const ListMenu = styled.div`
   display: flex;
   padding: 10px 13px 10px 15px;
-  width: 100%;
+  /* width: ${({ isSideMenuOver }) => (isSideMenuOver ? "214px" : "")}; */
   border-right: ${({ active }) => (active ? "4px solid #d12610" : "")};
 `;
 
@@ -113,7 +120,7 @@ const Arrow = styled.span`
 
 const SubMenu = styled.ul`
   margin: ${({ isSubMenuOpen }) => (isSubMenuOpen ? "" : "8px 0")};
-  display: ${({ isSubMenuOpen }) => (isSubMenuOpen ? "none" : "block")};
+  /* display: ${({ isSideBar }) => (isSideBar ? "none" : "block")}; */
   position: ${({ isSideBar }) => (isSideBar ? "absolute" : "static")};
   left: ${({ isSideBar }) => (isSideBar ? "43px" : "")};
   margin-top: ${({ isSideBar }) => (isSideBar ? "0" : "")};
@@ -122,7 +129,6 @@ const SubMenu = styled.ul`
   height: ${({ isSubMenuOpen }) => (isSubMenuOpen ? "0" : "auto")};
   background: ${({ isSideBar }) => (isSideBar ? "#414247" : "")};
   flex-direction: column;
-  width: 100%;
   li {
     margin-top: 1px;
     width: 100%;

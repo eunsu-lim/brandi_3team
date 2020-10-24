@@ -2,37 +2,29 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NAVMENU from "./NavMenu";
 import MenuItem from "./Components/MenuItem";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { ArrowDropRight } from "@styled-icons/remix-line";
 
 export default function Nav() {
   const [isSideBar, setIsSideBar] = useState(false);
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
+  const [isSideMenuOver, setSideMenuOver] = useState(false);
   const [listId, setListId] = useState();
 
   const handleBar = () => {
     setIsSideBar(!isSideBar);
     setSubMenuOpen(!isSubMenuOpen);
-    // setListId();
+    setSideMenuOver(false);
   };
 
   const handleSubMenu = (idx) => {
-    setListId(idx);
-    listId === idx && setSubMenuOpen(!isSubMenuOpen);
+    listId === idx ? setListId(-1) : setListId(idx);
   };
 
   const handleSideMenu = (idx) => {
-    setListId(idx);
-    listId === idx ? setSubMenuOver(true) : setSubMenuOver(false);
+    // listId === idx ? setSideMenuOver(!isSideMenuOver) : setSideMenuOver(false);
+    listId === idx && setSideMenuOver(!isSideMenuOver);
   };
 
-  // useEffect(() => {
-  //   isSideBar && handleSubMenu;
-  // }, [isSideBar]);
-
-  console.log("Toggle >>>>>>", isSideBar);
   return (
     <NavMenuList isSideBar={isSideBar}>
       <MenuToggle onClick={() => handleBar()}>
@@ -51,7 +43,9 @@ export default function Nav() {
               subMenu={nav.subMenu}
               isSideBar={isSideBar}
               isSubMenuOpen={isSubMenuOpen}
+              isSideMenuOver={isSideMenuOver}
               setSubMenuOpen={setSubMenuOpen}
+              setSideMenuOver={setSideMenuOver}
               handleSubMenu={handleSubMenu}
               handleSideMenu={handleSideMenu}
             />
