@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
+import MemberList from "./Components/MemberList";
 
 export default function User() {
   return (
@@ -10,7 +11,22 @@ export default function User() {
       <Header />
       <UserBox>
         <Nav />
-        <UserContainer>{/* 작업 */}</UserContainer>
+        <UserContainer>
+          <UserContent>
+            <h3>
+              셀러 계정 관리
+              <span>셀러 회원 목록 / 관리</span>
+            </h3>
+            <MenuBar>
+              <ul>
+                <li>회원 관리</li>
+                <li>셀러 계정 관리 </li>
+                <li>셀러 회원 리스트</li>
+              </ul>
+            </MenuBar>
+            <MemberList />
+          </UserContent>
+        </UserContainer>
       </UserBox>
       <Footer />
     </UserWrap>
@@ -30,4 +46,35 @@ const UserContainer = styled.div`
   min-height: 100vh;
   height: auto;
   padding-top: 45px;
+`;
+
+const UserContent = styled.div`
+  padding: 25px 20px 20px 20px;
+  h3 {
+    margin-bottom: 15px;
+    font-size: 26px;
+    font-weight: 300;
+    color: #666;
+  }
+  span {
+    font-size: 14px;
+    font-weight: 300;
+    color: #888;
+  }
+`;
+
+const MenuBar = styled.div`
+  background-color: #eee;
+  margin-bottom: 10px;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-left: 10px;
+  padding-right: 20px;
+  ul {
+    display: flex;
+    padding: 8px;
+    li {
+      font-size: 14px;
+    }
+  }
 `;
