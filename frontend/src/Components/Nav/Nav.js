@@ -22,7 +22,8 @@ export default function Nav() {
 
   const handleSideMenu = (idx) => {
     // listId === idx ? setSideMenuOver(!isSideMenuOver) : setSideMenuOver(false);
-    listId === idx && setSideMenuOver(!isSideMenuOver);
+    listId === idx ? setListId(-1) : setListId(idx);
+    setSideMenuOver(true);
   };
 
   return (
