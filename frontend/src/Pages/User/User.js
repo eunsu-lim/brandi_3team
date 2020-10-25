@@ -4,6 +4,8 @@ import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import MemberList from "./Components/MemberList";
+import { Home } from "@styled-icons/boxicons-solid";
+import { ArrowIosForwardOutline } from "@styled-icons/evaicons-outline";
 
 export default function User() {
   return (
@@ -19,8 +21,15 @@ export default function User() {
             </h3>
             <MenuBar>
               <ul>
-                <li>회원 관리</li>
-                <li>셀러 계정 관리 </li>
+                <li>
+                  <Home size="14" color="#333" />
+                  회원 관리
+                  <ArrowIosForwardOutline size="14" color="#999" />
+                </li>
+                <li>
+                  셀러 계정 관리
+                  <ArrowIosForwardOutline size="14" color="#999" />
+                </li>
                 <li>셀러 회원 리스트</li>
               </ul>
             </MenuBar>
@@ -46,6 +55,7 @@ const UserContainer = styled.div`
   min-height: 100vh;
   height: auto;
   padding-top: 45px;
+  width: calc(100% - 214px);
 `;
 
 const UserContent = styled.div`
@@ -71,10 +81,14 @@ const MenuBar = styled.div`
   padding-left: 10px;
   padding-right: 20px;
   ul {
-    display: flex;
+    ${({ theme }) => theme.flex(null, "flex-start")};
     padding: 8px;
     li {
+      ${({ theme }) => theme.flex("center", "flex-start")};
       font-size: 14px;
+      svg {
+        margin: 0 4px;
+      }
     }
   }
 `;
