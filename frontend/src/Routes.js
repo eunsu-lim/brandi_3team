@@ -10,6 +10,8 @@ import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 import Nav from "./Components/Nav/Nav";
 
+import OrderDetail from "./Pages/Order/Component/OrderDetail/OrderDetail";
+
 function Routes() {
   return (
     <Router>
@@ -24,6 +26,8 @@ function Routes() {
         <Route exact path="/product" component={Product} />
         <Route exact path="/signup" component={SignUp} />
         <Route exact path="/user" component={User} />
+
+        <Route exact path="/orderdetail" component={OrderDetail} />
       </Switch>
     </Router>
   );

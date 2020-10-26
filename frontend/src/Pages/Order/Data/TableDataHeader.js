@@ -1,4 +1,4 @@
-const TableData = [
+const TableDataHeader = [
   { id: 1, table_header: "결제 일자" },
   { id: 2, table_header: "주문번호" },
   { id: 3, table_header: "주문상세번호" },
@@ -12,4 +12,4 @@ const TableData = [
   { id: 11, table_header: "주문상태" },
 ];
 
-export default TableData;
+export default TableDataHeader;

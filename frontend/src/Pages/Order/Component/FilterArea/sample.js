@@ -8,8 +8,8 @@ import styled, { css } from "styled-components";
 import { HandIndexThumb } from "styled-icons/bootstrap";
 
 function FilterArea({ handleBtn }) {
+  const [currentIndex, setCurrentIndex] = useState([1]);
   const [btnClicked, setBtnClicked] = useState("3일");
-  const [duplicated, setDuplicated] = useState(["전체"]);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
@@ -18,30 +18,23 @@ function FilterArea({ handleBtn }) {
   };
 
   useEffect(() => {
-    if (duplicated.length === 7 || duplicated.length === 0) {
-      setDuplicated(["전체"]);
+    if (currentIndex.length === 7) {
+      setCurrentIndex([1]);
     }
-  }, [duplicated]);
-  const handleDuplicated = (e) => {
-    console.log(e.target.value);
-    const isIncludes = duplicated.find((el) => el === e.target.value);
-    if (e.target.value === "전체") {
-      // "전체"를 배열에 넣지 않아서, 100번 째 줄 쯤의
-      // find 메서드에서
-      // duplicated.find is not a function 오류남...
-      setDuplicated(["전체"]);
+  }, [currentIndex]);
+  const clickHandler = (idx) => {
+    const isIncludes = currentIndex.find((el) => el === idx);
+    if (idx === 1) {
+      setCurrentIndex([1]);
     } else if (isIncludes) {
-      setDuplicated(duplicated.filter((el) => el !== e.target.value));
-    } else if (duplicated.length > 0) {
-      setDuplicated([
-        ...duplicated.filter((el) => el !== "전체"),
-        e.target.value,
-      ]);
+      setCurrentIndex(currentIndex.filter((el) => el !== idx));
+    } else if (currentIndex.length > 0) {
+      setCurrentIndex([...currentIndex.filter((el) => el !== 1), idx]);
     } else {
-      setDuplicated([...duplicated, e.target.value]);
+      setCurrentIndex([...currentIndex, idx]);
     }
-    console.log(duplicated);
   };
+  console.log(currentIndex);
   return (
     <FilterSection>
       {/* 세부 항목, Select Box */}
@@ -93,14 +86,15 @@ function FilterArea({ handleBtn }) {
       <SellerAttri>
         <SellerAttriLabel htmlFor="">셀러속성:</SellerAttriLabel>
         <SellerAttriBtn>
-          {SellerAttriFilterData.map((el, index) => (
+          {SellerAttriFilterData.map((el) => (
             <AttriBtn
-              key={index}
+              key={el.id}
               type="button"
-              onClick={handleDuplicated}
-              value={el.value}
-              backgroundColor={duplicated.find(
-                (element) => element === el.value
+              onClick={() => {
+                clickHandler(el.id);
+              }}
+              backgroundColor={currentIndex.find(
+                (element) => element === el.id
               )}
             >
               {el.value}

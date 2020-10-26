@@ -1,5 +1,6 @@
 import React from "react";
-import TableData from "../../Data/TableData";
+import TableDataHeader from "../../Data/TableDataHeader";
+import OrderTableExample from "../../Data/OrderTableExample";
 import styled from "styled-components";
 import { List } from "@styled-icons/open-iconic/List";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
@@ -69,78 +70,36 @@ function OrderManagementArea() {
                   </span>
                 </div>
               </th>
-              {TableData.map((el, index) => (
+              {TableDataHeader.map((el, index) => (
                 <th>{el.table_header}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <div>
-                  <span>
-                    <input type="checkbox" />
-                  </span>
-                </div>
-              </td>
-              <td>2020-10-21 15:42:14</td>
-              <td>20201021000053000</td>
-              <td>
-                <a href="">B2020102100035001</a>
-              </td>
-              <td>메종셀린</td>
-              <td>U넥 반팔 티셔츠_메종셀린</td>
-              <td>소라/Free</td>
-              <td>1</td>
-              <td>이성현</td>
-              <td>010-4664-7852</td>
-              <td>11,700</td>
-              <td>상품준비</td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <span>
-                    <input type="checkbox" />
-                  </span>
-                </div>
-              </td>
-              <td>2020-10-21 15:42:14</td>
-              <td>20201021000053000</td>
-              <td>
-                <a href="">B2020102100035001</a>
-              </td>
-              <td>메종셀린</td>
-              <td>U넥 반팔 티셔츠_메종셀린</td>
-              <td>소라/Free</td>
-              <td>1</td>
-              <td>이성현</td>
-              <td>010-4664-7852</td>
-              <td>11,700</td>
-              <td>상품준비</td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <span>
-                    <input type="checkbox" />
-                  </span>
-                </div>
-              </td>
-              <td>2020-10-21 15:42:14</td>
-              <td>20201021000053000</td>
-              <td>
-                <a href="">B2020102100035001</a>
-              </td>
-              <td>메종셀린</td>
-              <td>U넥 반팔 티셔츠_메종셀린</td>
-              <td>소라/Free</td>
-              <td>1</td>
-              <td>이성현</td>
-              <td>010-4664-7852</td>
-              <td>11,700</td>
-              <td>상품준비</td>
-            </tr>
+            {OrderTableExample.map((el, index) => (
+              <tr>
+                <td>
+                  <div>
+                    <span>
+                      <input type="checkbox" />
+                    </span>
+                  </div>
+                </td>
+                <td>{el.paid_on}</td>
+                <td>{el.order_number}</td>
+                <td>
+                  <a href="">{el.order_detail_number}</a>
+                </td>
+                <td>{el.seller_name}</td>
+                <td>{el.product_name}</td>
+                <td>{el.option_info}</td>
+                <td>{el.quantity}</td>
+                <td>{el.orderer_name}</td>
+                <td>{el.phone_number}</td>
+                <td>{el.payment_amount}</td>
+                <td>{el.order_status}</td>
+              </tr>
+            ))}
           </tbody>
 
           {/* 페이지네이션 영역 */}
@@ -249,6 +208,7 @@ const OrderProcessBtn = styled.button`
   font-size: 12px;
   outline: none;
   border: none;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.9;
@@ -266,6 +226,7 @@ const ExcelDownloadBtn = styled.button`
   font-size: 12px;
   outline: none;
   border: none;
+  cursor: pointer;
 
   &:hover {
     opacity: 0.9;

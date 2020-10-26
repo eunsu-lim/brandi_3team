@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../../Components/Nav/Nav";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -9,6 +9,14 @@ import OrderManagementArea from "./Component/OrderManagementArea/OrderManagement
 import styled from "styled-components";
 
 function Order(props) {
+  const [selectedBtn, setSeletedBtn] = useState([]);
+
+  const handleBtn = (btn) => {
+    selectedBtn.includes(value)
+      ? setSeletedBtn(selectedBtn.filter((el) => el !== value))
+      : setSelectedBtn([...selectedBtn, value]);
+  };
+
   // const history = useHistory();
   // const [orderId, setOrderId] = useState(props.match.params.id);
   // console.log(props.match.params.id);
@@ -19,31 +27,39 @@ function Order(props) {
   // };
 
   return (
-    <OrderContainer>
+    <Orderwrap>
       <Header />
-      <Nav />
-      <PageContent>
-        {/* 타이틀 영역 */}
-        <Title />
-        {/* 필터 영역 */}
-        <FilterArea />
-        {/* 주문 관리 리스트 영역 */}
-        <OrderManagementArea />
-      </PageContent>
+      <OrderBox>
+        <Nav />
+        <OrderContainer>
+          {/* 타이틀 영역 */}
+          <Title />
+          {/* 필터 영역 */}
+          <FilterArea handleBtn={(e) => handleBtn(e)} />
+          {/* 주문 관리 리스트 영역 */}
+          <OrderManagementArea />
+        </OrderContainer>
+      </OrderBox>
       <Footer />
-    </OrderContainer>
+    </Orderwrap>
   );
 }
 
 export default Order;
 
-const OrderContainer = styled.div`
+const Orderwrap = styled.article`
+  position: relative;
+`;
+
+const OrderBox = styled.div`
   display: flex;
 `;
 
-const PageContent = styled.div`
-  /* margin-left: 215px; */
-  margin-top: 30px;
-  padding: 25px 20px 20px 20px;
-  background-color: #fafafa;
+const OrderContainer = styled.div`
+  flex: 1;
+  min-height: 100vh;
+  height: auto;
+
+  padding: 66px 20px 20px 20px;
+  width: calc(100% - 214px);
 `;

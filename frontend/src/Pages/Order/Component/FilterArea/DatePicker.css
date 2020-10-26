@@ -194,8 +194,10 @@
 
 :global .react-datepicker__header {
   text-align: center;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #aeaeae;
+  background-color: #fff;
+  /* background-color: #f0f0f0; */
+  border-bottom: 1px solid #fff;
+  /* border-bottom: 1px solid #f0f0f0; */
   border-top-left-radius: 0.3rem;
   padding-top: 8px;
   position: relative;

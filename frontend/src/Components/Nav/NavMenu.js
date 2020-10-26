@@ -125,7 +125,7 @@ const NAVMENU = [
   {
     id: 7,
     menuIcon: <Gift size="16" />,
-    menuTitle: "기획전/쿠폰관리",
+    menuTitle: "기획전/쿠폰관리",
     status: false,
     subMenu: [
       {
