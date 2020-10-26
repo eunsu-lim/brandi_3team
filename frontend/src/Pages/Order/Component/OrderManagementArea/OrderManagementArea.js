@@ -1,4 +1,5 @@
 import React from "react";
+import TableData from "../../Data/TableData";
 import styled from "styled-components";
 import { List } from "@styled-icons/open-iconic/List";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
@@ -68,17 +69,9 @@ function OrderManagementArea() {
                   </span>
                 </div>
               </th>
-              <th>결제일자</th>
-              <th>주문번호</th>
-              <th>주문상세번호</th>
-              <th>셀러명</th>
-              <th>상품명</th>
-              <th>옵션정보</th>
-              <th>수량</th>
-              <th>주문자명</th>
-              <th>핸드폰번호</th>
-              <th>결제금액</th>
-              <th>주문상태</th>
+              {TableData.map((el, index) => (
+                <th>{el.table_header}</th>
+              ))}
             </tr>
           </thead>
           <tbody>

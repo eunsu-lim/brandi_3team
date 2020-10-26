@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import "./DatePicker.css";
 import SelectFilterData from "../../Data/SelectFilterData";
 import DateFilterData from "../../Data/DateFilterData";
 import SellerAttriFilterData from "../../Data/SellerAttriFilterData";
@@ -8,7 +8,14 @@ import styled from "styled-components";
 
 function FilterArea() {
   const [currentIndex, setCurrentIndex] = useState(2);
+  const [btnIndex, setBtnIndex] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [placeHolder, setPlaceHolder] = useState("");
+
+  const handleDateOutside = () => {
+    setPlaceHolder("입력해주세요");
+  };
 
   return (
     <FilterSection>
@@ -39,22 +46,38 @@ function FilterArea() {
             />
           ))}
         </SimpleDateBtn>
-        <DatePicker
-        //   selected={startDate}
-        //   onChange={(date) => setStartDate(date)}
-        // /
-        >
-          <input type="text" placeholder="클릭해주세요." />
-          <span> ~ </span>
-          <input type="text" placeholder="클릭해주세요." />
-        </DatePicker>
+        <SelectDate
+          selected={startDate}
+          // onSelect={handleDateSelect}
+          onClickOutside={handleDateOutside}
+          dateFormat="yyyy-MM-dd"
+          onChange={(date) => setStartDate(date)}
+          placeholder={placeHolder}
+        />
+        {/* <input type="text" placeholder="클릭해주세요." />
+          
+          <input type="text" placeholder="클릭해주세요." /> */}
+        {/* </DatePicker> */}
+        <BetweenDate> ~ </BetweenDate>
+        <SelectDate
+          selected={endDate}
+          // onSelect={handleDateSelect}
+          dateFormat="yyyy-MM-dd"
+          onChange={(date) => setEndDate(date)}
+          placeholder="클릭해주세요."
+        />
       </DateFilter>
       {/* 파트너 여부 */}
       <SellerAttri>
         <label htmlFor="">셀러속성:</label>
         <SellerAttriBtn>
           {SellerAttriFilterData.map((el, index) => (
-            <AttriBtn key={index} type="button">
+            <AttriBtn
+              key={index}
+              type="button"
+              onClick={() => setBtnIndex(index)}
+              backgroundColor={btnIndex === index}
+            >
               {el.value}
             </AttriBtn>
           ))}
@@ -139,27 +162,28 @@ const DateInput = styled.input`
   }
 `;
 
-const DatePicker = styled.div`
-  margin-left: 15px;
+// const DatePicker = styled.div`
 
-  input {
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 0 3px 3px 0;
-    text-align: center;
-    border: 1px solid #e5e5e5;
-    outline: none;
-    cursor: pointer;
-  }
+//   }
+// `;
 
-  span {
-    padding: 6px 12px;
-    background-color: #e5e5e5;
-    border: 1px solid #e5e5e5;
-    border-radius: 0 3px 3px 0;
-    font-size: 14px;
-    cursor: pointer;
-  }
+const SelectDate = styled(DatePicker)`
+  /* margin-left: 15px; */
+  height: 22px;
+  padding: 6px 12px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #e5e5e5;
+  outline: none;
+  cursor: pointer;
+`;
+
+const BetweenDate = styled.span`
+  padding: 6px 12px;
+  background-color: #e5e5e5;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+  cursor: pointer;
 `;
 
 const SellerAttri = styled(DateFilter)``;
@@ -171,7 +195,8 @@ const AttriBtn = styled.button`
   padding: 6px 12px;
   font-size: 14px;
   font-weight: 400;
-  background-color: #fff;
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor ? "#428bca" : "#fff"};
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   outline: none;
@@ -179,7 +204,8 @@ const AttriBtn = styled.button`
 
   &:hover {
     color: #333;
-    background-color: #e6e6e6;
+    background-color: ${({ backgroundColor }) =>
+      backgroundColor ? "#428bca" : "#e6e6e6"};
     border-color: #adadad;
   }
 `;

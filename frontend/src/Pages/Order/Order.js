@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import Title from "./Component/Title/Title";
 import FilterArea from "./Component/FilterArea/FilterArea";
 import OrderManagementArea from "./Component/OrderManagementArea/OrderManagementArea";
 import styled from "styled-components";
 
-function Order() {
+function Order(props) {
+  // const history = useHistory();
+  // const [orderId, setOrderId] = useState(props.match.params.id);
+  // console.log(props.match.params.id);
+
+  // const handleChange = (e) => {
+  //   history.push(`/product/${e}`);
+  //   window.location.reload();
+  // };
+
   return (
     <PageContent>
       {/* 타이틀 영역 */}
