@@ -9,10 +9,15 @@ import { Phone } from "@styled-icons/boxicons-solid";
 import { InformationCircle } from "@styled-icons/heroicons-solid";
 import { Text } from "@styled-icons/ionicons-sharp";
 import { Comment } from "@styled-icons/fa-regular";
+import InputMask from "react-input-mask";
 
 function JoinForm() {
-  const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const { register, handleSubmit, watch, errors } = useForm({
+    defaultValues: {
+      sellerRadio: "1",
+    },
+  });
+  const onSubmit = (data) => console.log("submit >>>>>>", data);
   const [password, setPassword] = useState("");
   const [rPassword, setRpassword] = useState("");
 
@@ -28,6 +33,7 @@ function JoinForm() {
             type="text"
             placeholder="아이디"
             ref={register({ required: true, minLength: 5 })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerId && errors.sellerId.type === "required" && (
@@ -50,6 +56,7 @@ function JoinForm() {
               pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
             })}
             onChange={(password) => setPassword(password.target.value)}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerPassword &&
@@ -74,6 +81,7 @@ function JoinForm() {
             placeholder="비밀번호 재입력"
             ref={register()}
             onChange={(Rpassword) => setRpassword(Rpassword.target.value)}
+            autoComplete="off"
           />
           {/* password과 rPassword 입력할 때마다 state로 상태 관리, 값 불일치 시 에러 메세지 */}
           {password !== rPassword && (
@@ -85,15 +93,12 @@ function JoinForm() {
         {/* 셀러 전화번호 Input */}
         <SellerPhone isError={errors.sellerPhone}>
           <Phone />
-          <input
+          <InputMask
+            mask="999-9999-9999"
             name="sellerPhone"
-            type="tel"
             placeholder="핸드폰번호"
-            ref={register({
-              required: true,
-              pattern: /[0-9]{3}-[0-9]{4}-[0-9]{4}/,
-              maxLength: 13,
-            })}
+            inputRef={register({ required: true })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerPhone && errors.sellerPhone.type === "required" && (
@@ -117,31 +122,31 @@ function JoinForm() {
         {/* 셀러 정보 Radio Input */}
         <SellerRadio>
           <label>
-            <input name="sellerRadio" type="radio" value="1" />
+            <input name="sellerRadio" type="radio" value="1" ref={register} />
             쇼핑몰
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="2" />
+            <input name="sellerRadio" type="radio" value="2" ref={register} />
             마켓
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="3" />
+            <input name="sellerRadio" type="radio" value="3" ref={register} />
             로드샵
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="4" />
+            <input name="sellerRadio" type="radio" value="4" ref={register} />
             디자이너브랜드
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="5" />
+            <input name="sellerRadio" type="radio" value="5" ref={register} />
             제너럴브랜드
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="6" />
+            <input name="sellerRadio" type="radio" value="6" ref={register} />
             내셔널브랜드
           </label>
           <label>
-            <input name="sellerRadio" type="radio" value="7" />
+            <input name="sellerRadio" type="radio" value="7" ref={register} />
             기타
           </label>
         </SellerRadio>
@@ -157,6 +162,7 @@ function JoinForm() {
               required: true,
               pattern: /^[가-힣|a-z|A-Z|0-9|\*]+$/,
             })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerName && errors.sellerName.type === "required" && (
@@ -175,6 +181,7 @@ function JoinForm() {
             type="text"
             placeholder="영문 셀러명 (영문상호)"
             ref={register({ required: true, pattern: /^[a-z|0-9|\*]+$/ })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerEnName && errors.sellerEnName.type === "required" && (
@@ -193,6 +200,7 @@ function JoinForm() {
             type="text"
             placeholder="고객센터 전화번호"
             ref={register({ required: true, pattern: /^[0-9 \-]+$/ })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerTel && errors.sellerTel.type === "required" && (
@@ -216,6 +224,7 @@ function JoinForm() {
               required: true,
               pattern: /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/,
             })}
+            autoComplete="off"
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerSite && errors.sellerSite.type === "required" && (
@@ -231,7 +240,13 @@ function JoinForm() {
         {/* 카카오톡 ID Input */}
         <SellerKakao>
           <Comment />
-          <input name="sellerKakao" type="text" placeholder="카카오톡 아이디" />
+          <input
+            name="sellerKakao"
+            type="text"
+            placeholder="카카오톡 아이디"
+            ref={register}
+            autoComplete="off"
+          />
         </SellerKakao>
         {/* 인스타그램 ID Input */}
         <SellerInsta>
@@ -240,6 +255,8 @@ function JoinForm() {
             name="sellerInsta"
             type="text"
             placeholder="인스타그램 아이디"
+            ref={register}
+            autoComplete="off"
           />
         </SellerInsta>
         {/* 회원가입 Button */}
