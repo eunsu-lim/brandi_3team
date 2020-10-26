@@ -10,8 +10,6 @@ export default function MenuItem({
   isSideBar,
   isSubMenuOpen,
   isSideMenuOver,
-  setSubMenuOpen,
-  setSideMenuOver,
   handleSubMenu,
   handleSideMenu,
   index,
@@ -62,11 +60,7 @@ export default function MenuItem({
           </ListMenu>
 
           {subMenu && index === listId && (
-            <SubMenu
-              isSubMenuOpen={isSubMenuOpen}
-              isSideBar={isSideBar}
-              // onMouseLeave={() => setSubMenuOpen(false)}
-            >
+            <SubMenu isSubMenuOpen={isSubMenuOpen} isSideBar={isSideBar}>
               {subMenu.map((list, idx) => {
                 return (
                   <li key={idx}>
@@ -85,12 +79,14 @@ export default function MenuItem({
 const ListItem = styled.li`
   ${({ theme }) => theme.flex("flex-start", null, "column")};
   position: relative;
+  height: ${({ active }) => (active ? "auto" : "40px")};
   font-weight: 300;
   font-size: 14px;
   color: #eee;
   background-color: ${({ active }) => (active ? "#27272B" : "")};
-  border-bottom: ${({ isSideBar }) => (isSideBar ? "1px solid #414247" : "")};
+  border-bottom: 1px solid #414247;
   box-sizing: border-box;
+  transition: ${({ active }) => (active ? "1s" : "1s")};
   cursor: pointer;
   &:hover {
     background-color: #27272b;
@@ -101,6 +97,7 @@ const ListItem = styled.li`
 `;
 
 const SideItem = styled.li`
+  border-bottom: 1px solid #414247;
   &:hover {
     width: 214px;
     background-color: #35363a;
@@ -122,7 +119,7 @@ const SideItem = styled.li`
 const ListMenu = styled.div`
   display: flex;
   padding: 10px 13px 10px 15px;
-  /* 현재 페이지 적용 */
+  /* 현재 페이지 적용 (나중에 수정 후 적용) **수정 금지 */
   /* border-right: ${({ active }) => (active ? "4px solid #d12610" : "")}; */
 `;
 
@@ -140,9 +137,8 @@ const SubMenu = styled.ul`
   margin-top: ${({ isSideBar }) => (isSideBar ? "0" : "")};
   padding-right: ${({ isSideBar }) => (isSideBar ? "8px" : "")};
   width: ${({ isSideBar }) => (isSideBar ? "171px" : "")};
-  height: ${({ isSubMenuOpen }) => (isSubMenuOpen ? "0" : "auto")};
   background: ${({ isSideBar }) => (isSideBar ? "#414247" : "")};
-  flex-direction: column;
+  transition: 3s;
   li {
     margin-top: 1px;
     width: 100%;

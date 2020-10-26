@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NAVMENU from "./NavMenu";
-import MenuItem from "./Components/MenuItem";
+import MenuItem from "./MenuItem";
 import { ArrowDropRight } from "@styled-icons/remix-line";
 
 export default function Nav() {
@@ -10,18 +10,20 @@ export default function Nav() {
   const [isSideMenuOver, setSideMenuOver] = useState(false);
   const [listId, setListId] = useState();
 
+  // 사이드 메뉴 클릭 시
   const handleBar = () => {
     setIsSideBar(!isSideBar);
     setSubMenuOpen(!isSubMenuOpen);
     setSideMenuOver(false);
   };
 
+  // 서브 메뉴 클릭 시
   const handleSubMenu = (idx) => {
     listId === idx ? setListId(-1) : setListId(idx);
   };
 
+  // 사이드 메뉴 마우스 오버 시
   const handleSideMenu = (idx) => {
-    // listId === idx ? setSideMenuOver(!isSideMenuOver) : setSideMenuOver(false);
     listId === idx ? setListId(-1) : setListId(idx);
     setSideMenuOver(true);
   };
@@ -45,8 +47,6 @@ export default function Nav() {
               isSideBar={isSideBar}
               isSubMenuOpen={isSubMenuOpen}
               isSideMenuOver={isSideMenuOver}
-              setSubMenuOpen={setSubMenuOpen}
-              setSideMenuOver={setSideMenuOver}
               handleSubMenu={handleSubMenu}
               handleSideMenu={handleSideMenu}
             />
