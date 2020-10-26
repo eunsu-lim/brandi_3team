@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import JoinTitle from "./Components/JoinTitle";
 import JoinForm from "./Components/JoinForm";
+import Footer from "./Components/Footer";
 
 function SignUp() {
   return (
@@ -16,6 +17,8 @@ function SignUp() {
         {/* 회원가입 Form */}
         <JoinForm />
       </SellerJoin>
+      {/* 회원가입 Footer */}
+      <Footer />
     </SignUpWrap>
   );
 }

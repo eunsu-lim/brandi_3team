@@ -16,14 +16,6 @@ function JoinForm() {
   const [password, setPassword] = useState("");
   const [rPassword, setRpassword] = useState("");
 
-  const handlePassword = (password) => {
-    setPassword(password.target.value);
-  };
-
-  const handleRpassword = (Rpassword) => {
-    setRpassword(Rpassword.target.value);
-  };
-
   return (
     <JoinFormWrap>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -57,7 +49,7 @@ function JoinForm() {
               required: true,
               pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
             })}
-            onChange={handlePassword}
+            onChange={(password) => setPassword(password.target.value)}
           />
           {/* 필수 입력 에러 메세지 */}
           {errors.sellerPassword &&
@@ -81,7 +73,7 @@ function JoinForm() {
             type="password"
             placeholder="비밀번호 재입력"
             ref={register()}
-            onChange={handleRpassword}
+            onChange={(Rpassword) => setRpassword(Rpassword.target.value)}
           />
           {/* password과 rPassword 입력할 때마다 state로 상태 관리, 값 불일치 시 에러 메세지 */}
           {password !== rPassword && (
