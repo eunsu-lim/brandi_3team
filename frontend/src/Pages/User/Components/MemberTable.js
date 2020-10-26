@@ -132,7 +132,8 @@ const SellerTable = styled.table`
       text-align: left;
     }
     .inputBox {
-      input {
+      input,
+      select {
         padding: 6px 10px;
         font-size: 13px;
         font-weight: normal;
