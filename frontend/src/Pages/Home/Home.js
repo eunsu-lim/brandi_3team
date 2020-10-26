@@ -1,8 +1,35 @@
 import React from "react";
+import styled from "styled-components";
+import Header from "../../Components/Header/Header";
+import Nav from "../../Components/Nav/Nav";
+import Footer from "../../Components/Footer/Footer";
 
-function Home() {
-  console.log("test");
-  return <div>home</div>;
+export default function Home() {
+  return (
+    <MainWrap>
+      <Header />
+      <MainBox>
+        <Nav />
+        <MainContainer>
+          {/* 여기에 component 추가 후 작업해주세요!! */}
+        </MainContainer>
+      </MainBox>
+      <Footer />
+    </MainWrap>
+  );
 }
 
-export default Home;
+const MainWrap = styled.div`
+  position: relative;
+`;
+
+const MainBox = styled.div`
+  display: flex;
+`;
+
+const MainContainer = styled.div`
+  flex: 1;
+  min-height: 100vh;
+  height: auto;
+  padding-top: 45px;
+`;
