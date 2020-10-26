@@ -5,9 +5,7 @@ import FormActions from "./FormActions";
 
 export default function LoginForm() {
   const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = (data) => console.log(data);
-
-  console.log(watch("example"));
+  const onSubmit = (data) => console.log("submit >>>>", data);
 
   return (
     <LoginFormWrapper onSubmit={handleSubmit(onSubmit)}>

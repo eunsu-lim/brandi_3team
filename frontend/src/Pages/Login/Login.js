@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import LoginForm from "./Components/LoginForm";
+import Footer from "./Components/Footer";
 
 function Login() {
   return (
@@ -13,6 +14,7 @@ function Login() {
         {/* 로그인 form Component 분리 */}
         <LoginForm />
       </Content>
+      <Footer />
     </Wrapper>
   );
 }
