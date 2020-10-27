@@ -63,6 +63,7 @@ const NavMenuList = styled.div`
   width: ${({ isSideBar }) => (isSideBar ? "42px" : "215px")};
   background: #35363a;
   color: #eee;
+  z-index: 1;
 `;
 
 const MenuToggle = styled.div`
