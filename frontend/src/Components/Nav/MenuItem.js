@@ -79,14 +79,15 @@ export default function MenuItem({
 const ListItem = styled.li`
   ${({ theme }) => theme.flex("flex-start", null, "column")};
   position: relative;
-  height: ${({ active }) => (active ? "auto" : "40px")};
+  max-height: ${({ active }) => (active ? "1000px" : "40px")};
+  transform-origin: top;
   font-weight: 300;
   font-size: 14px;
   color: #eee;
   background-color: ${({ active }) => (active ? "#27272B" : "")};
   border-bottom: 1px solid #414247;
   box-sizing: border-box;
-  transition: ${({ active }) => (active ? "1s" : "1s")};
+  transition: 0.8s;
   cursor: pointer;
   &:hover {
     background-color: #27272b;
