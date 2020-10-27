@@ -84,7 +84,7 @@ const ListItem = styled.li`
   font-weight: 300;
   font-size: 14px;
   color: #eee;
-  background-color: ${({ active }) => (active ? "#27272B" : "")};
+  /* background-color: ${({ active }) => (active ? "#27272B" : "")}; */
   border-bottom: 1px solid #414247;
   box-sizing: border-box;
   transition: 0.8s;
@@ -99,6 +99,7 @@ const ListItem = styled.li`
 
 const SideItem = styled.li`
   border-bottom: 1px solid #414247;
+
   &:hover {
     width: 214px;
     background-color: #35363a;
@@ -106,7 +107,6 @@ const SideItem = styled.li`
     span {
       display: block;
       margin-left: 12px;
-      background-color: #27272b;
       font-weight: 300;
       font-size: 14px;
       color: #eee;
