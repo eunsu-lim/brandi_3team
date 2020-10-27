@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
-import SellerInfo from "./Components/SellerInfo";
+import SellerInfo from "./Components/Master/SellerInfo";
 import { Home } from "@styled-icons/boxicons-solid";
 import { ArrowIosForwardOutline } from "@styled-icons/evaicons-outline";
 
@@ -65,11 +65,11 @@ const UserContent = styled.div`
     font-size: 26px;
     font-weight: 300;
     color: #666;
-  }
-  span {
-    font-size: 14px;
-    font-weight: 300;
-    color: #888;
+    span {
+      font-size: 14px;
+      font-weight: 300;
+      color: #888;
+    }
   }
 `;
 

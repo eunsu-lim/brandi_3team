@@ -12,6 +12,7 @@ export default function SellerInfo() {
           기본 정보
         </h4>
       </TableTitle>
+      {/* 마스터 -> 셀러 정보 변경 테이블 component */}
       <SellerUserTable />
       <TableBox></TableBox>
     </MemberListBox>
