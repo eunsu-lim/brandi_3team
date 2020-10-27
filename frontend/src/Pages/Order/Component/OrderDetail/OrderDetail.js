@@ -2,6 +2,11 @@ import React from "react";
 import Nav from "../../../../Components/Nav/Nav";
 import Header from "../../../../Components/Header/Header";
 import Footer from "../../../../Components/Footer/Footer";
+import OrderInfo from "./Component/OrderInfo/OrderInfo";
+import OrderDetailInfo from "./Component/OrderDetailInfo/OrderDetailInfo";
+import OrderProductInfo from "./Component/OrderProductInfo/OrderProductInfo";
+import OrderReceiverInfo from "./Component/OrderReceiverInfo/OrderReceiverInfo";
+import OrderStatusChangeRecord from "./Component/OrderStatusChangeRecord/OrderStatusChangeRecord";
 import styled from "styled-components";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
 import { Home } from "@styled-icons/fa-solid/Home";
@@ -20,84 +25,42 @@ function OrderDetail() {
           </PageTitle>
           <PageNav>
             <ul>
-              <Home size="16" />
+              <Home size="13" style={{ color: "#666" }} />
               <li>주문관리</li>
               <ArrowForwardIos size="13" />
               <li>주문 상세 페이지</li>
             </ul>
           </PageNav>
-          {/* 주문 상세 내용 */}
           <OrderDetailPortlet>
             <OrderPortletTitle>
-              <Truck size="16" />
+              <Truck
+                size="13"
+                style={{
+                  transform: "scaleX(-1)",
+                  color: "#666",
+                }}
+              />
               <span>주문 상세</span>
             </OrderPortletTitle>
             <OrderPortletBody>
-              {/* 주문 정보 */}
-              <OrderPortletInfo>
-                <OrderPortletInfoTitle>
-                  <ArrowForwardIos size="10" />
-                  <span>주문 정보</span>
-                </OrderPortletInfoTitle>
-                <div>
-                  <div>
-                    <div>주문 번호:</div>
-                    <div>
-                      <label htmlFor="">20201007000121000</label>
-                    </div>
-                  </div>
-                  <div>주문 일시 : </div>
-                  <div>
-                    <label htmlFor="">2020-10-26 14:10:35</label>
-                  </div>
-                </div>
-                <hr />
-                <div>
-                  <div>총 결제금액:</div>
-                  <div>72,090원</div>
-                </div>
-              </OrderPortletInfo>
-              <OrderPortletDetail>
+              <OrderPortletInfoTitle>
                 <ArrowForwardIos size="10" />
-                <span>주문 상세 정보</span>
-                <div>
-                  <div>
-                    <div>주문 상세 번호:</div>
-                    <div>
-                      <label htmlFor="">B202010260005C001</label>
-                    </div>
-                  </div>
-                  <div>주문 상태 : </div>
-                  <div>
-                    <select name="" id="">
-                      <option value="">주문접수</option>
-                      <option value="">배송준비</option>
-                      <option value="">주문취소중</option>
-                      <option value="">환불요청</option>
-                      <option value="">반품진행</option>
-                      <option value="">환불승인중</option>
-                      <option value="">결제대기</option>
-                      <option value="">결제완료</option>
-                      <option value="">상품준비</option>
-                      <option value="">배송중</option>
-                      <option value="">배송완료</option>
-                      <option value="">환불완료</option>
-                      <option value="">주문취소완료</option>
-                      <option value="">구매확정</option>
-                    </select>
-                  </div>
-                </div>
-                <hr />
-                <div>
-                  <div>총 결제금액:</div>
-                  <div>72,090원</div>
-                </div>
-              </OrderPortletDetail>
+                <span>주문 정보</span>
+              </OrderPortletInfoTitle>
+              {/* 주문 정보 */}
+              <OrderInfo />
+              {/* 주문 상세 정보 */}
+              <OrderDetailInfo />
+              {/* 상품 정보 */}
+              <OrderProductInfo />
+              {/* 수취자 정보 */}
+              <OrderReceiverInfo />
+              {/* 주문상태 변경 이력 */}
+              <OrderStatusChangeRecord />
             </OrderPortletBody>
           </OrderDetailPortlet>
         </OrderDetailArticle>
       </OrderDetailBox>
-
       <Footer />
     </OrderDetailWrap>
   );
@@ -142,6 +105,9 @@ const PageTitle = styled.div`
 const PageNav = styled.nav`
   display: flex;
   background-color: #eeeeee;
+  padding-left: 10px;
+  margin-left: -20px;
+  margin-right: -20px;
   margin-bottom: 10px;
   justify-content: space-between;
 
@@ -158,44 +124,47 @@ const PageNav = styled.nav`
   }
 `;
 
-const OrderDetailPortlet = styled.article`
+const OrderDetailPortlet = styled.div`
+  margin-bottom: 50px;
   border: 1px solid #ddd;
   border-radius: 4px;
 `;
 
-const OrderPortletTitle = styled.header`
+const OrderPortletTitle = styled.div`
+  height: 38px;
   background-color: #eee;
   border-radius: 4px 4px 0 0;
-  padding: 10px 10px 2px 20px;
+  padding: 10px 10px 2px 10px;
 
   span {
     color: #333;
     display: inline-block;
     font-size: 16px;
-    height: 38px;
-    line-height: 38px;
     font-weight: 400;
+    line-height: 16px;
     margin-left: 5px;
     padding: 0;
     margin-top: 1px;
   }
 `;
 
-const OrderPortletBody = styled(OrderDetailPortlet)`
-  display: flex;
-  flex-direction: column;
-  padding: 10px 10px 2px 20px;
+const OrderPortletBody = styled.div`
+  border: 1px solid #eee;
+  padding: 10px;
 `;
 
-const OrderPortletInfo = styled(OrderPortletTitle)`
-  hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
+const OrderPortletInfoTitle = styled(OrderPortletTitle)`
+  background-color: cornsilk;
+  border: 1px solid #eee;
+
+  span {
+    color: #333;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    margin-left: 5px;
+    padding: 0;
+    margin-top: 1px;
   }
 `;
-
-const OrderPortletInfoTitle = styled.header`
-  background-color: cornsilk;
-`;
-
-const OrderPortletDetail = styled.article``;

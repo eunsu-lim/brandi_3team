@@ -9,14 +9,6 @@ import OrderManagementArea from "./Component/OrderManagementArea/OrderManagement
 import styled from "styled-components";
 
 function Order(props) {
-  const [selectedBtn, setSeletedBtn] = useState([]);
-
-  const handleBtn = (btn) => {
-    selectedBtn.includes(value)
-      ? setSeletedBtn(selectedBtn.filter((el) => el !== value))
-      : setSelectedBtn([...selectedBtn, value]);
-  };
-
   // const history = useHistory();
   // const [orderId, setOrderId] = useState(props.match.params.id);
   // console.log(props.match.params.id);
@@ -35,7 +27,7 @@ function Order(props) {
           {/* 타이틀 영역 */}
           <Title />
           {/* 필터 영역 */}
-          <FilterArea handleBtn={(e) => handleBtn(e)} />
+          <FilterArea />
           {/* 주문 관리 리스트 영역 */}
           <OrderManagementArea />
         </OrderContainer>

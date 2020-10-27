@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "./DatePicker.css";
 import SelectFilterData from "../../Data/SelectFilterData";
 import DateFilterData from "../../Data/DateFilterData";
 import SellerAttriFilterData from "../../Data/SellerAttriFilterData";
 import styled, { css } from "styled-components";
-import { HandIndexThumb } from "styled-icons/bootstrap";
 
-function FilterArea({ handleBtn }) {
+function FilterArea({}) {
   const [btnClicked, setBtnClicked] = useState("3일");
   const [duplicated, setDuplicated] = useState(["전체"]);
   const [startDate, setStartDate] = useState();
@@ -22,13 +22,13 @@ function FilterArea({ handleBtn }) {
       setDuplicated(["전체"]);
     }
   }, [duplicated]);
+
+  // 버튼 중복 선택 함수 및 조건문
   const handleDuplicated = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const isIncludes = duplicated.find((el) => el === e.target.value);
+
     if (e.target.value === "전체") {
-      // "전체"를 배열에 넣지 않아서, 100번 째 줄 쯤의
-      // find 메서드에서
-      // duplicated.find is not a function 오류남...
       setDuplicated(["전체"]);
     } else if (isIncludes) {
       setDuplicated(duplicated.filter((el) => el !== e.target.value));
@@ -37,10 +37,9 @@ function FilterArea({ handleBtn }) {
         ...duplicated.filter((el) => el !== "전체"),
         e.target.value,
       ]);
-    } else {
-      setDuplicated([...duplicated, e.target.value]);
     }
-    console.log(duplicated);
+
+    // console.log(duplicated);
   };
   return (
     <FilterSection>
@@ -77,10 +76,6 @@ function FilterArea({ handleBtn }) {
           onChange={(date) => setStartDate(date)}
           placeholderText="클릭해주세요."
         />
-        {/* <input type="text" placeholder="클릭해주세요." />
-          
-          <input type="text" placeholder="클릭해주세요." /> */}
-        {/* </DatePicker> */}
         <BetweenDate> ~ </BetweenDate>
         <SelectDate
           selected={endDate}
@@ -215,7 +210,8 @@ const SelectDate = styled(DatePicker)`
 `;
 
 const BetweenDate = styled.span`
-  padding: 6px 12px;
+  display: table;
+  padding: 8px 12px;
   background-color: #e5e5e5;
   border: 1px solid #e5e5e5;
   font-size: 14px;

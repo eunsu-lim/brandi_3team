@@ -8,6 +8,7 @@ import { ChevronsLeft } from "@styled-icons/boxicons-regular/ChevronsLeft";
 import { ChevronLeft } from "@styled-icons/boxicons-regular/ChevronLeft";
 import { ChevronRight } from "@styled-icons/boxicons-regular/ChevronRight";
 import { ChevronsRight } from "@styled-icons/boxicons-regular/ChevronsRight";
+import { FileExcel } from "@styled-icons/fa-regular/FileExcel";
 
 function OrderManagementArea() {
   return (
@@ -48,14 +49,20 @@ function OrderManagementArea() {
       <NumOfViews>
         <div>
           <span>전체 조회건 수 : </span>
-          <span>1,220 건</span>
+          <span>{OrderTableExample.length}건</span>
           {/* <OrderProcessBtn>배송준비처리</OrderProcessBtn>
           <OrderProcessBtn>주문취소처리</OrderProcessBtn> */}
           <OrderProcessBtn className="firstBtn">배송처리</OrderProcessBtn>
         </div>
         <div>
-          <ExcelDownloadBtn>전체주문 엑셀다운로드</ExcelDownloadBtn>
-          <ExcelDownloadBtn>선택주문 엑셀다운로드</ExcelDownloadBtn>
+          <ExcelDownloadBtn>
+            <FileExcel size="15" />
+            전체주문 엑셀다운로드
+          </ExcelDownloadBtn>
+          <ExcelDownloadBtn>
+            <FileExcel size="15" />
+            선택주문 엑셀다운로드
+          </ExcelDownloadBtn>
         </div>
       </NumOfViews>
       {/* 데이터 테이블 영역 */}
@@ -147,8 +154,14 @@ function OrderManagementArea() {
           <OrderProcessBtn>주문취소처리</OrderProcessBtn>
         </div> */}
         <div>
-          <ExcelDownloadBtn>전체주문 엑셀다운로드</ExcelDownloadBtn>
-          <ExcelDownloadBtn>선택주문 엑셀다운로드</ExcelDownloadBtn>
+          <ExcelDownloadBtn>
+            <FileExcel size="15" />
+            전체주문 엑셀다운로드
+          </ExcelDownloadBtn>
+          <ExcelDownloadBtn>
+            <FileExcel size="15" />
+            선택주문 엑셀다운로드
+          </ExcelDownloadBtn>
         </div>
       </BottomArea>
     </OrderManagementSection>
@@ -192,6 +205,14 @@ const NumOfViews = styled.div`
   display: flex;
   justify-content: space-between;
 
+  span {
+    font-size: 13px;
+
+    &:nth-child(2) {
+      font-weight: bold;
+    }
+  }
+
   .firstBtn {
     margin-left: 20px;
   }
@@ -231,11 +252,6 @@ const ExcelDownloadBtn = styled.button`
   &:hover {
     opacity: 0.9;
   }
-`;
-
-const BottomArea = styled.footer`
-  display: flex;
-  justify-content: flex-end;
 `;
 
 const DataTableArea = styled.article`
@@ -318,4 +334,10 @@ const DataTableArea = styled.article`
       }
     }
   }
+`;
+
+const BottomArea = styled.footer`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 55px;
 `;

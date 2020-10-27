@@ -1,4 +1,4 @@
-const DateFilterData = [
+const SellerAttriFilterData = [
   {
     id: 1,
     value: "전체",
@@ -33,4 +33,4 @@ const DateFilterData = [
   },
 ];
 
-export default DateFilterData;
+export default SellerAttriFilterData;
