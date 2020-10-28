@@ -33,6 +33,7 @@ export default function Info() {
                 <li>셀러 정보 조회 / 수정</li>
               </ul>
             </MenuBar>
+            {/* 셀러 정보 수정 컴포넌트 */}
             <SellerInfo />
           </UserContent>
         </UserContainer>
@@ -70,6 +71,9 @@ const UserContent = styled.div`
       font-weight: 300;
       color: #888;
     }
+  }
+  td:first-child {
+    width: 16%;
   }
 `;
 

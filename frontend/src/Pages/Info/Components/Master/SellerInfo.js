@@ -1,21 +1,69 @@
 import React from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 import SellerUserTable from "./SellerUserTable";
+import SellerDetailTable from "./SellerDetailTable";
+import SellerDeliveryTable from "./SellerDeliveryTable";
 import { User } from "@styled-icons/boxicons-solid";
 
 export default function SellerInfo() {
+  const { register, handleSubmit, errors } = useForm();
+
+  // form Data 전송
+  const onSubmit = (data) => {
+    console.log("data", data);
+    // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
+  };
+
   return (
-    <MemberListBox>
-      <TableTitle>
-        <h4>
-          <User size="16" />
-          기본 정보
-        </h4>
-      </TableTitle>
-      {/* 마스터 -> 셀러 정보 변경 테이블 component */}
-      <SellerUserTable />
-      <TableBox></TableBox>
-    </MemberListBox>
+    <SellerForm onSubmit={handleSubmit(onSubmit)}>
+      {/* 셀러 기본 정보 */}
+      <MemberListBox>
+        <TableTitle>
+          <h4>
+            <User size="16" />
+            기본 정보
+          </h4>
+        </TableTitle>
+        {/* 마스터 -> 셀러 정보 변경 테이블 component */}
+        <SellerUserTable register={register} errors={errors} />
+      </MemberListBox>
+      {/* 셀러 상세 정보 */}
+      <MemberListBox>
+        <TableTitle>
+          <h4>
+            <User size="16" />
+            상세 정보
+          </h4>
+        </TableTitle>
+        {/* 마스터 -> 셀러 정보 변경 테이블 component */}
+        <SellerDetailTable register={register} errors={errors} />
+      </MemberListBox>
+      {/* 셀러 배송 정보 */}
+      <MemberListBox>
+        <TableTitle>
+          <h4>
+            <User size="16" />
+            배송정보 및 교환/환불 정보
+          </h4>
+        </TableTitle>
+        {/* 셀러 배송 정보 테이블 component */}
+        <SellerDeliveryTable register={register} errors={errors} />
+      </MemberListBox>
+
+      <SellerInfoBtn>
+        <button
+          type="submit"
+          className="btn btn-success disabled"
+          id="save_button"
+        >
+          수정
+        </button>
+        <button type="button" className="btn btn-default" id="back_button">
+          취소
+        </button>
+      </SellerInfoBtn>
+    </SellerForm>
   );
 }
 
@@ -25,6 +73,10 @@ const MemberListBox = styled.div`
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
   border: 1px solid #ddd;
   border-radius: 4px;
+`;
+
+const SellerForm = styled.form`
+  width: 100%;
 `;
 
 const TableTitle = styled.div`
@@ -46,8 +98,27 @@ const TableTitle = styled.div`
   }
 `;
 
-const TableBox = styled.div`
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 0px 0px 4px 4px;
+const SellerInfoBtn = styled.div`
+  ${({ theme }) => theme.flex("center", "center")};
+  margin: 24px 0;
+  padding-bottom: 36px;
+  button {
+    margin: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    background-color: #fff;
+    color: #999;
+    border: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    &.btn-success {
+      color: #fff;
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+    }
+  }
 `;

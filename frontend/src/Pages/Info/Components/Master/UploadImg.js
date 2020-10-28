@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { InfoCircleFill } from "@styled-icons/bootstrap";
 
 export default function UploadImg({ register }) {
+  // 이미지 미리보기
   const [imgPreview, setImgPreview] = useState("");
+  // 이미지 파일 업데이트 관리
   const [imgFile, setImgFile] = useState(null);
 
   // 이미지 파일 업로드 (미리보기)
@@ -13,6 +14,7 @@ export default function UploadImg({ register }) {
 
     reader.onloadend = (e) => {
       const preview = reader.result;
+      // 이미지 미리보기
       if (preview) {
         setImgPreview(preview.toString());
       }
@@ -20,6 +22,7 @@ export default function UploadImg({ register }) {
 
     if (file) {
       reader.readAsDataURL(file);
+      // 이미지 업데이트
       setImgFile(file);
     }
   };
@@ -46,21 +49,18 @@ export default function UploadImg({ register }) {
           ref={register({ required: true })}
         />
       </label>
-
-      <span className="info">
-        <InfoCircleFill size="14" />
-        셀러 프로필 확장자는 <b> jpg, jpeg, png</b> 만 가능하며, 허용 가능한
-        최대 파일사이즈 크기는 <b> 5MB</b> 입니다.
-      </span>
     </UploadBox>
   );
 }
 
 const UploadBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
   label {
     position: relative;
     margin-bottom: 4px;
-    padding: 6px 12px;
+    padding: 4px 12px;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     background-color: #fff;
@@ -105,15 +105,23 @@ const NoImg = styled.div`
 `;
 
 const InputImg = styled.div`
-  display: flex;
+  /* display: flex;
   margin-bottom: 8px;
   padding: 8px;
   max-width: 130px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
+  border-radius: 4px; */
+  margin-bottom: 8px;
+  padding: 4px;
+  max-width: 130px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
   border-radius: 4px;
+  display: inline-block;
+  line-height: 0;
   img {
     width: 100%;
-    object-fit: contain;
+    /* object-fit: contain; */
   }
 `;
