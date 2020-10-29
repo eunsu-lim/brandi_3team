@@ -109,7 +109,7 @@ const ListItem = styled.li`
   font-weight: 300;
   font-size: 14px;
   color: #eee;
-  background-color: ${({ active }) => (active ? "#27272B" : "")};
+  /* background-color: ${({ active }) => (active ? "#27272B" : "")}; */
   border-bottom: 1px solid #414247;
   box-sizing: border-box;
   transition: 0.8s;
@@ -194,7 +194,7 @@ const NAV_ICON = {
   "취소/환불 관리": <Cart size="16" />,
   상품관리: <BagCheck size="16" />,
   고객응대관리: <EmojiSmile size="16" />,
-  "기획전/쿠폰관리": <Gift size="16" />,
+  "기획전/쿠폰관리": <Gift size="16" />,
   "회원 관리": <People size="16" />,
   공지사항: <CardList size="16" />,
   정산관리: <Calculate size="16" />,
