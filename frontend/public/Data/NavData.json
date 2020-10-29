@@ -8,7 +8,7 @@
       {
         "id": 2,
         "menuTitle": "통계",
-        "submenu": [
+        "subMenu": [
           {
             "id": 1,
             "sub": "시간단위분석"
@@ -18,7 +18,7 @@
       {
         "id": 3,
         "menuTitle": "주문관리",
-        "submenu": [
+        "subMenu": [
           {
             "id": 1,
             "sub": "결제완료관리"
@@ -102,7 +102,7 @@
         ]
       },
       {
-        "id": 5,
+        "id": 8,
         "menuTitle": "회원 관리",
         "subMenu": [
           {
