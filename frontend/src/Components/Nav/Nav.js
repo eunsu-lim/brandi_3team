@@ -13,7 +13,7 @@ export default function Nav() {
   const [listId, setListId] = useState();
 
   // 통신 받아 올 nav data
-  const [nav, setNav] = useState();
+  const [navli, setNav] = useState();
 
   // 사이드 메뉴 클릭 시
   const handleBar = () => {
@@ -36,14 +36,9 @@ export default function Nav() {
   // 페이지 로드 시
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const {
-          data: { nav_data },
-        } = await axios.get(`public/Data/NavData.json`);
-        setNav(nav_data);
-      } catch (error) {
-        console.log(error);
-      }
+      const result = await axios(`/public/Data/NavData.json`);
+      setNav(result.data.nav_data);
+      console.log(result.data.nav_data);
     };
     fetchData();
   }, []);

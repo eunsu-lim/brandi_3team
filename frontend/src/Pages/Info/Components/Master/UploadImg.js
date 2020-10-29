@@ -5,7 +5,7 @@ export default function UploadImg({ register }) {
   // 이미지 미리보기
   const [imgPreview, setImgPreview] = useState("");
   // 이미지 파일 업데이트 관리
-  const [imgFile, setImgFile] = useState(null);
+  const [imgFile, setImgFile] = useState([]);
 
   // 이미지 파일 업로드 (미리보기)
   const handleUploadFile = (e) => {

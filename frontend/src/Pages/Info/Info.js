@@ -8,6 +8,7 @@ import { Home } from "@styled-icons/boxicons-solid";
 import { ArrowIosForwardOutline } from "@styled-icons/evaicons-outline";
 
 export default function Info() {
+  const uploadImg = (content) => {};
   return (
     <UserWrap>
       <Header />
@@ -34,7 +35,11 @@ export default function Info() {
               </ul>
             </MenuBar>
             {/* 셀러 정보 수정 컴포넌트 */}
-            <SellerInfo />
+            <SellerInfo
+              uploadImg={() => {
+                uploadImg(content);
+              }}
+            />
           </UserContent>
         </UserContainer>
       </UserBox>
