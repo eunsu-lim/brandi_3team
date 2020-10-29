@@ -1,7 +1,20 @@
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ArrowDropLeft } from "@styled-icons/remix-line";
+import { ArrowDropLeft, Question } from "@styled-icons/remix-line";
+import { Calculate } from "@styled-icons/material-outlined";
+import { Home } from "@styled-icons/ionicons-outline";
+import {
+  BarChartLine,
+  CartCheck,
+  Cart,
+  BagCheck,
+  EmojiSmile,
+  Gift,
+  People,
+  CardList,
+  Eye,
+} from "@styled-icons/bootstrap";
 
 export default function MenuItem({
   menuIcon,
@@ -15,8 +28,16 @@ export default function MenuItem({
   index,
   listId,
 }) {
+  const [isPage, setIsPage] = useState(false);
+
+  const handleActivePage = () => {
+    setIsPage(!isPage);
+    console.log(isPage);
+  };
+
   return (
     <Fragment>
+      {/* 메뉴 bar가 sidebar로 접혀 있을 경우 */}
       {isSideBar ? (
         <SideItem
           active={listId === index}
@@ -27,16 +48,18 @@ export default function MenuItem({
             active={listId === index}
             isSideBar={isSideBar}
             isSideMenuOver={isSideMenuOver}
+            isPage={isPage}
           >
-            {menuIcon}
+            {NAV_ICON[menuTitle]}
             {isSideMenuOver && <span>{menuTitle}</span>}
           </ListMenu>
 
+          {/* 서브 메뉴가 있고, index 값이 동일한 경우 서브 메뉴 mouseover */}
           {subMenu && index === listId && isSideMenuOver && (
             <SubMenu isSideBar={isSideBar}>
               {subMenu.map((list, idx) => {
                 return (
-                  <li key={idx}>
+                  <li key={idx} onClick={handleActivePage}>
                     <Link to={list.url}>{list.sub}</Link>
                   </li>
                 );
@@ -45,12 +68,14 @@ export default function MenuItem({
           )}
         </SideItem>
       ) : (
+        // 기본 메뉴 - 펼쳐진 nav bar
         <ListItem
           active={listId === index}
           onClick={() => handleSubMenu(index)}
+          isPage={isPage}
         >
           <ListMenu active={listId === index}>
-            {menuIcon}
+            {NAV_ICON[menuTitle]}
             <span>{menuTitle}</span>
             {subMenu && (
               <Arrow active={listId === index}>
@@ -58,12 +83,12 @@ export default function MenuItem({
               </Arrow>
             )}
           </ListMenu>
-
+          {/* 서브 메뉴가 있고, index 값이 동일한 경우 서브 메뉴 열기 */}
           {subMenu && index === listId && (
             <SubMenu isSubMenuOpen={isSubMenuOpen} isSideBar={isSideBar}>
               {subMenu.map((list, idx) => {
                 return (
-                  <li key={idx}>
+                  <li key={idx} onClick={handleActivePage}>
                     <Link to={list.url}>{list.sub}</Link>
                   </li>
                 );
@@ -84,7 +109,7 @@ const ListItem = styled.li`
   font-weight: 300;
   font-size: 14px;
   color: #eee;
-  /* background-color: ${({ active }) => (active ? "#27272B" : "")}; */
+  background-color: ${({ active }) => (active ? "#27272B" : "")};
   border-bottom: 1px solid #414247;
   box-sizing: border-box;
   transition: 0.8s;
@@ -143,6 +168,7 @@ const SubMenu = styled.ul`
   li {
     margin-top: 1px;
     width: 100%;
+
     a {
       display: block;
       padding: 5px 0 5px 35px;
@@ -159,3 +185,19 @@ const SubMenu = styled.ul`
     }
   }
 `;
+
+// NAV_ICON menuTitle과 연결
+const NAV_ICON = {
+  홈: <Home size="16" />,
+  통계: <BarChartLine size="16" />,
+  주문관리: <CartCheck size="16" />,
+  "취소/환불 관리": <Cart size="16" />,
+  상품관리: <BagCheck size="16" />,
+  고객응대관리: <EmojiSmile size="16" />,
+  "기획전/쿠폰관리": <Gift size="16" />,
+  "회원 관리": <People size="16" />,
+  공지사항: <CardList size="16" />,
+  정산관리: <Calculate size="16" />,
+  진열관리: <Eye size="16" />,
+  고객센터: <Question size="16" />,
+};
