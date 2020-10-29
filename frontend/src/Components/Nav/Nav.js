@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 import axios from "axios";
 import styled from "styled-components";
-import NAVMENU from "./NavMenu";
 import MenuItem from "./MenuItem";
 import { ArrowDropRight } from "@styled-icons/remix-line";
 
@@ -13,7 +12,7 @@ export default function Nav() {
   const [listId, setListId] = useState();
 
   // 통신 받아 올 nav data
-  const [nav, setNav] = useState();
+  const [navList, setNavList] = useState();
 
   // 사이드 메뉴 클릭 시
   const handleBar = () => {
@@ -33,14 +32,12 @@ export default function Nav() {
     setSideMenuOver(true);
   };
 
-  // 페이지 로드 시
+  // 페이지 로드 시 메뉴 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const {
-          data: { nav_data },
-        } = await axios.get(`public/Data/NavData.json`);
-        setNav(nav_data);
+        const result = await axios.get(`public/Data/NavData.json`);
+        setNavList(result.data.data.nav_data);
       } catch (error) {
         console.log(error);
       }
@@ -55,23 +52,24 @@ export default function Nav() {
       </MenuToggle>
       {/* 메뉴 리스트 영역 */}
       <MenuBox isSideBar={isSideBar}>
-        {NAVMENU.map((nav, idx) => {
-          return (
-            <MenuItem
-              key={idx}
-              index={idx}
-              listId={listId}
-              menuIcon={nav.menuIcon}
-              menuTitle={nav.menuTitle}
-              subMenu={nav.subMenu}
-              isSideBar={isSideBar}
-              isSubMenuOpen={isSubMenuOpen}
-              isSideMenuOver={isSideMenuOver}
-              handleSubMenu={handleSubMenu}
-              handleSideMenu={handleSideMenu}
-            />
-          );
-        })}
+        {navList &&
+          navList.map((nav, idx) => {
+            return (
+              <MenuItem
+                key={idx}
+                index={idx}
+                listId={listId}
+                menuIcon={nav.menuIcon}
+                menuTitle={nav.menuTitle}
+                subMenu={nav.subMenu}
+                isSideBar={isSideBar}
+                isSubMenuOpen={isSubMenuOpen}
+                isSideMenuOver={isSideMenuOver}
+                handleSubMenu={handleSubMenu}
+                handleSideMenu={handleSideMenu}
+              />
+            );
+          })}
       </MenuBox>
     </NavMenuList>
   );
@@ -79,6 +77,7 @@ export default function Nav() {
 
 const NavMenuList = styled.div`
   position: relative;
+  z-index: 1;
   display: flex;
   width: ${({ isSideBar }) => (isSideBar ? "42px" : "215px")};
   background: #35363a;
