@@ -72,6 +72,7 @@ const SellerInput = styled.div`
 const TimeFromTo = styled.div`
   .MuiFormControl-root {
     height: 35px;
+    background: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     input {

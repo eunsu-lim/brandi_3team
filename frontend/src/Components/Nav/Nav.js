@@ -13,7 +13,7 @@ export default function Nav() {
   const [listId, setListId] = useState();
 
   // 통신 받아 올 nav data
-  const [navli, setNav] = useState();
+  const [navli, setNavli] = useState();
 
   // 사이드 메뉴 클릭 시
   const handleBar = () => {
@@ -36,13 +36,16 @@ export default function Nav() {
   // 페이지 로드 시
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios(`/public/Data/NavData.json`);
-      setNav(result.data.nav_data);
-      console.log(result.data.nav_data);
+      try {
+        const result = await axios.get(`public/Data/NavData.json`);
+        setNavli(result.data.data.nav_data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchData();
   }, []);
-
+  console.log("11", navli && navli);
   return (
     <NavMenuList isSideBar={isSideBar}>
       <MenuToggle onClick={() => handleBar()} isSideBar={isSideBar}>
@@ -50,23 +53,24 @@ export default function Nav() {
       </MenuToggle>
       {/* 메뉴 리스트 영역 */}
       <MenuBox isSideBar={isSideBar}>
-        {NAVMENU.map((nav, idx) => {
-          return (
-            <MenuItem
-              key={idx}
-              index={idx}
-              listId={listId}
-              menuIcon={nav.menuIcon}
-              menuTitle={nav.menuTitle}
-              subMenu={nav.subMenu}
-              isSideBar={isSideBar}
-              isSubMenuOpen={isSubMenuOpen}
-              isSideMenuOver={isSideMenuOver}
-              handleSubMenu={handleSubMenu}
-              handleSideMenu={handleSideMenu}
-            />
-          );
-        })}
+        {navli &&
+          navli.map((nav, idx) => {
+            return (
+              <MenuItem
+                key={idx}
+                index={idx}
+                listId={listId}
+                menuIcon={nav.menuIcon}
+                menuTitle={nav.menuTitle}
+                subMenu={nav.subMenu}
+                isSideBar={isSideBar}
+                isSubMenuOpen={isSubMenuOpen}
+                isSideMenuOver={isSideMenuOver}
+                handleSubMenu={handleSubMenu}
+                handleSideMenu={handleSideMenu}
+              />
+            );
+          })}
       </MenuBox>
     </NavMenuList>
   );

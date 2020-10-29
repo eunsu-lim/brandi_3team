@@ -3,12 +3,11 @@ import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
-import SellerInfo from "./Components/Master/SellerInfo";
+import SellerInfo from "./Components/SellerInfo";
 import { Home } from "@styled-icons/boxicons-solid";
 import { ArrowIosForwardOutline } from "@styled-icons/evaicons-outline";
 
 export default function Info() {
-  const uploadImg = (content) => {};
   return (
     <UserWrap>
       <Header />
@@ -35,11 +34,7 @@ export default function Info() {
               </ul>
             </MenuBar>
             {/* 셀러 정보 수정 컴포넌트 */}
-            <SellerInfo
-              uploadImg={() => {
-                uploadImg(content);
-              }}
-            />
+            <SellerInfo />
           </UserContent>
         </UserContainer>
       </UserBox>

@@ -5,23 +5,31 @@ import { MailOpen } from "@styled-icons/heroicons-outline";
 import { LocationPin } from "@styled-icons/entypo";
 
 export default function SellerAddress({ register, errors }) {
-  // const handleComplete = (data) => {
-  //   let fullAddress = data.address;
-  //   let extraAddress = "";
+  const postCodeStyle = {
+    display: "block",
+    position: "absolute",
+    top: "50px",
+    zIndex: "100",
+    padding: "7px",
+  };
 
-  //   if (data.addressType === "R") {
-  //     if (data.bname !== "") {
-  //       extraAddress += data.bname;
-  //     }
-  //     if (data.buildingName !== "") {
-  //       extraAddress +=
-  //         extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-  //     }
-  //     fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-  //   }
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
 
-  //   console.log(fullAddress);
-  // };
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    console.log(fullAddress);
+  };
 
   return (
     <Address>
@@ -34,9 +42,8 @@ export default function SellerAddress({ register, errors }) {
             name="postalCode"
             ref={register}
           />
-          {/* <DaumPostcode onClick={handleComplete}> */}
           <PostalBtn className="btn">우편번호 찾기</PostalBtn>
-          {/* </DaumPostcode> */}
+          <DaumPostcode style={postCodeStyle} onComplete={handleComplete} />
         </SellerInput>
       </AddressInput>
       <AddressInput>
@@ -127,3 +134,5 @@ const ErrorMsg = styled.p`
   font-size: 13px;
   color: #a94442;
 `;
+
+// const Post = styled(DaumPostcode)``;

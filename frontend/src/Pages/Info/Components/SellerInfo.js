@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import SellerUserTable from "./SellerUserTable";
-import SellerDetailTable from "./SellerDetailTable";
-import SellerDeliveryTable from "./SellerDeliveryTable";
+import SellerDefaultInfo from "./SellerDefaultInfo";
+import SellerDetailInfo from "./SellerDetailInfo";
+import SellerDeliveryInfo from "./SellerDeliveryInfo";
 import { User } from "@styled-icons/boxicons-solid";
 
 export default function SellerInfo() {
@@ -26,7 +26,7 @@ export default function SellerInfo() {
           </h4>
         </TableTitle>
         {/* 마스터 -> 셀러 정보 변경 테이블 component */}
-        <SellerUserTable register={register} errors={errors} />
+        <SellerDefaultInfo register={register} errors={errors} />
       </MemberListBox>
       {/* 셀러 상세 정보 */}
       <MemberListBox>
@@ -37,7 +37,7 @@ export default function SellerInfo() {
           </h4>
         </TableTitle>
         {/* 마스터 -> 셀러 정보 변경 테이블 component */}
-        <SellerDetailTable register={register} errors={errors} />
+        <SellerDetailInfo register={register} errors={errors} />
       </MemberListBox>
       {/* 셀러 배송 정보 */}
       <MemberListBox>
@@ -48,7 +48,7 @@ export default function SellerInfo() {
           </h4>
         </TableTitle>
         {/* 셀러 배송 정보 테이블 component */}
-        <SellerDeliveryTable register={register} errors={errors} />
+        <SellerDeliveryInfo register={register} errors={errors} />
       </MemberListBox>
 
       <SellerInfoBtn>

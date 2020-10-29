@@ -4,7 +4,7 @@ import UploadImg from "./UploadImg";
 import { InfoCircleFill } from "@styled-icons/bootstrap";
 import { User } from "@styled-icons/boxicons-solid";
 
-export default function SellerUSerTable({ register, errors }) {
+export default function SellerDefaultInfo({ register, errors }) {
   return (
     <TableContainer>
       <SellerTable>
