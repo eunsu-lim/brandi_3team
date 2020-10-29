@@ -1,27 +1,13 @@
 import React from "react";
-import { Home } from "@styled-icons/ionicons-outline";
-import {
-  BarChartLine,
-  CartCheck,
-  Cart,
-  BagCheck,
-  EmojiSmile,
-  Gift,
-  People,
-} from "@styled-icons/bootstrap";
 
 const NAVMENU = [
   {
     id: 1,
-    menuIcon: <Home size="16" />,
     menuTitle: "홈",
-    status: false,
   },
   {
     id: 2,
-    menuIcon: <BarChartLine size="16" />,
     menuTitle: "통계",
-    status: false,
     subMenu: [
       {
         id: 1,
@@ -32,9 +18,7 @@ const NAVMENU = [
   },
   {
     id: 3,
-    menuIcon: <CartCheck size="16" />,
     menuTitle: "주문관리",
-    status: false,
     subMenu: [
       {
         id: 1,
@@ -65,9 +49,7 @@ const NAVMENU = [
   },
   {
     id: 4,
-    menuIcon: <Cart size="16" />,
     menuTitle: "취소/환불 관리",
-    status: false,
     subMenu: [
       {
         id: 1,
@@ -88,9 +70,7 @@ const NAVMENU = [
   },
   {
     id: 5,
-    menuIcon: <BagCheck size="16" />,
     menuTitle: "상품관리",
-    status: false,
     subMenu: [
       {
         id: 1,
@@ -106,9 +86,7 @@ const NAVMENU = [
   },
   {
     id: 6,
-    menuIcon: <EmojiSmile size="16" />,
     menuTitle: "고객응대관리",
-    status: false,
     subMenu: [
       {
         id: 1,
@@ -142,9 +120,7 @@ const NAVMENU = [
   },
   {
     id: 5,
-    menuIcon: <People size="16" />,
     menuTitle: "회원 관리",
-    status: false,
     subMenu: [
       {
         id: 1,

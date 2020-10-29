@@ -19,6 +19,7 @@ const FooterBox = styled.footer`
   bottom: 0;
   padding: 10px 20px 5px 20px;
   width: 100%;
+  z-index: 2;
   background-color: #35363a;
   p {
     color: #999ba2;
