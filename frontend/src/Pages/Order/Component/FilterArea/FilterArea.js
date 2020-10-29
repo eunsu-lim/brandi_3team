@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import OrderTableExample from "../../Data/OrderTableExample";
 import DatePicker from "react-datepicker";
 import "./DatePicker.css";
 import SelectFilterData from "../../Data/SelectFilterData";
@@ -10,13 +11,64 @@ import styled, { css } from "styled-components";
 function FilterArea({}) {
   const [btnClicked, setBtnClicked] = useState("3일");
   const [duplicated, setDuplicated] = useState(["전체"]);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
+  );
 
+  // 날짜 버튼 클릭, 기간 변경 기능
   const handleBtnClicked = (e) => {
-    setBtnClicked(e.target.value);
+    const { value } = e.target;
+    setBtnClicked(value);
+    const currentDate = new Date();
+    // 기본값: placeholder 내용
+    if (value === "전체") {
+      setStartDate();
+      setEndDate();
+    }
+    // 오늘 날짜
+    if (value === "오늘") {
+      setStartDate(new Date());
+      setEndDate(new Date());
+    }
+    // 3일 전부터 오늘까지의 기간
+    if (value === "3일") {
+      let threeDaysAgo = new Date(
+        currentDate.getTime() - 3 * 24 * 60 * 60 * 1000
+      );
+      setStartDate(threeDaysAgo);
+      setEndDate(new Date());
+    }
+    // 1주일 전부터 오늘까지의 기간
+    if (value === "1주일") {
+      let weekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+      setStartDate(weekAgo);
+      setEndDate(new Date());
+    }
+    // 1개월 전부터 오늘까지의 기간
+    if (value === "1개월") {
+      let oneMonthAgo = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() - 1,
+        new Date().getDate()
+      );
+      setStartDate(oneMonthAgo);
+      setEndDate(new Date());
+    }
+    // 3개월 전부터 오늘까지의 기간
+    if (value === "3개월") {
+      let threeMonthAgo = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() - 3,
+        new Date().getDate()
+      );
+      setStartDate(threeMonthAgo);
+      setEndDate(new Date());
+    }
   };
 
+  // 선택 버튼이 모드 선택되거나, 선택된 버튼이 없을 시, 전체이 선택되도록 함
   useEffect(() => {
     if (duplicated.length === 7 || duplicated.length === 0) {
       setDuplicated(["전체"]);
@@ -25,7 +77,6 @@ function FilterArea({}) {
 
   // 버튼 중복 선택 함수 및 조건문
   const handleDuplicated = (e) => {
-    // console.log(e.target.value);
     const isIncludes = duplicated.find((el) => el === e.target.value);
 
     if (e.target.value === "전체") {
@@ -38,9 +89,24 @@ function FilterArea({}) {
         e.target.value,
       ]);
     }
-
-    // console.log(duplicated);
   };
+
+  const handleInput = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+  };
+
+  const handleSearch = () => {
+    if (!search && !startDate && !endDate)
+      return alert(
+        "날짜 조건이 없을 경우에는 필수 필터 조건 검색이 존재합니다. \n주문번호 or 주문상세번호 or 주문자명 or 핸드폰번호"
+      );
+    else if (!search) {
+      alert("검색어를 입력해주세요.");
+    }
+  };
+
+  console.log(OrderTableExample);
   return (
     <FilterSection>
       {/* 세부 항목, Select Box */}
@@ -52,7 +118,12 @@ function FilterArea({}) {
             </option>
           ))}
         </SelectFilter>
-        <FilterKeyword type="text" placeholder="검색어를 입력하세요." />
+        <FilterKeyword
+          name="search"
+          onChange={handleInput}
+          type="text"
+          placeholder="검색어를 입력하세요."
+        />
       </FilterSearch>
       {/* 날짜 필터 */}
       <DateFilter>
@@ -106,7 +177,11 @@ function FilterArea({}) {
 
       {/* 검색, 초기화 버튼 영역 */}
       <SearchInitializationBtn>
-        <SearchInitializationInput type="button" value="검색" />
+        <SearchInitializationInput
+          onClick={handleSearch}
+          type="button"
+          value="검색"
+        />
         <SearchInitializationInput type="button" value="초기화" />
       </SearchInitializationBtn>
     </FilterSection>
@@ -193,13 +268,7 @@ const DateInput = styled.input`
   }
 `;
 
-// const DatePicker = styled.div`
-
-//   }
-// `;
-
 const SelectDate = styled(DatePicker)`
-  /* margin-left: 15px; */
   height: 22px;
   padding: 6px 12px;
   font-size: 14px;
@@ -245,19 +314,6 @@ const AttriBtn = styled.button`
     border-color: #adadad;
   }
 `;
-
-const SellerClass = styled(DateFilter)``;
-
-const SellerClassBtn = styled(SellerAttriBtn)`
-  div {
-    display: inline-block;
-  }
-`;
-
-const DeliveryDivision = styled(DateFilter)``;
-const DeliveryDivisionBtn = styled(SellerAttriBtn)``;
-const DivisionBtn = styled(AttriBtn)``;
-const DeliveryBtn = styled(AttriBtn)``;
 
 const SearchInitializationBtn = styled.div`
   display: flex;

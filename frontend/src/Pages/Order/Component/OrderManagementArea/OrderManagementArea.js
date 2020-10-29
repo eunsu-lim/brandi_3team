@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import OrderTableData from "./Component/OrderTableData/OrderTableData";
+import { Link } from "react-router-dom";
 import TableDataHeader from "../../Data/TableDataHeader";
 import OrderTableExample from "../../Data/OrderTableExample";
 import styled from "styled-components";
@@ -11,6 +13,29 @@ import { ChevronsRight } from "@styled-icons/boxicons-regular/ChevronsRight";
 import { FileExcel } from "@styled-icons/fa-regular/FileExcel";
 
 function OrderManagementArea() {
+  const [checkItems, setCheckItems] = useState([]);
+
+  // 체크박스 전체 단일 개체 선택
+  const handleSingleCheck = (checked, id) => {
+    if (checked) {
+      setCheckItems([...checkItems, id]);
+    } else {
+      // 체크 해제
+      setCheckItems(checkItems.filter((el) => el !== id));
+    }
+  };
+
+  // 체크박스 전체 선택
+  const handleAllCheck = (checked) => {
+    if (checked) {
+      const idArray = [];
+      OrderTableExample.forEach((el) => idArray.push(el.id));
+      setCheckItems(idArray);
+    } else {
+      setCheckItems([]);
+    }
+  };
+
   return (
     // 네이게이션 바
     <OrderManagementSection>
@@ -73,7 +98,12 @@ function OrderManagementArea() {
               <th style={{ width: "19px" }}>
                 <div>
                   <span>
-                    <input type="checkbox" />
+                    <TableHeadCheckBox
+                      name="checkAll"
+                      type={"checkbox"}
+                      onChange={(e) => handleAllCheck(e.target.checked)}
+                      // checked={allChecked}
+                    />
                   </span>
                 </div>
               </th>
@@ -84,28 +114,13 @@ function OrderManagementArea() {
           </thead>
           <tbody>
             {OrderTableExample.map((el, index) => (
-              <tr>
-                <td>
-                  <div>
-                    <span>
-                      <input type="checkbox" />
-                    </span>
-                  </div>
-                </td>
-                <td>{el.paid_on}</td>
-                <td>{el.order_number}</td>
-                <td>
-                  <a href="">{el.order_detail_number}</a>
-                </td>
-                <td>{el.seller_name}</td>
-                <td>{el.product_name}</td>
-                <td>{el.option_info}</td>
-                <td>{el.quantity}</td>
-                <td>{el.orderer_name}</td>
-                <td>{el.phone_number}</td>
-                <td>{el.payment_amount}</td>
-                <td>{el.order_status}</td>
-              </tr>
+              <OrderTableData
+                data={el}
+                index={index}
+                checkItems={checkItems}
+                setCheckItems={setCheckItems}
+                handleSingleCheck={handleSingleCheck}
+              />
             ))}
           </tbody>
 
@@ -284,13 +299,21 @@ const DataTableArea = styled.article`
 
   tr {
     /* width: 100%; */
-    input {
+    /* input {
       width: 19px;
       height: 19px;
-    }
+    } */
 
     td {
       font-size: 13px;
+
+      a {
+        color: #0d638f;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 
@@ -333,6 +356,13 @@ const DataTableArea = styled.article`
         }
       }
     }
+  }
+`;
+
+const TableHeadCheckBox = styled.input`
+  input {
+    width: 19px;
+    height: 19px;
   }
 `;
 

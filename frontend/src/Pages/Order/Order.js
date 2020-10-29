@@ -41,6 +41,7 @@ export default Order;
 
 const Orderwrap = styled.article`
   position: relative;
+  background-color: #fafafa;
 `;
 
 const OrderBox = styled.div`
