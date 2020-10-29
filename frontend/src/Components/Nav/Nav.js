@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import regeneratorRuntime from "regenerator-runtime";
+import axios from "axios";
 import styled from "styled-components";
 import NAVMENU from "./NavMenu";
 import MenuItem from "./MenuItem";
@@ -9,6 +11,9 @@ export default function Nav() {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isSideMenuOver, setSideMenuOver] = useState(false);
   const [listId, setListId] = useState();
+
+  // 통신 받아 올 nav data
+  const [nav, setNav] = useState();
 
   // 사이드 메뉴 클릭 시
   const handleBar = () => {
@@ -28,9 +33,24 @@ export default function Nav() {
     setSideMenuOver(true);
   };
 
+  // 페이지 로드 시
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const {
+          data: { nav_data },
+        } = await axios.get(`public/Data/NavData.json`);
+        setNav(nav_data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <NavMenuList isSideBar={isSideBar}>
-      <MenuToggle onClick={() => handleBar()}>
+      <MenuToggle onClick={() => handleBar()} isSideBar={isSideBar}>
         <ArrowDropRight color="black" isSideBar={isSideBar} />
       </MenuToggle>
       {/* 메뉴 리스트 영역 */}
@@ -76,7 +96,8 @@ const MenuToggle = styled.div`
   background-color: #fcfcfc;
   cursor: pointer;
   svg {
-    transform: ${({ isSideBar }) => (isSideBar ? "rotate(180deg)" : "")};
+    transform: ${({ isSideBar }) =>
+      isSideBar ? "roatte(90eg)" : "rotate(180deg)"};
   }
 `;
 
