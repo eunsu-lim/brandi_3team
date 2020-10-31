@@ -33,7 +33,7 @@ export default function Nav() {
     setSideMenuOver(true);
   };
 
-  // 페이지 로드 시
+  // 페이지 로드 시 get 요청
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +45,7 @@ export default function Nav() {
     };
     fetchData();
   }, []);
-  console.log("11", navli && navli);
+
   return (
     <NavMenuList isSideBar={isSideBar}>
       <MenuToggle onClick={() => handleBar()} isSideBar={isSideBar}>

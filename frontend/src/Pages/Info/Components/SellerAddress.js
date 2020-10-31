@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import DaumPostcode from "react-daum-postcode";
 import { MailOpen } from "@styled-icons/heroicons-outline";
 import { LocationPin } from "@styled-icons/entypo";
 
 export default function SellerAddress({ register, errors }) {
-  const postCodeStyle = {
-    display: "block",
-    position: "absolute",
-    top: "50px",
-    zIndex: "100",
-    padding: "7px",
+  const [isPostOpen, setIsPostOpen] = useState(false);
+  const [isAddress, setIsAddress] = useState("");
+  const [isZoneCode, setIsZoneCode] = useState();
+
+  const handlePostOpen = (e) => {
+    e.preventDefault();
+    setIsPostOpen(true);
   };
 
   const handleComplete = (data) => {
@@ -27,8 +28,23 @@ export default function SellerAddress({ register, errors }) {
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
+    setIsZoneCode(data.zonecode);
+    setIsAddress(fullAddress);
+    setIsPostOpen(false);
+  };
 
-    console.log(fullAddress);
+  const postCodeStyle = {
+    display: "block",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginLeft: "-200px",
+    marginTop: "-250px",
+    width: "400px",
+    height: "500px",
+    padding: "7px",
+    border: "3px solid black",
+    background: "#fff",
   };
 
   return (
@@ -40,10 +56,22 @@ export default function SellerAddress({ register, errors }) {
             type="text"
             placeholder="우편번호"
             name="postalCode"
+            defaultValue={isZoneCode}
             ref={register}
+            readOnly={true}
           />
-          <PostalBtn className="btn">우편번호 찾기</PostalBtn>
-          <DaumPostcode style={postCodeStyle} onComplete={handleComplete} />
+          <PostalBtn className="btn" onClick={(e) => handlePostOpen(e)}>
+            우편번호 찾기
+          </PostalBtn>
+          {isPostOpen && (
+            <PostWrap
+              onClick={() => {
+                setIsPostOpen(false);
+              }}
+            >
+              <DaumPostcode style={postCodeStyle} onComplete={handleComplete} />
+            </PostWrap>
+          )}
         </SellerInput>
       </AddressInput>
       <AddressInput>
@@ -53,7 +81,9 @@ export default function SellerAddress({ register, errors }) {
             type="text"
             placeholder="주소 ( 택배 수령지 )"
             name="sellerAddr"
+            defaultValue={isAddress}
             ref={register}
+            readOnly={true}
           />
         </SellerInput>
       </AddressInput>
@@ -98,6 +128,16 @@ const PostalBtn = styled.button`
   border: 1px solid #4cae4c;
 `;
 
+const PostWrap = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+`;
+
 const SellerInput = styled.div`
   position: relative;
   ${({ theme }) => theme.flex(null, "center")};
@@ -134,5 +174,3 @@ const ErrorMsg = styled.p`
   font-size: 13px;
   color: #a94442;
 `;
-
-// const Post = styled(DaumPostcode)``;

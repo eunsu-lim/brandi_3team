@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import UploadImg from "./UploadImg";
+import SellerBackImg from "./SellerBackImg";
 import ChargerInfo from "./ChargerInfo";
 import SellerAddress from "./SellerAddress";
 import SellerTimePick from "./SellerTimePick";
@@ -19,7 +19,7 @@ export default function SellerDetailTable({ register, errors }) {
             <td>셀러페이지 배경이미지</td>
             <td>
               {/* UploadImg */}
-              <UploadImg register={register} />
+              <SellerBackImg register={register} />
               <InfoLine>
                 <InfoSmall>
                   <InfoCircleFill size="14" />
@@ -91,15 +91,16 @@ export default function SellerDetailTable({ register, errors }) {
               <Require> *</Require>
             </td>
             <td>
-              <SellerInput isError={errors.ChargerTel}>
+              <SellerInput isError={errors.customerTel}>
                 <TelephoneFill size="14" color="#ddd" />
                 <input
                   type="text"
                   placeholder="고객센터 전화번호"
-                  name="ChargerTel"
+                  name="customerTel"
                   ref={register({ required: true })}
                 />
               </SellerInput>
+              {errors.customerTel && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
             </td>
           </tr>
           <tr>

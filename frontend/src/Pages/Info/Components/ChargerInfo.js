@@ -44,9 +44,6 @@ export default function ChargerInfo({ register, errors }) {
           />
         </SellerInput>
         {errors.ChargerEmail && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
-        <button className="plusBtn btn">
-          <Plus size="16" color="#fff" />
-        </button>
       </ChargerInput>
     </Charger>
   );

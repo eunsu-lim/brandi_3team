@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-export default function UploadImg({ register }) {
+export default function SellerProfileImg({ register }) {
   // 이미지 미리보기
   const [imgPreview, setImgPreview] = useState("");
   // 이미지 파일 업데이트 관리
-  const [imgFile, setImgFile] = useState([]);
+  const [imgFile, setImgFile] = useState();
 
   // 이미지 파일 업로드 (미리보기)
   const handleUploadFile = (e) => {
     let reader = new FileReader();
+    console.log("e.target.files >>> ", e.target.files);
     let file = e.target.files[0];
 
     reader.onloadend = (e) => {
@@ -26,29 +27,45 @@ export default function UploadImg({ register }) {
       setImgFile(file);
     }
   };
+
+  // onClick={() => this.props.handleID(인자)}
+
   return (
     <UploadBox>
       {imgPreview ? ( // 이미지가 있을 경우
-        <InputImg>
-          <img src={imgPreview} />
-        </InputImg>
+        <div>
+          <InputImg>
+            <img src={imgPreview} />
+          </InputImg>
+          <label htmlFor="ImgUpload">
+            <span>변경</span>
+            <input
+              type="file"
+              id="ImgUpload"
+              name="SellerProfileImg"
+              onChange={handleUploadFile}
+              ref={register({ required: true })}
+            />
+          </label>
+        </div>
       ) : (
         // 기존 이미지가 없을 경우
-        <NoImg>
-          <img src="https://image.brandi.me/seller/noimage.png" />
-        </NoImg>
+        <div>
+          <NoImg>
+            <img src="https://image.brandi.me/seller/noimage.png" />
+          </NoImg>
+          <label htmlFor="ImgUpload">
+            <span>이미지 선택</span>
+            <input
+              type="file"
+              id="ImgUpload"
+              name="SellerProfileImg"
+              onChange={handleUploadFile}
+              ref={register({ required: true })}
+            />
+          </label>
+        </div>
       )}
-
-      <label htmlFor="ImgUpload">
-        <span>이미지 선택</span>
-        <input
-          type="file"
-          id="ImgUpload"
-          name="uploadFile"
-          onChange={handleUploadFile}
-          ref={register({ required: true })}
-        />
-      </label>
     </UploadBox>
   );
 }
@@ -105,23 +122,17 @@ const NoImg = styled.div`
 `;
 
 const InputImg = styled.div`
-  /* display: flex;
-  margin-bottom: 8px;
-  padding: 8px;
-  max-width: 130px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px; */
   margin-bottom: 8px;
   padding: 4px;
-  max-width: 130px;
+  max-width: 200px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   display: inline-block;
   line-height: 0;
   img {
-    width: 100%;
-    /* object-fit: contain; */
+    max-width: 100%;
+    height: auto;
+    max-height: 140px;
   }
 `;

@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import UploadImg from "./UploadImg";
+import SellerProfileImg from "./SellerProfileImg";
+import ChangePassword from "./ChangePassword";
 import { InfoCircleFill } from "@styled-icons/bootstrap";
 import { User } from "@styled-icons/boxicons-solid";
 
-export default function SellerDefaultInfo({ register, errors }) {
+export default function SellerDefaultInfo({
+  register,
+  errors,
+  changePassword,
+}) {
   return (
     <TableContainer>
       <SellerTable>
@@ -16,7 +21,7 @@ export default function SellerDefaultInfo({ register, errors }) {
             </td>
             <td>
               {/* UploadImg 컴포넌트 분리 */}
-              <UploadImg register={register} />
+              <SellerProfileImg register={register} />
               <span className="info">
                 <InfoCircleFill size="14" />
                 셀러 프로필 확장자는 <b> jpg, jpeg, png</b> 만 가능하며, 허용
@@ -109,7 +114,9 @@ export default function SellerDefaultInfo({ register, errors }) {
             <td>셀러 계정</td>
             <td>
               wecode11
-              <BtnDanger>비밀번호 변경하기</BtnDanger>
+              <BtnDanger onClick={(e) => changePassword(e)}>
+                비밀번호 변경하기
+              </BtnDanger>
             </td>
           </tr>
         </tbody>
