@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function MemberTable() {
+export default function MemberTable({ sellerList, setSellerList }) {
   return (
     <TableContainer>
       <SellerTable>
@@ -108,6 +108,26 @@ export default function MemberTable() {
               <BtnSuccess>휴점 해제</BtnSuccess>
             </td>
           </tr>
+          {sellerList.map((user, i) => {
+            return (
+              <tr key={i}>
+                <td>
+                  <input type="checkbox" />
+                </td>
+                <td>{user.num}</td>
+                <td>{user.sellerId}</td>
+                <td>{user.sellerNameEn}</td>
+                <td>{user.sellerNameKo}</td>
+                <td>{user.chargerName}</td>
+                <td>{user.status}</td>
+                <td>{user.chrgerTel}</td>
+                <td>{user.chrgerEmail}</td>
+                <td>{user.chargerAttr}</td>
+                <td>{user.sellerTime}</td>
+                <td></td>
+              </tr>
+            );
+          })}
         </tbody>
       </SellerTable>
     </TableContainer>

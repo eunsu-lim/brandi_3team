@@ -5,7 +5,7 @@ import MemberTable from "./MemberTable";
 import { List } from "@styled-icons/evaicons-solid";
 import { Share } from "@styled-icons/fa-solid";
 
-export default function MemberList() {
+export default function MemberList({ sellerList, setSellerList }) {
   return (
     <MemberListBox>
       <TableTitle>
@@ -20,7 +20,7 @@ export default function MemberList() {
       </TableTitle>
       <TableBox>
         <Pagination />
-        <MemberTable />
+        <MemberTable sellerList={sellerList} setSellerList={setSellerList} />
         <Pagination />
       </TableBox>
     </MemberListBox>
