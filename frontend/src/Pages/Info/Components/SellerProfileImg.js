@@ -45,6 +45,7 @@ export default function SellerProfileImg({ register }) {
               name="SellerProfileImg"
               onChange={handleUploadFile}
               ref={register({ required: true })}
+              accept="image/*"
             />
           </label>
         </div>

@@ -6,9 +6,14 @@ import { Close } from "@styled-icons/evaicons-solid";
 export default function ChangePassword({ setIsModal }) {
   const { register, handleSubmit, errors } = useForm();
 
-  const onSubmit = (data) => console.log("data", data);
   const [pwd, setPwd] = useState("");
   const [chkPwd, setChkPwd] = useState("");
+
+  const onSubmit = (data) => {
+    console.log("data >>> ", data);
+    // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
+  };
+
   // 비밀번호를 변경하시겠습니까?
   // 비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.
   return (
@@ -26,7 +31,12 @@ export default function ChangePassword({ setIsModal }) {
           <ModalBody>
             <SellerInput>
               <p>현재 비밀번호</p>
-              <input type="password" placeholder="" name="cuurentPwd" />
+              <input
+                type="password"
+                placeholder=""
+                name="cuurentPwd"
+                autoComplete="off"
+              />
             </SellerInput>
             <SellerInput isError={errors.password}>
               <label htmlFor="password">변경할 비밀번호</label>
@@ -41,22 +51,24 @@ export default function ChangePassword({ setIsModal }) {
                 type="password"
                 placeholder="변경할 비밀번호"
                 onChange={(pwd) => setPwd(pwd.target.value)}
+                autoComplete="off"
               />
               {errors.password &&
                 alert(
                   "비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야 합니다."
                 )}
             </SellerInput>
-            <SellerInput isError={errors.chkPassword}>
+            <SellerInput isError={errors.rePassword}>
               <p>비밀번호 재입력</p>
               <input
                 type="password"
                 placeholder="한번 더 입력해주세요."
-                name="chkPassword"
+                name="rePassword"
                 ref={register({ required: true })}
-                onChange={(chkPwd) => setChkPwd(chkPwd.target.value)}
+                onChange={(rePwd) => setChkPwd(rePwd.target.value)}
+                autoComplete="off"
               />
-              {errors.chkPassword &&
+              {errors.rePassword &&
                 alert(
                   "비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야 합니다."
                 )}
