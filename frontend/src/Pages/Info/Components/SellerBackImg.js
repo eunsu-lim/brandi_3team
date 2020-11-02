@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
 
 export default function UploadImg({ register }) {
-  // 이미지 미리보기
-  const [imgPreview, setImgPreview] = useState("");
   // 이미지 파일 업데이트 관리
-  const [imgFile, setImgFile] = useState([]);
+  const [imgFile, setImgFile] = useState();
 
   // 이미지 파일 업로드 (미리보기)
   const handleUploadFile = (e) => {
@@ -13,45 +12,76 @@ export default function UploadImg({ register }) {
     console.log("e.target.files >>> ", e.target.files);
     let file = e.target.files[0];
 
+    if (file) {
+      reader.readAsDataURL(file);
+      // 이미지의 새로운 base64 URI 또는 ​​Blob을 반환
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "",
+        100,
+        0,
+        (uri) => {
+          // console.log("uri >>>>> ", uri);
+          // 이미지 업데이트
+          setImgFile(uri);
+        },
+        "base64",
+        200,
+        200
+      );
+    }
+
     reader.onloadend = (e) => {
       const preview = reader.result;
       // 이미지 미리보기
       if (preview) {
-        setImgPreview(preview.toString());
+        setImgFile(preview.toString());
       }
     };
-
-    if (file) {
-      reader.readAsDataURL(file);
-      // 이미지 업데이트
-      setImgFile(file);
-    }
   };
 
-  // onClick={() => this.props.handleID(인자)}
+  // 이미지 삭제 버튼 클릭시 초기화
+  const handleRemoveFile = () => {
+    setImgFile();
+  };
 
   return (
     <UploadBox>
-      {imgPreview ? ( // 이미지가 있을 경우
-        <InputImg>
-          <img src={imgPreview} />
-        </InputImg>
-      ) : (
-        // 기존 이미지가 없을 경우
-        <NoImg>
-          <img src="https://image.brandi.me/seller/noimage.png" />
-        </NoImg>
-      )}
-      <label htmlFor="ImgUpload2">
-        <span>이미지 선택</span>
-        <input
-          type="file"
-          id="ImgUpload2"
-          name="SellerBackImg"
-          onChange={handleUploadFile}
-          ref={register({ required: true })}
-        />
-      </label>
+      <ChangeImg>
+        {imgFile ? (
+          <InputImg>
+            <img src={imgFile} />
+          </InputImg>
+        ) : (
+          <NoImg>
+            <img src="https://image.brandi.me/seller/noimage.png" />
+          </NoImg>
+        )}
+        <ChangeBtn>
+          <label htmlFor="ImgUpload2" className={imgFile ? "reImgUpload" : ""}>
+            <span>{imgFile ? "변경" : "이미지 선택"}</span>
+            <input
+              type="file"
+              id="ImgUpload2"
+              name="SellerBackImg"
+              onChange={handleUploadFile}
+              ref={register({ required: false })}
+              accept="image/*"
+            />
+          </label>
+          {imgFile && (
+            <button
+              type="button"
+              className="btn deleteBtn"
+              onClick={handleRemoveFile}
+            >
+              삭제
+            </button>
+          )}
+        </ChangeBtn>
+      </ChangeImg>
     </UploadBox>
   );
 }
@@ -63,7 +93,7 @@ const UploadBox = styled.div`
   label {
     position: relative;
     margin-bottom: 4px;
-    padding: 4px 12px;
+    padding: 6px 12px;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     background-color: #fff;
@@ -89,6 +119,41 @@ const UploadBox = styled.div`
   }
   .info {
     margin-top: 8px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+`;
+
+const ChangeImg = styled.div`
+  ${({ theme }) => theme.flex("flex-start", null, "column")};
+  input {
+    width: 50px;
+  }
+`;
+
+const ChangeBtn = styled.div`
+  .reImgUpload {
+    padding: 7px 12px;
+    input {
+      width: 50px;
+    }
+  }
+
+  .deleteBtn {
+    margin-left: 4px;
+    color: #fff;
+    background-color: #d9534f;
+    border: 1px solid #d43f3a;
+    &:hover {
+      color: #fff;
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }
   }
 `;
 
@@ -117,9 +182,8 @@ const InputImg = styled.div`
   display: inline-block;
   line-height: 0;
   img {
-    /* width: 100%; */
-    /* object-fit: contain; */
-    object-fit: contain;
-    max-height: 150px;
+    max-width: 100%;
+    height: auto;
+    max-height: 140px;
   }
 `;

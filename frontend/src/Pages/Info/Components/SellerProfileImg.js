@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
 
 export default function SellerProfileImg({ register }) {
-  // 이미지 미리보기
-  const [imgPreview, setImgPreview] = useState("");
   // 이미지 파일 업데이트 관리
   const [imgFile, setImgFile] = useState();
 
@@ -13,32 +12,58 @@ export default function SellerProfileImg({ register }) {
     console.log("e.target.files >>> ", e.target.files);
     let file = e.target.files[0];
 
+    if (file) {
+      reader.readAsDataURL(file);
+      // 이미지의 새로운 base64 URI 또는 ​​Blob을 반환
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "",
+        100,
+        0,
+        (uri) => {
+          console.log("uri >>>>> ", uri);
+          // 이미지 업데이트
+          setImgFile(uri);
+        },
+        "base64",
+        200,
+        200
+      );
+    }
+
     reader.onloadend = (e) => {
       const preview = reader.result;
       // 이미지 미리보기
       if (preview) {
-        setImgPreview(preview.toString());
+        setImgFile(preview.toString());
       }
     };
-
-    if (file) {
-      reader.readAsDataURL(file);
-      // 이미지 업데이트
-      setImgFile(file);
-    }
   };
 
-  // onClick={() => this.props.handleID(인자)}
+  // 이미지 삭제 버튼 클릭시 초기화
+  const handleRemoveFile = () => {
+    setImgFile();
+    // setImgPreview("");
+  };
 
+  Resizer && console.log("blobddd >>>>>>>", imgFile);
   return (
     <UploadBox>
-      {imgPreview ? ( // 이미지가 있을 경우
-        <div>
+      <ChangeImg>
+        {imgFile ? (
           <InputImg>
-            <img src={imgPreview} />
+            <img src={imgFile} />
           </InputImg>
-          <label htmlFor="ImgUpload">
-            <span>변경</span>
+        ) : (
+          <NoImg>
+            <img src="https://image.brandi.me/seller/noimage.png" />
+          </NoImg>
+        )}
+        <ChangeBtn>
+          <label htmlFor="ImgUpload" className={imgFile ? "reImgUpload" : ""}>
+            <span>{imgFile ? "변경" : "이미지 선택"}</span>
             <input
               type="file"
               id="ImgUpload"
@@ -48,25 +73,17 @@ export default function SellerProfileImg({ register }) {
               accept="image/*"
             />
           </label>
-        </div>
-      ) : (
-        // 기존 이미지가 없을 경우
-        <div>
-          <NoImg>
-            <img src="https://image.brandi.me/seller/noimage.png" />
-          </NoImg>
-          <label htmlFor="ImgUpload">
-            <span>이미지 선택</span>
-            <input
-              type="file"
-              id="ImgUpload"
-              name="SellerProfileImg"
-              onChange={handleUploadFile}
-              ref={register({ required: true })}
-            />
-          </label>
-        </div>
-      )}
+          {imgFile && (
+            <button
+              type="button"
+              className="btn deleteBtn"
+              onClick={handleRemoveFile}
+            >
+              삭제
+            </button>
+          )}
+        </ChangeBtn>
+      </ChangeImg>
     </UploadBox>
   );
 }
@@ -78,7 +95,7 @@ const UploadBox = styled.div`
   label {
     position: relative;
     margin-bottom: 4px;
-    padding: 4px 12px;
+    padding: 6px 12px;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     background-color: #fff;
@@ -104,6 +121,38 @@ const UploadBox = styled.div`
   }
   .info {
     margin-top: 8px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+`;
+
+const ChangeImg = styled.div`
+  ${({ theme }) => theme.flex("flex-start", null, "column")};
+`;
+
+const ChangeBtn = styled.div`
+  .reImgUpload {
+    padding: 7px 12px;
+    input {
+      width: 50px;
+    }
+  }
+
+  .deleteBtn {
+    margin-left: 4px;
+    color: #fff;
+    background-color: #d9534f;
+    border: 1px solid #d43f3a;
+    &:hover {
+      color: #fff;
+      background-color: #c9302c;
+      border-color: #ac2925;
+    }
   }
 `;
 

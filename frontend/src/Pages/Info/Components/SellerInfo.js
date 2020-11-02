@@ -20,6 +20,7 @@ export default function SellerInfo() {
   const onSubmit = (data) => {
     console.log("data >>> ", data);
     // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
+    // let formData = new FormData();
   };
 
   return (
@@ -78,13 +79,7 @@ export default function SellerInfo() {
         </SellerInfoBtn>
       </SellerForm>
       {/* 셀러 비밀번호 찾기 */}
-      {isModal && (
-        <ChangePassword
-          register={register}
-          errors={errors}
-          setIsModal={setIsModal}
-        />
-      )}
+      {isModal && <ChangePassword setIsModal={setIsModal} />}
     </Fragment>
   );
 }

@@ -4,18 +4,23 @@ import { useForm } from "react-hook-form";
 import { Close } from "@styled-icons/evaicons-solid";
 
 export default function ChangePassword({ setIsModal }) {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, watch, errors } = useForm();
 
   const [pwd, setPwd] = useState("");
   const [chkPwd, setChkPwd] = useState("");
 
   const onSubmit = (data) => {
-    console.log("data >>> ", data);
+    console.log("data111 >>> ", data);
+    console.log("error >> ", errors);
+    console.log("valid", pwd.errors);
     // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
   };
 
   // 비밀번호를 변경하시겠습니까?
   // 비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.
+
+  // 비밀번호 변경 도중 오류가 발생하였습니다.
+  // 현재 비밀번호가 일치하지 않습니다.
   return (
     <Fragment>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -29,49 +34,59 @@ export default function ChangePassword({ setIsModal }) {
             </button>
           </ModalHeader>
           <ModalBody>
-            <SellerInput>
-              <p>현재 비밀번호</p>
+            <SellerInput isError={errors.cuurentPwd}>
+              <label htmlFor="cuurentPwd">현재 비밀번호</label>
               <input
                 type="password"
-                placeholder=""
+                placeholder="현재 비밀번호"
                 name="cuurentPwd"
                 autoComplete="off"
+                ref={register({ required: true })}
               />
+              {errors.cuurentPwd && <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>}
             </SellerInput>
+
             <SellerInput isError={errors.password}>
               <label htmlFor="password">변경할 비밀번호</label>
               <input
                 id="password"
                 name="password"
-                aria-invalid={errors.passward ? "true" : "false"}
                 ref={register({
                   required: true,
                   pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
                 })}
                 type="password"
                 placeholder="변경할 비밀번호"
-                onChange={(pwd) => setPwd(pwd.target.value)}
                 autoComplete="off"
               />
-              {errors.password &&
-                alert(
-                  "비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야 합니다."
-                )}
+              {errors.password && errors.password.type === "required" && (
+                <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>
+              )}
+              {errors.password && errors.password.type === "pattern" && (
+                <ErrorMsg>
+                  비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야
+                  합니다.
+                </ErrorMsg>
+              )}
             </SellerInput>
-            <SellerInput isError={errors.rePassword}>
-              <p>비밀번호 재입력</p>
+            {/* 유효성 검사 에러 메세지 */}
+            <SellerInput isError={errors.rePasswrod}>
+              <label htmlFor="rePassword">비밀번호 재입력</label>
               <input
                 type="password"
                 placeholder="한번 더 입력해주세요."
                 name="rePassword"
-                ref={register({ required: true })}
-                onChange={(rePwd) => setChkPwd(rePwd.target.value)}
+                ref={register({
+                  required: true,
+                  validate: (value) =>
+                    value === watch("password") ||
+                    "비밀번호가 일치하지 않습니다",
+                })}
                 autoComplete="off"
               />
-              {errors.rePassword &&
-                alert(
-                  "비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야 합니다."
-                )}
+              {errors.rePassword && (
+                <ErrorMsg>{errors.rePassword.message}</ErrorMsg>
+              )}
             </SellerInput>
           </ModalBody>
           <ModalFooter>
@@ -82,7 +97,11 @@ export default function ChangePassword({ setIsModal }) {
             >
               취소
             </button>
-            <button type="button" className="btn btn-success">
+            <button
+              type="submit"
+              className="btn btn-success"
+              // onClick={() => handleCheckPwd}
+            >
               변경
             </button>
           </ModalFooter>
@@ -198,4 +217,11 @@ const SellerInput = styled.div`
       border-radius: 4px;
     }
   }
+`;
+
+const ErrorMsg = styled.p`
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #a94442;
 `;
