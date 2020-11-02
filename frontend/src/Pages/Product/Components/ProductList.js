@@ -1,29 +1,53 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import CheckBox from "./CheckBox";
 import { ListUl } from "@styled-icons/boxicons-regular";
 import { NavigateNext } from "@styled-icons/material";
 import { FileExcel } from "@styled-icons/icomoon";
 import { Check } from "@styled-icons/bootstrap";
-import axios from "axios";
 import Pagination from "react-js-pagination";
 
 // 페이지네이션 Button CSS 적용
 import "./Pagination.css";
 
-function ProductList() {
-  const [productData, setProductData] = useState(); // 서버로부터 받은 data를 state에 저장
+function ProductList({
+  productData,
+  isMaster,
+  sortData,
+  setSortData,
+  postSortData,
+  isChecked,
+  setIsChecked,
+  handleExcel,
+  handleApply,
+}) {
   const [pageNumber, setPageNumber] = useState(1); // 현재 Page Number state
-
-  useEffect(() => {
-    axios
-      .get(`public/Data/ProductListFilter.json`)
-      .then((res) => setProductData(res.data.data));
-  }, []);
+  const [applyOption, setApplyOption] = useState(); // 적용 옵션(판매, 진열) state
 
   //  페이지네이션 button 클릭 시 현재 활성화 된 Page Number state값을 변경하는 함수
   const handlePageChange = (pageNumber) => {
     setPageNumber(pageNumber);
+    // 페이지 변경 시 offSet 값을 조건에 맞게 변경
+    const offSet = (pageNumber * sortData.limit - sortData.limit).toString();
+    // 변경한 offSet을 sortData에서 offset의 value로 저장
+    setSortData({ ...sortData, offset: offSet });
   };
+
+  //  sortData의 limit 값이 변경되면(option 변경 시) 서버로 해당 limit 값을 post하는 함수 실행
+  useEffect(() => {
+    // page 번호를 "1"로 초기화
+    setPageNumber(1);
+    // offset을 "0"으로 초기화
+    setSortData({ ...sortData, offset: "0" });
+    // sort data 전송 함수 실행
+    postSortData();
+  }, [sortData.limit]);
+
+  //  sortData의 offset 값이 변경되면(page 변경 시) 서버로 해당 offset 값을 post하는 함수 실행
+  useEffect(() => {
+    // sort data 전송 함수 실행
+    postSortData();
+  }, [sortData.offset]);
 
   return (
     <ProductListWrap>
@@ -44,10 +68,13 @@ function ProductList() {
           <li>리스트</li>
         </ul>
         {/* 상품 리스트 limit select */}
-        <Select>
-          <option value="10" selected>
-            10개씩 보기
-          </option>
+        <Select
+          onChange={(e) => {
+            // option 변경시 value를 sortData에서 limit의 value로 변경
+            setSortData({ ...sortData, limit: e.target.value });
+          }}
+        >
+          <option value="10">10개씩 보기</option>
           <option value="20">20개씩 보기</option>
           <option value="50">50개씩 보기</option>
         </Select>
@@ -55,58 +82,79 @@ function ProductList() {
       {/* page bar 밑 button bar */}
       <ButtonBar>
         {/* 선택상품 엑셀 다운로드 button */}
-        <ExcelButton>
+        <ExcelButton value="excel" onClick={(e) => handleExcel(e.target.value)}>
           <FileExcel />
           선택상품 엑셀다운로드
         </ExcelButton>
         {/* 전체상품 엑셀 다운로드 button */}
-        <ExcelButton>
+        <ExcelButton
+          value="allExcel"
+          onClick={(e) => handleExcel(e.target.value)}
+        >
           <FileExcel />
           전체상품 엑셀다운로드
         </ExcelButton>
         {/* 판매여부 select */}
-        <ApplySelect>
+        <SaleSelect
+          // option 변경 시 applyOption 상태에 sale을 key, value로 option value를 저장
+          onChange={(e) => {
+            setApplyOption({ ...applyOption, sale: e.target.value });
+          }}
+        >
           <option>판매여부</option>
           <option value="Y">판매</option>
           <option value="N">미판매</option>
-        </ApplySelect>
+        </SaleSelect>
         {/* 진열여부 select */}
-        <ApplySelect>
+        <DisplaySelect
+          // option 변경 시 applyOption 상태에 display를 key, value로 option value를 저장
+          onChange={(e) => {
+            setApplyOption({ ...applyOption, display: e.target.value });
+          }}
+        >
           <option>진열여부</option>
           <option value="Y">진열</option>
           <option value="N">미진열</option>
-        </ApplySelect>
+        </DisplaySelect>
         {/* 적용 Button */}
-        <ApplyButton>
+        <ApplyButton onClick={() => handleApply({ applyOption })}>
+          {/* 체크박스 Components 분리 */}
           <Check />
           적용
         </ApplyButton>
       </ButtonBar>
       {/* 상품관리 상품 리스트 */}
       <List>
+        {/* 상품관리 리스트 data의 length로 전체 조회건 수 출력 */}
         <p>
           전체 조회건 수 :
-          {/* 상품관리 리스트 data의 length로 전체 조회건 수 출력 */}
           <span> {productData && productData.product_list.length}</span> 건
         </p>
+        {/* 상품관리 리스트 table */}
         <ListTable>
           <table>
             {/* 상품관리 리스트 table head */}
             <thead>
               <tr>
                 <th>
-                  <CheckBox>
-                    <input type="checkbox" />
-                  </CheckBox>
+                  <CheckBox
+                    allChecked // 전체 선택 체크박스 여부 props로 전달
+                    isChecked={isChecked}
+                    setIsChecked={setIsChecked}
+                    productData={productData}
+                  />
                 </th>
-                <th width="50px">등록상태</th>
-                <th>등록일</th>
+                {/* 마스터 계정일 경우에만 등록상태 표시 */}
+                {isMaster && <th width="50px">등록상태</th>}
+                <th width="90px">등록일</th>
                 <th width="86px">대표이미지</th>
                 <th>상품명</th>
                 <th>상품코드</th>
                 <th>상품번호</th>
-                <th>셀러속성</th>
-                <th>셀러명</th>
+                {/* 마스터 계정일 경우에만 셀러속성 표시 */}
+                {isMaster && <th>셀러속성</th>}
+                {/* 마스터 계정일 경우에만 셀러명 표시 */}
+                {isMaster && <th>셀러명</th>}
                 <th>판매가</th>
                 <th>할인가</th>
                 <th>판매여부</th>
@@ -123,24 +171,28 @@ function ProductList() {
                   return (
                     <tr key={i}>
                       <td>
-                        <CheckBox>
-                          <input type="checkbox" />
-                        </CheckBox>
+                        {/* 체크박스 Components 분리 */}
+                        <CheckBox
+                          listId={list.id}
+                          isChecked={isChecked}
+                          setIsChecked={setIsChecked}
+                          productData={productData}
+                        />
                       </td>
-                      <td>{list.status}</td>
+                      {isMaster && <td>{list.status}</td>}
                       <td>{list.date}</td>
                       <td>
-                        <Img>
+                        <ImgBox>
                           <img src={list.img} />
-                        </Img>
+                        </ImgBox>
                       </td>
                       <td>{list.name}</td>
                       <td>
                         <a href="">{list.code}</a>
                       </td>
                       <td>{list.number}</td>
-                      <td>{list.type}</td>
-                      <td>{list.seller_name}</td>
+                      {isMaster && <td>{list.type}</td>}
+                      {isMaster && <td>{list.seller_name}</td>}
                       <td>{list.price}</td>
                       <td>{list.discount_price}</td>
                       <td>{list.sale}</td>
@@ -283,9 +335,11 @@ const ApplyButton = styled(ExcelButton)`
   }
 `;
 
-const ApplySelect = styled(Select)`
+const SaleSelect = styled(Select)`
   margin-left: 5px;
 `;
+
+const DisplaySelect = styled(SaleSelect)``;
 
 const List = styled.div`
   margin: 10px auto;
@@ -351,17 +405,6 @@ const ListTable = styled.div`
   }
 `;
 
-const CheckBox = styled.div`
-  width: 100%;
-  height: 100%;
-  text-align: center;
-
-  input {
-    width: 16px;
-    height: 16px;
-  }
-`;
-
 const GetButton = styled(ApplyButton)`
   margin-left: 0;
   border: 1px solid #357ebd;
@@ -373,7 +416,7 @@ const GetButton = styled(ApplyButton)`
   }
 `;
 
-const Img = styled.div`
+const ImgBox = styled.div`
   display: flex;
 
   img {

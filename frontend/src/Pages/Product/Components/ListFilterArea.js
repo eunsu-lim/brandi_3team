@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import axios from "axios";
 
 // DatePicker css 적용을 위해 css파일 만들어 준 다음 import
 import "./DatePickerCss.css";
 
-function ListFilterArea() {
-  const [productData, setProductData] = useState(); // 서버로부터 get하는 페이지 data state
+function ListFilterArea({
+  productData,
+  sortData,
+  setSortData,
+  isMaster,
+  postSortData,
+}) {
   const [startDate, setStartDate] = useState(); // 조회기간 시작일 state
   const [endDate, setEndDate] = useState(); // 조회기간 종료일 state
   const [sellerTypeBtn, setSellerTypeBtn] = useState({ 전체: true }); // 셀러속성 button state
@@ -15,24 +19,15 @@ function ListFilterArea() {
   const [displayBtn, setDisplayBtn] = useState({ 전체: true }); // 진열여부 button state
   const [discountBtn, setDiscountBtn] = useState({ 전체: true }); // 할인여부 button state
 
-  useEffect(() => {
-    axios
-      .get(`public/Data/ProductListFilter.json`)
-      .then((res) => setProductData(res.data.data));
-  }, []);
-
-  //   마스터인지 셀러인지 판단하여 isMaster에 할당. 마스터일 경우 true, 셀러일 경우 false
-  const isMaster = productData && productData.account_type === "master";
-
   // 셀러속성 button 클릭 이벤트 발생 시 함수 실행
-  const handleBtn = (title) => {
-    // 셀러속성 button 객체 형태로 상태 관리, key는 button title으로 value는 boolean을 부여
+  const handleBtn = (title, id) => {
     setSellerTypeBtn(() => {
-      // title이 "전체"일 경우 전체button만 클릭되도록 상태 지정
+      // 셀러속성 button 객체 형태로 상태 관리, key는 button title로 value는 boolean을 부여
       if (title === "전체") {
+        // title이 "전체"일 경우 전체button만 클릭되도록 상태 지정
         return { [title]: true };
-        // title이 "전체"가 아닐 경우 전체button을 false로 지정, 다른 button은 true일 경우 false, false경우 true 지정
       } else if (title !== "전체") {
+        // title이 "전체"가 아닐 경우 전체button을 false로 지정, 다른 button은 true일 경우 false, false경우 true 지정
         return {
           ...sellerTypeBtn,
           전체: false,
@@ -40,19 +35,65 @@ function ListFilterArea() {
         };
       }
     });
+
+    // 셀러속성 button 클릭 시 해당 button의 id를 sortData에서 sellerType의 value 값으로 지정
+    // 셀러속성 button은 중복 선택이 가능하기 때문에 value 값을 배열로 관리
+    setSortData(() => {
+      if (id === "1") {
+        // 클릭한 셀러속성 button이 "전체"일 경우
+        return { ...sortData, sellerType: ["1"] }; // sortData에서 sellerType의 값을 [1]로 변경
+      } else if (sortData.sellerType && sortData.sellerType.includes(id)) {
+        // 클릭한 id가 sortData sellerType에 포함되어 있는지 확인
+        // 포함되어 있다면 셀러속성 button이 이미 선택 되었다가 해제되는 것을 의미하기 때문에
+        let idx = sortData.sellerType.indexOf(id); // 배열 안에서 해당 id의 index를 확인한 다음
+        sortData.sellerType.splice(idx, 1); // sortData에서 sellerType의 value에서 해당 id 값을 제거
+        return { ...sortData, sellerType: sortData.sellerType };
+      } else {
+        // 클릭한 셀러속성 button이 "전체"도 아니고 sortData sellerType에 포함되어 있지 않다면 해당 id를 value 값으로 저장
+        return {
+          ...sortData,
+          sellerType:
+            sortData.sellerType && !sortData.sellerType.includes("1") // sellerType 키 값과 밸류가 있을 경우
+              ? [...sortData.sellerType, id] // 기존 value에 클릭한 id 추가
+              : [id], // sellerType 키 값과 밸류가 없을 경우 클릭한 id만 추가
+        };
+      }
+    });
   };
 
+  // 셀러속성 button 클릭 이벤트 외 상태 관리
+  // 1. 모든 버튼을 클릭했을 때 "전체" 버튼으로 변경
+  // 2. 모든 버튼 해제했을 때 "전체" 버튼으로 변경
   useEffect(() => {
     // dataList에 productData.filter_list[0].btnList에서 "전체"를 제외한 리스트를 정의
     const dataList =
       productData &&
-      productData.filter_list[0].btnList.filter((el) => el !== "전체");
+      productData.filter_list[0].btnList.filter((el) => el.btn !== "전체");
     //   trueList에 sellerTypeBtn에서 value가 true인 리스트를 정의
     const trueList = Object.values(sellerTypeBtn).filter((el) => el === true);
     dataList && dataList.length === trueList.length //  sellerTypeBtn 상태가 바뀔 때마다 dataList의 length와 trueList의 length를 비교
-      ? setSellerTypeBtn({ 전체: true }) //  length가 같을 경우 전체 filter_list를 선택한 것이기 때문에 sellerTypeBtn의 상태를 전체button만 클릭되도록 상태 지정
+      ? setSellerTypeBtn({ 전체: true }) & //  length가 같을 경우 전체 filter_list를 선택한 것이기 때문에 sellerTypeBtn의 상태를 전체button만 클릭되도록 상태 지정
+        setSortData({ ...sortData, sellerType: ["1"] }) // 전체 button으로 바뀌면 sortData에서 sellerType의 value를 [1]로 변경
+      : null;
+
+    // 선택한 셀러속성 button이 없을 경우 전체 button이 선택되도록 sellerTypeBtn state 값 변경
+    Object.values(sellerTypeBtn).includes(true) === false
+      ? setSellerTypeBtn({ 전체: true }) &
+        setSortData({ ...sortData, sellerType: ["1"] }) // 전체 button으로 바뀌면 sortData에서 sellerType의 value를 [1]로 변경
       : null;
   }, [sellerTypeBtn]);
+
+  // 선택한 조회기간 날짜를 서버에서 원하는 형식으로 바꿔주는 함수(ex. yyyy-mm-dd)
+  const getFormattedDate = (date) => {
+    const d = new Date(date);
+    let year = d.getFullYear();
+    let month = 1 + d.getMonth();
+    let day = d.getDate();
+    // month와 day가 10 이상일 경우 그대로 출력, 10 이하일 경우 앞에 0 을 붙인 뒤 출력
+    return `${year}-${month >= 10 ? month : "0" + month}-${
+      day >= 10 ? day : "0" + day
+    }`;
+  };
 
   return (
     <ListFilterAreaWrap>
@@ -63,7 +104,15 @@ function ListFilterArea() {
           {/* 시작 날짜 DatePicker */}
           <StartDate
             selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            onChange={(date) => {
+              setStartDate(date);
+              // 조회기간 시작일 선택 시 sortData에 해당 날짜 저장
+              // getFormattedDate 함수를 통해 날짜 형식을 yyyy-mm-dd 형태로 변경하여 저장
+              setSortData({
+                ...sortData,
+                filterDateFrom: getFormattedDate(date),
+              });
+            }}
             dateFormat="yyyy-MM-dd"
             placeholderText="클릭해주세요."
             shouldCloseOnSelect={false}
@@ -72,7 +121,13 @@ function ListFilterArea() {
           {/* 종료 날짜 DatePicker */}
           <EndDate
             selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            onChange={(date) => {
+              setEndDate(date);
+              setSortData({
+                ...sortData,
+                filterDateTo: getFormattedDate(date),
+              });
+            }}
             dateFormat="yyyy-MM-dd"
             placeholderText="클릭해주세요."
             shouldCloseOnSelect={false}
@@ -86,13 +141,24 @@ function ListFilterArea() {
         {/* account_type이 마스터일 경우만 검색 Input 표시 */}
         <SearchInput isMaster={isMaster}>
           {isMaster && (
-            <input placeholder="검색어를 입력하세요." autoComplete="off" />
+            <input
+              placeholder="검색어를 입력하세요."
+              autoComplete="off"
+              onChange={(e) =>
+                // 입력한 값을 sortData에 저장
+                setSortData({ ...sortData, sellerName: e.target.value })
+              }
+            />
           )}
         </SearchInput>
         {/* 상품명, 상품번호, 상품코드 select */}
         <SearchSelect>
-          <select>
-            <option value>Select</option>
+          <select
+            onChange={(e) =>
+              setSortData({ ...sortData, select: e.target.value })
+            }
+          >
+            <option>Select</option>
             <option value="productName">상품명</option>
             <option value="productNo">상품번호</option>
             <option value="productCode">상품코드</option>
@@ -100,7 +166,14 @@ function ListFilterArea() {
         </SearchSelect>
         {/* 상품명, 상품번호, 상품코드 검색 Input */}
         <SelectInput>
-          <input placeholder="검색어를 입력하세요." autoComplete="off" />
+          <input
+            placeholder="검색어를 입력하세요."
+            autoComplete="off"
+            onChange={(e) =>
+              // 입력한 값을 sortData에 저장
+              setSortData({ ...sortData, selectFilter: e.target.value })
+            }
+          />
         </SelectInput>
       </FilterWrap>
       {/* 셀러속성 */}
@@ -111,17 +184,17 @@ function ListFilterArea() {
         {isMaster && (
           <SellerTypeButton>
             {/* 셀러속성의 btnList data만큼 map을 돌려 button 생성 */}
-            {productData.filter_list[0].btnList.map((title) => {
+            {productData.filter_list[0].btnList.map((obj) => {
               return (
                 <Button
-                  key={title}
-                  // 셀러속성 button 클릭 시 해당 button의 title을 handleBtn 함수의 인자로 전달
-                  onClick={() => handleBtn(title)}
+                  key={obj.btn}
+                  // 셀러속성 button 클릭 시 해당 button의 title과 id를 handleBtn 함수의 인자로 전달
+                  onClick={() => handleBtn(obj.btn, obj.id)}
                   // sellerTypeBtn 상태를 isClicked라는 변수명으로 props 전달
                   // 선택한 셀러속성 button title이 sellerTypeBtn 객체에서 value가 true일 경우 스타일 변화
-                  isClicked={sellerTypeBtn[title]}
+                  isClicked={sellerTypeBtn[obj.btn]}
                 >
-                  {title}
+                  {obj.btn}
                 </Button>
               );
             })}
@@ -135,14 +208,18 @@ function ListFilterArea() {
         <ButtonWrap>
           {/* 판매여부의 btnList data만큼 map을 돌려 button 생성 */}
           {productData &&
-            productData.filter_list[1].btnList.map((title) => {
+            productData.filter_list[1].btnList.map((obj) => {
               return (
                 <Button
-                  key={title}
-                  onClick={() => setSaleBtn({ [title]: true })}
-                  isClicked={saleBtn[title]}
+                  key={obj.btn}
+                  onClick={() => {
+                    setSaleBtn({ [obj.btn]: true }); // 클릭한 판매여부 button을 true 값으로 상태 변경
+                    setSortData({ ...sortData, salesStatus: obj.id }); // 클릭한 판매여부 button의 id를 부모 컴포넌트의 sortData state에 추가
+                  }}
+                  // 선택한 셀러속성 button title이 sellerTypeBtn 객체에서 value가 true일 경우 스타일 변화
+                  isClicked={saleBtn[obj.btn]}
                 >
-                  {title}
+                  {obj.btn}
                 </Button>
               );
             })}
@@ -152,14 +229,18 @@ function ListFilterArea() {
         <ButtonWrap>
           {/* 진열여부의 btnList data만큼 map을 돌려 button 생성 */}
           {productData &&
-            productData.filter_list[2].btnList.map((title) => {
+            productData.filter_list[2].btnList.map((obj) => {
               return (
                 <Button
-                  key={title}
-                  onClick={() => setDisplayBtn({ [title]: true })}
-                  isClicked={displayBtn[title]}
+                  key={obj.btn}
+                  onClick={() => {
+                    setDisplayBtn({ [obj.btn]: true }); // 클릭한 진열여부 button을 true 값으로 상태 변경
+                    setSortData({ ...sortData, displayStatus: obj.id }); // 클릭한 진열여부 button의 id를 부모 컴포넌트의 sortData state에 추가
+                  }}
+                  // 선택한 셀러속성 button title이 sellerTypeBtn 객체에서 value가 true일 경우 스타일 변화
+                  isClicked={displayBtn[obj.btn]}
                 >
-                  {title}
+                  {obj.btn}
                 </Button>
               );
             })}
@@ -171,14 +252,18 @@ function ListFilterArea() {
         <ButtonWrap>
           {/* 할인여부의 btnList data만큼 map을 돌려 button 생성 */}
           {productData &&
-            productData.filter_list[3].btnList.map((title) => {
+            productData.filter_list[3].btnList.map((obj) => {
               return (
                 <Button
-                  key={title}
-                  onClick={() => setDiscountBtn({ [title]: true })}
-                  isClicked={discountBtn[title]}
+                  key={obj.btn}
+                  onClick={() => {
+                    setDiscountBtn({ [obj.btn]: true }); // 클릭한 할인여부 button을 true 값으로 상태 변경
+                    setSortData({ ...sortData, discountStatus: obj.id }); // 클릭한 할인여부 button의 id를 부모 컴포넌트의 sortData state에 추가
+                  }}
+                  // 선택한 셀러속성 button title이 sellerTypeBtn 객체에서 value가 true일 경우 스타일 변화
+                  isClicked={discountBtn[obj.btn]}
                 >
-                  {title}
+                  {obj.btn}
                 </Button>
               );
             })}
@@ -186,7 +271,7 @@ function ListFilterArea() {
       </FilterWrap>
       {/* 검색&초기화 버튼 */}
       <Submit>
-        <SubmitBtn type="submit" value="검색" />
+        <SubmitBtn type="submit" value="검색" onClick={postSortData} />
         <ClearBtn type="button" value="초기화" />
       </Submit>
     </ListFilterAreaWrap>
