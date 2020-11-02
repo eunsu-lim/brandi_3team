@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { PersonFill } from "@styled-icons/bootstrap";
@@ -20,18 +20,22 @@ function JoinForm() {
     },
   });
 
+  // 회원가입 신청 시 실행되는 함수
   const onSubmit = async (data) => {
-    const newData = JSON.stringify(data);
+    const history = useHistory();
+    const signUpData = JSON.stringify(data);
 
     await axios
-      .post(`${api}/sellers/sign-up`, newData, {
+      .post(`${api}/sellers/sign-up`, signUpData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-      .then((res) =>
-        res.message === "success" ? alert("회원가입 성공") : null
-      )
+      .then((res) => res.json())
+      .then((res) => {
+        res.message === "SUCCESS" ? alert("회원가입 성공") : null;
+        history.push("/login");
+      })
       .catch((err) => console.log("err >>>>>>", err));
   };
 
