@@ -18,7 +18,7 @@ export default function Header() {
 
 const HeaderBox = styled.header`
   ${({ theme }) => theme.flex("space-between", "center")};
-  z-index: 1;
+  z-index: 2;
   position: fixed;
   left: 0;
   top: 0;
