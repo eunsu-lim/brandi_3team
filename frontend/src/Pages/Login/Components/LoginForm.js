@@ -1,24 +1,45 @@
 import React from "react";
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { useForm, useHistory } from "react-hook-form";
 import FormActions from "./FormActions";
+import axios from "axios";
+import { api } from "../../../Config/api";
 
 export default function LoginForm() {
   const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = (data) => console.log("submit >>>>", data);
+
+  // 로그인 버튼 클릭 시 실행되는 함수
+  const onSubmit = async (data) => {
+    const history = useHistory();
+    const newData = JSON.stringify(data);
+
+    await axios
+      .post(`${api}/sellers/sign-in`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      // 로그인 성공 시 Token과 Type을 리덕스에 저장하고, 홈-셀러 페이지로 이동 구현 예정
+      .then((res) => res.json())
+      .then((res) => {
+        localStorage.setItem("access_token", res.access_token);
+        res.access_token ? history.push("/") : alert("로그인 실패!");
+      })
+      .catch((err) => console.log("err >>>>>>", err));
+  };
 
   return (
     <LoginFormWrapper onSubmit={handleSubmit(onSubmit)}>
       <h3>브랜디 어드민 로그인</h3>
       {/* Id Input */}
-      <IdInput ref={register({ required: true })} isError={errors.username} />
-      {errors.username && <span>아이디를 입력해주세요.</span>}
+      <IdInput ref={register({ required: true })} isError={errors.sellerId} />
+      {errors.sellerId && <span>아이디를 입력해주세요.</span>}
       {/* Password Input */}
       <PasswordInput
         ref={register({ required: true })}
-        isError={errors.password}
+        isError={errors.sellerPassword}
       />
-      {errors.password && <span>비밀번호를 입력해주세요.</span>}
+      {errors.sellerPassword && <span>비밀번호를 입력해주세요.</span>}
       {/* 로그인 Btn & 회원가입 */}
       <FormActions />
     </LoginFormWrapper>
@@ -51,7 +72,7 @@ const LoginFormWrapper = styled.form`
 `;
 
 const IdInput = styled.input.attrs({
-  name: "username",
+  name: "sellerId",
   placeholder: "셀러 아이디",
   type: "text",
 })`
@@ -74,7 +95,7 @@ const IdInput = styled.input.attrs({
 `;
 
 const PasswordInput = styled(IdInput).attrs({
-  name: "password",
+  name: "sellerPassword",
   placeholder: "셀러 비밀번호",
   type: "password",
 })`
