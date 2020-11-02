@@ -10,6 +10,8 @@ import { InformationCircle } from "@styled-icons/heroicons-solid";
 import { Text } from "@styled-icons/ionicons-sharp";
 import { Comment } from "@styled-icons/fa-regular";
 import InputMask from "react-input-mask";
+import axios from "axios";
+import { api } from "../../../Config/api";
 
 function JoinForm() {
   const { register, handleSubmit, watch, errors } = useForm({
@@ -17,7 +19,22 @@ function JoinForm() {
       sellerRadio: "1",
     },
   });
-  const onSubmit = (data) => console.log("submit >>>>>>", data);
+
+  const onSubmit = async (data) => {
+    const newData = JSON.stringify(data);
+
+    await axios
+      .post(`${api}/sellers/sign-up`, newData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) =>
+        res.message === "success" ? alert("회원가입 성공") : null
+      )
+      .catch((err) => console.log("err >>>>>>", err));
+  };
+
   const [password, setPassword] = useState("");
   const [rPassword, setRpassword] = useState("");
 
