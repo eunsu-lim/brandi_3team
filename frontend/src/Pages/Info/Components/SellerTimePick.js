@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Moment from "react-moment";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -15,19 +16,23 @@ export default function SellerTimePick({ register }) {
     new Date("2020-10-28T18:00:00")
   );
 
+  // console.log("시작", selectedDateFrom);
+  // console.log("끝", selectedDateTo);
   return (
     <TimeFromTo>
       <SellerInput>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardTimePicker
-            ampm={true}
-            name="FromTime"
-            variant="inline"
-            placeholder="08:00 AM"
-            value={selectedDateFrom}
-            onChange={handleDateFromChange}
-            forwardedRef={register({ required: true })}
-          />
+          <Moment date={selectedDateFrom}>
+            <KeyboardTimePicker
+              ampm={true}
+              name="FromTime"
+              variant="inline"
+              placeholder="08:00 AM"
+              // value={selectedDateFrom}
+              onChange={handleDateFromChange}
+              forwardedRef={register({ required: true })}
+            />
+          </Moment>
         </MuiPickersUtilsProvider>
         <span className="timeFrom">~</span>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -36,7 +41,7 @@ export default function SellerTimePick({ register }) {
             name="ToTime"
             variant="inline"
             placeholder="06:00 PM"
-            value={selectedDateTo}
+            // value={selectedDateTo}
             onChange={handleDateToChange}
             forwardedRef={register({ required: true })}
           />

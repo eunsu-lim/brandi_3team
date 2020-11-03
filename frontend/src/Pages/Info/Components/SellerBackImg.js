@@ -9,12 +9,11 @@ export default function UploadImg({ register }) {
   // 이미지 파일 업로드 (미리보기)
   const handleUploadFile = (e) => {
     let reader = new FileReader();
-    console.log("e.target.files >>> ", e.target.files);
     let file = e.target.files[0];
 
     if (file) {
       reader.readAsDataURL(file);
-      // 이미지의 새로운 base64 URI 또는 ​​Blob을 반환
+      // 이미지의 새로운 base64 URI를 반환
       Resizer.imageFileResizer(
         file,
         300,
@@ -23,7 +22,6 @@ export default function UploadImg({ register }) {
         100,
         0,
         (uri) => {
-          console.log("uri >>>>> ", uri);
           // 이미지 업데이트
           setImgFile(uri);
         },

@@ -148,6 +148,7 @@ const SellerInput = styled.div`
   /* isError - 에러 메세지가 있을 경우  */
   svg {
     position: absolute;
+    top: 0;
     margin: 12px;
     color: ${({ isError }) => (isError ? "#b94a48" : "#ccc")};
   }

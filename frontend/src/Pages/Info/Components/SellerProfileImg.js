@@ -6,7 +6,7 @@ export default function SellerProfileImg({ register }) {
   // 이미지 파일 업데이트 관리
   const [imgFile, setImgFile] = useState();
 
-  // 이미지 파일 업로드 (미리보기)
+  // 이미지 파일 업로드
   const handleUploadFile = (e) => {
     let reader = new FileReader();
     console.log("e.target.files >>> ", e.target.files);
@@ -14,7 +14,8 @@ export default function SellerProfileImg({ register }) {
 
     if (file) {
       reader.readAsDataURL(file);
-      // 이미지의 새로운 base64 URI 또는 ​​Blob을 반환
+      // 이미지의 새로운 base64 URI로 반환
+      // file, maxWidth, maxHeight, compressFormat, quality, rotation, responseUriFunc, outputType, minWidth, minHeight;
       Resizer.imageFileResizer(
         file,
         300,
@@ -23,7 +24,6 @@ export default function SellerProfileImg({ register }) {
         100,
         0,
         (uri) => {
-          console.log("uri >>>>> ", uri);
           // 이미지 업데이트
           setImgFile(uri);
         },
@@ -45,10 +45,11 @@ export default function SellerProfileImg({ register }) {
   // 이미지 삭제 버튼 클릭시 초기화
   const handleRemoveFile = () => {
     setImgFile();
-    // setImgPreview("");
   };
 
-  Resizer && console.log("blobddd >>>>>>>", imgFile);
+  // 이미지 용량 확인
+  setImgFile && Resizer && console.log("size ==> ", imgFile);
+
   return (
     <UploadBox>
       <ChangeImg>

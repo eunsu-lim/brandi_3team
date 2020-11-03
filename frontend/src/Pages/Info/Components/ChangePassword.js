@@ -8,7 +8,6 @@ export default function ChangePassword({ setIsModal }) {
 
   const onSubmit = (data) => {
     console.log("data111 >>> ", data);
-    ㄴ;
     if (data) {
       const changePwd = confirm("비밀번호를 변경하시겠습니까?");
       if (changePwd == true) {

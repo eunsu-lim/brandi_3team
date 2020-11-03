@@ -122,7 +122,7 @@ export default function SellerDefaultInfo({
           <tr>
             <td>셀러 계정</td>
             <td>
-              wecode11
+              Brandi
               <BtnDanger onClick={(e) => changePassword(e)}>
                 비밀번호 변경하기
               </BtnDanger>
@@ -210,6 +210,7 @@ const SellerInput = styled.div`
   /* isError - 에러 메세지가 있을 경우  */
   svg {
     position: absolute;
+    top: 0;
     margin: 12px;
     color: ${({ isError }) => (isError ? "#b94a48" : "#ccc")};
   }
