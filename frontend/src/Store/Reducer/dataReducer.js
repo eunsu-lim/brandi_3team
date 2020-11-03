@@ -1,4 +1,4 @@
-const datataReducer = (state = INITIAL_STATE, action) => {
+const dataReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case "SAVE_ACCOUNT":
       return { ...state, account_type: action.payload };
