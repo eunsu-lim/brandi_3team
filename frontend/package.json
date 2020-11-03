@@ -22,7 +22,11 @@
     "fragment": "^0.3.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+<<<<<<< HEAD
     "react-hook-form": "^6.9.5",
+=======
+    "react-hook-form": "^6.10.1",
+>>>>>>> master
     "react-hooks-useform": "^0.1.84",
     "react-input-mask": "^2.0.4",
     "react-redux": "^7.2.1",
