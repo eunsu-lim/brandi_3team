@@ -1,7 +1,4 @@
 import { combineReducers } from "redux";
+import dataReducer from "./dataReducer";
 
-function index() {
-  return <div></div>;
-}
-
-export default index;
+export default combineReducers({ dataReducer });
