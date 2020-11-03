@@ -11,15 +11,15 @@ export default function LoginForm() {
   // 로그인 버튼 클릭 시 실행되는 함수
   const onSubmit = async (data) => {
     const history = useHistory();
-    const newData = JSON.stringify(data);
+    const loginData = JSON.stringify(data);
 
     await axios
-      .post(`${api}/sellers/sign-in`, newData, {
+      .post(`${api}/sellers/sign-in`, loginData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-      // 로그인 성공 시 Token과 Type을 리덕스에 저장하고, 홈-셀러 페이지로 이동 구현 예정
+      // 로그인 성공 시 Token을 localStorage에 저장하고, 홈-셀러 페이지로 이동
       .then((res) => res.json())
       .then((res) => {
         localStorage.setItem("access_token", res.access_token);
