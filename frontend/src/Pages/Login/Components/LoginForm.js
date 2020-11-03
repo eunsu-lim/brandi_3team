@@ -1,16 +1,21 @@
 import React from "react";
 import styled from "styled-components";
-import { useForm, useHistory } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import FormActions from "./FormActions";
 import axios from "axios";
 import { api } from "../../../Config/api";
 
+import { useDispatch } from "react-redux";
+import { saveAccountType } from "../../../Store/Action";
+
 export default function LoginForm() {
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   // 로그인 버튼 클릭 시 실행되는 함수
   const onSubmit = async (data) => {
-    const history = useHistory();
     const loginData = JSON.stringify(data);
 
     await axios
@@ -19,11 +24,14 @@ export default function LoginForm() {
           "Content-Type": "application/json",
         },
       })
-      // 로그인 성공 시 Token을 localStorage에 저장하고, 홈-셀러 페이지로 이동
-      .then((res) => res.json())
       .then((res) => {
-        localStorage.setItem("access_token", res.access_token);
-        res.access_token ? history.push("/") : alert("로그인 실패!");
+        // 로그인 성공 시 Token을 localStorage에 저장
+        localStorage.setItem("access_token", res.data.access_token);
+        // Account Type을 Redux에 저장하여 전역 관리
+        dispatch(saveAccountType(res.data.account_type_id));
+        res.data.access_token
+          ? history.push("/")
+          : alert("아이디, 비밀번호를 확인해주세요!");
       })
       .catch((err) => console.log("err >>>>>>", err));
   };

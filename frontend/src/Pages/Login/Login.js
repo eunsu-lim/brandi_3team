@@ -2,8 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import LoginForm from "./Components/LoginForm";
 import Footer from "./Components/Footer";
+import { useSelector } from "react-redux";
 
 function Login() {
+  const test = useSelector((store) => store.dataReducer);
+  console.log("initial_state >>>>>>", test);
+
   return (
     <Wrapper>
       <Content>
