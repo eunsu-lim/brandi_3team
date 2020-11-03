@@ -3,7 +3,7 @@ internal_code_sheet = {
     "S000":{'message':'QUERY_OPERATION_FAILED','code':400},
     
     #요청 성공 
-    "S100":{'message':'SUCCSS','code':200},
+    "S100":{'message':'SUCCESS','code':200},
 
     #비밀번호 유효성 검사
     "S101":{'message':'INVALID_PASSWORD','client_message':'특수문자를 사용하세요.','code':400},
@@ -18,7 +18,7 @@ internal_code_sheet = {
     #Invalid data
     "S107":{'message':'INVALID_DATA','code':400},
 
-    #빈 값 에러 
+    #빈 값 에러
     "S108":{'message':'VALUE_NOT_FOUND','client_message':'회원가입을 해주세요.','code':400},
 
     #인가 실패
@@ -26,4 +26,13 @@ internal_code_sheet = {
 
     #재고 부족
     "S110":{'message':'OUT_OF_STOCK','client_message':'품절된 상품입니다.','code':400},
+
+    #가격 잘못됨
+    "S111":{'message':'PRICE_DOES_NOT_MATCH','code':400},
+
+    #최소구매수량
+    "S112":{'message':'INVALID_REQUEST','client_message':'최소 구매수량을 확인하세요','code':400},
+
+    #최대구매수량
+    "S113":{'message':'INVALID_REQUEST','client_message':'최대 구매수량을 확인하세요','code':400},
 }
