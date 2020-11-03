@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import SellerBackImg from "./SellerBackImg";
-import ChargerInfo from "./ChargerInfo";
+import ManagerInfo from "./ManagerInfo";
 import SellerAddress from "./SellerAddress";
 import SellerTimePick from "./SellerTimePick";
 import SellerStatus from "./SellerStatus";
@@ -82,7 +82,7 @@ export default function SellerDetailTable({ register, errors }) {
               <Require> *</Require>
             </td>
             <td>
-              <ChargerInfo register={register} errors={errors} />
+              <ManagerInfo register={register} errors={errors} />
             </td>
           </tr>
           <tr>

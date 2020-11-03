@@ -45,6 +45,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
+                    value="1"
                     ref={register({ required: true })}
                   />
                 </label>
@@ -53,6 +54,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
+                    value="2"
                     ref={register({ required: true })}
                   />
                 </label>
@@ -61,6 +63,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
+                    value="3"
                     ref={register({ required: true })}
                   />
                 </label>
@@ -92,6 +95,9 @@ export default function SellerDefaultInfo({
                 />
               </SellerInput>
               {errors.sellerNameKo && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+              {/*  isSeller && 삼항연산자
+                <span>{seller_name_ko}</span>
+              */}
             </td>
           </tr>
           <tr>
@@ -108,6 +114,9 @@ export default function SellerDefaultInfo({
                 />
               </SellerInput>
               {errors.sellerNameEn && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+              {/* 
+                <span>{sellerNameEn}</span>
+              */}
             </td>
           </tr>
           <tr>

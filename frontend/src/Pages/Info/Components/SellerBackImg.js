@@ -23,7 +23,7 @@ export default function UploadImg({ register }) {
         100,
         0,
         (uri) => {
-          // console.log("uri >>>>> ", uri);
+          console.log("uri >>>>> ", uri);
           // 이미지 업데이트
           setImgFile(uri);
         },

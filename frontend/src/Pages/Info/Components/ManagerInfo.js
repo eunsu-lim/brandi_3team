@@ -6,54 +6,54 @@ import { TelephoneFill } from "@styled-icons/bootstrap";
 import { Email } from "@styled-icons/material";
 import { Plus } from "@styled-icons/fa-solid";
 
-export default function ChargerInfo({ register, errors }) {
+export default function ManagerInfo({ register, errors }) {
   return (
-    <Charger>
-      <ChargerInput>
-        <SellerInput isError={errors.ChargerInfo}>
+    <Manager>
+      <ManagerInput>
+        <SellerInput isError={errors.ManagerInfo}>
           <User size="14" color="#ddd" />
           <input
             type="text"
             placeholder="담당자명"
-            name="ChargerInfo"
+            name="ManagerInfo"
             ref={register({ required: true })}
           />
         </SellerInput>
-        {errors.ChargerInfo && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
-      </ChargerInput>
-      <ChargerInput>
+        {errors.ManagerInfo && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+      </ManagerInput>
+      <ManagerInput>
         <SellerInput>
           <TelephoneFill size="14" color="#ddd" />
           <InputMask
             mask="999-9999-9999"
             type="text"
             placeholder="담당자 핸드폰번호"
-            name="ChargerTel"
+            name="ManagerTel"
             inputRef={register}
           />
         </SellerInput>
-      </ChargerInput>
-      <ChargerInput>
-        <SellerInput isError={errors.ChargerEmail}>
+      </ManagerInput>
+      <ManagerInput>
+        <SellerInput isError={errors.ManagerEmail}>
           <Email size="14" color="#ddd" />
           <input
             type="text"
             placeholder="담당자 이메일"
-            name="ChargerEmail"
+            name="ManagerEmail"
             ref={register({ required: true })}
           />
         </SellerInput>
-        {errors.ChargerEmail && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
-      </ChargerInput>
-    </Charger>
+        {errors.ManagerEmail && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+      </ManagerInput>
+    </Manager>
   );
 }
 
-const Charger = styled.div`
+const Manager = styled.div`
   ${({ theme }) => theme.flex("space-around", null, "column")};
 `;
 
-const ChargerInput = styled.div`
+const ManagerInput = styled.div`
   margin-bottom: 8px;
   &:last-child {
     position: relative;

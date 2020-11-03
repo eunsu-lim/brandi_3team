@@ -6,21 +6,19 @@ import { Close } from "@styled-icons/evaicons-solid";
 export default function ChangePassword({ setIsModal }) {
   const { register, handleSubmit, watch, errors } = useForm();
 
-  const [pwd, setPwd] = useState("");
-  const [chkPwd, setChkPwd] = useState("");
-
   const onSubmit = (data) => {
     console.log("data111 >>> ", data);
-    console.log("error >> ", errors);
-    console.log("valid", pwd.errors);
-    // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
+    ㄴ;
+    if (data) {
+      const changePwd = confirm("비밀번호를 변경하시겠습니까?");
+      if (changePwd == true) {
+        alert("비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.");
+      } else {
+        alert("취소되었습니다.");
+      }
+    }
   };
 
-  // 비밀번호를 변경하시겠습니까?
-  // 비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.
-
-  // 비밀번호 변경 도중 오류가 발생하였습니다.
-  // 현재 비밀번호가 일치하지 않습니다.
   return (
     <Fragment>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -97,11 +95,7 @@ export default function ChangePassword({ setIsModal }) {
             >
               취소
             </button>
-            <button
-              type="submit"
-              className="btn btn-success"
-              // onClick={() => handleCheckPwd}
-            >
+            <button type="submit" className="btn btn-success">
               변경
             </button>
           </ModalFooter>
