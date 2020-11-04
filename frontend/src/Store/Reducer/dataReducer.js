@@ -11,7 +11,7 @@ const dataReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default datataReducer;
+export default dataReducer;
 
 const INITIAL_STATE = {
   account_type: "",
