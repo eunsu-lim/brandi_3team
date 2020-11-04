@@ -1,7 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Routes from "./Routes";
-//import combineReducers from "./Store/Reducer/index";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import rootReducer from "./Store/Reducer";
 import theme from "./Styles/Themes";
 import GlobalStyle from "./Styles/GlobalStyle";
 import { ThemeProvider } from "styled-components";
@@ -12,10 +14,6 @@ if (module.hot) {
   module.hot.accept();
 }
 
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from "./Store/Reducer";
-// reducer는 state를 update 시키는 함수
 const store = createStore(rootReducer);
 
 ReactDOM.render(

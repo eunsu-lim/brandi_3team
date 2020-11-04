@@ -1,15 +1,25 @@
-export const addProduct = (item) => {
+// 액션 생성 함수 정의
+
+// Account Type 액션 생성 함수
+export const saveAccountType = (type) => {
   return {
-    // addProduct가 실행됐을 때,
-    // type과 payload를 담은 객체가 리턴되도록 설정
-    type: "ADD_ITEM",
-    payload: item,
+    type: "SAVE_ACCOUNT",
+    payload: type,
   };
 };
 
-export const deleteProduct = (items) => {
+// Filter List 액션 생성 함수
+export const saveFilterList = (list) => {
   return {
-    type: "DELETE_ITEM",
-    payload: items,
+    type: "SAVE_FILTER",
+    payload: list,
+  };
+};
+
+// Nav List 액션 생성 함수
+export const saveNavList = (list) => {
+  return {
+    type: "SAVE_NAV",
+    payload: list,
   };
 };

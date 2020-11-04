@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import productReducer from "./productReducer";
+import dataReducer from "./dataReducer";
 
-// root reducer 작성 완료
-export default combineReducers({ productReducer });
+export default combineReducers({ dataReducer });
