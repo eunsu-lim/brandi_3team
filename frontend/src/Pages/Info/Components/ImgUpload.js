@@ -1,50 +1,14 @@
 import React, { useState } from "react";
-import Resizer from "react-image-file-resizer";
 import styled from "styled-components";
 
-export default function UploadImg({ register }) {
-  // 이미지 파일 업데이트 관리
-  const [imgFile, setImgFile] = useState();
-
-  // 이미지 파일 업로드 (미리보기)
-  const handleUploadFile = (e) => {
-    let reader = new FileReader();
-    let file = e.target.files[0];
-
-    if (file) {
-      reader.readAsDataURL(file);
-      // 이미지의 새로운 base64 URI를 반환
-      Resizer.imageFileResizer(
-        file,
-        300,
-        300,
-        "",
-        100,
-        0,
-        (uri) => {
-          // 이미지 업데이트
-          setImgFile(uri);
-        },
-        "base64",
-        200,
-        200
-      );
-    }
-
-    reader.onloadend = (e) => {
-      const preview = reader.result;
-      // 이미지 미리보기
-      if (preview) {
-        setImgFile(preview.toString());
-      }
-    };
-  };
-
-  // 이미지 삭제 버튼 클릭시 초기화
-  const handleRemoveFile = () => {
-    setImgFile();
-  };
-
+export default function ImgUpload({
+  refImg,
+  uploadId,
+  imgFile,
+  name,
+  onChange,
+  removeFile,
+}) {
   return (
     <UploadBox>
       <ChangeImg>
@@ -58,14 +22,14 @@ export default function UploadImg({ register }) {
           </NoImg>
         )}
         <ChangeBtn>
-          <label htmlFor="ImgUpload2" className={imgFile ? "reImgUpload" : ""}>
+          <label htmlFor={uploadId} className={imgFile ? "reImgUpload" : ""}>
             <span>{imgFile ? "변경" : "이미지 선택"}</span>
             <input
               type="file"
-              id="ImgUpload2"
-              name="SellerBackImg"
-              onChange={handleUploadFile}
-              ref={register({ required: false })}
+              id={uploadId}
+              name={name}
+              onChange={onChange}
+              ref={refImg}
               accept="image/*"
             />
           </label>
@@ -73,7 +37,7 @@ export default function UploadImg({ register }) {
             <button
               type="button"
               className="btn deleteBtn"
-              onClick={handleRemoveFile}
+              onClick={removeFile}
             >
               삭제
             </button>
@@ -129,9 +93,6 @@ const UploadBox = styled.div`
 
 const ChangeImg = styled.div`
   ${({ theme }) => theme.flex("flex-start", null, "column")};
-  input {
-    width: 50px;
-  }
 `;
 
 const ChangeBtn = styled.div`

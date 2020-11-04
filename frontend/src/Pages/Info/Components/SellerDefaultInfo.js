@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SellerProfileImg from "./SellerProfileImg";
-import ChangePassword from "./ChangePassword";
+import ImgUpload from "./ImgUpload";
 import { InfoCircleFill } from "@styled-icons/bootstrap";
 import { User } from "@styled-icons/boxicons-solid";
 
 export default function SellerDefaultInfo({
   register,
   errors,
+  uploadId,
+  profileImg,
+  uploadProfileImg,
+  removeProfileImg,
   changePassword,
 }) {
+  // console.log("values", values);
   return (
     <TableContainer>
       <SellerTable>
@@ -21,7 +25,14 @@ export default function SellerDefaultInfo({
             </td>
             <td>
               {/* UploadImg 컴포넌트 분리 */}
-              <SellerProfileImg register={register} />
+              <ImgUpload
+                refImg={register({ required: true })}
+                uploadId={uploadId}
+                name="sellerProfileImg"
+                imgFile={profileImg}
+                onChange={uploadProfileImg}
+                removeFile={removeProfileImg}
+              />
               <span className="info">
                 <InfoCircleFill size="14" />
                 셀러 프로필 확장자는 <b> jpg, jpeg, png</b> 만 가능하며, 허용
@@ -114,9 +125,6 @@ export default function SellerDefaultInfo({
                 />
               </SellerInput>
               {errors.sellerNameEn && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
-              {/* 
-                <span>{sellerNameEn}</span>
-              */}
             </td>
           </tr>
           <tr>

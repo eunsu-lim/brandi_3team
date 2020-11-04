@@ -1,6 +1,8 @@
 import React, { useState, Fragment } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import Resizer from "react-image-file-resizer";
+import dayjs from "dayjs";
 import SellerDefaultInfo from "./SellerDefaultInfo";
 import ChangePassword from "./ChangePassword";
 import SellerDetailInfo from "./SellerDetailInfo";
@@ -8,8 +10,140 @@ import SellerDeliveryInfo from "./SellerDeliveryInfo";
 import { User } from "@styled-icons/boxicons-solid";
 
 export default function SellerInfo() {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, setValue } = useForm();
   const [isModal, setIsModal] = useState(false);
+  const [weekdayFrom, handleWeekdayFrom] = useState(
+    new Date("2020-10-28T09:00:00")
+  );
+  const [weekdayTo, handleWeekdayTo] = useState(
+    new Date("2020-10-28T18:00:00")
+  );
+  const [weekendFrom, handleWeekendFrom] = useState(
+    new Date("2020-10-28T09:00:00")
+  );
+  const [weekendTo, handleWeekendTo] = useState(
+    new Date("2020-10-28T18:00:00")
+  );
+
+  // 이미지 파일 업데이트 관리
+  const [profileImg, setProfileImg] = useState();
+  const [backImg, setBackImg] = useState();
+
+  // 이미지 파일 업로드
+  const uploadProfileImg = (e) => {
+    let reader = new FileReader();
+    console.log("e.target.files >>> ", e.target.files);
+
+    let file = e.target.files[0];
+
+    if (file) {
+      reader.readAsDataURL(file);
+      // 이미지의 새로운 base64 URI로 반환
+      // file, maxWidth, maxHeight, compressFormat, quality, rotation, responseUriFunc, outputType, minWidth, minHeight;
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "",
+        100,
+        0,
+        (uri) => {
+          // 이미지 업데이트
+          setProfileImg(uri);
+        },
+        "base64",
+        200,
+        200
+      );
+    }
+
+    reader.onloadend = (e) => {
+      const preview = reader.result;
+      // 이미지 미리보기
+      if (preview) {
+        setProfileImg(preview.toString());
+      }
+    };
+  };
+
+  // 이미지 삭제 버튼 클릭시 초기화
+  const removeProfileImg = () => {
+    var file = document.getElementById("profileImg").files;
+    console.log("file >>> ", file);
+    setValue("sellerProfileImg", (file.FileList = null));
+    console.log("del >>> ", file);
+    setProfileImg();
+  };
+
+  // 이미지 파일 업로드
+  const uploadBackImg = (e) => {
+    let reader = new FileReader();
+    console.log("e.target.files >>> ", e.target.files);
+
+    let file = e.target.files[0];
+
+    if (file) {
+      reader.readAsDataURL(file);
+      // 이미지의 새로운 base64 URI로 반환
+      // file, maxWidth, maxHeight, compressFormat, quality, rotation, responseUriFunc, outputType, minWidth, minHeight;
+      Resizer.imageFileResizer(
+        file,
+        300,
+        300,
+        "",
+        100,
+        0,
+        (uri) => {
+          // 이미지 업데이트
+          setBackImg(uri);
+        },
+        "base64",
+        200,
+        200
+      );
+    }
+
+    reader.onloadend = (e) => {
+      const preview = reader.result;
+      // 이미지 미리보기
+      if (preview) {
+        setBackImg(preview.toString());
+      }
+    };
+  };
+
+  // 이미지 삭제 버튼 클릭시 초기화
+  const removeBackImg = () => {
+    var file = document.getElementById("backImg").files;
+    console.log("file >>> ", file);
+    setValue("sellerBackImg", (file.FileList = null));
+    console.log("del >>> ", file);
+    setBackImg();
+  };
+
+  const formattedWeekday = () => {
+    const from = dayjs(weekdayFrom);
+    const to = dayjs(weekdayTo);
+    const startTime = `${from.hour() < 10 ? "0" + from.hour() : from.hour()}:${
+      from.minute() < 10 ? "0" + from.minute() : from.minute()
+    }`;
+    const endTime = `${to.hour() < 10 ? "0" + to.hour() : to.hour()}:${
+      to.minute() < 10 ? "0" + to.minute() : to.minute()
+    }`;
+    return startTime + "-" + endTime;
+  };
+
+  const formattedWeekend = () => {
+    const from = dayjs(weekendFrom);
+    const to = dayjs(weekendTo);
+    const startTime = `${from.hour() < 10 ? "0" + from.hour() : from.hour()}:${
+      from.minute() < 10 ? "0" + from.minute() : from.minute()
+    }`;
+    const endTime = `${to.hour() < 10 ? "0" + to.hour() : to.hour()}:${
+      to.minute() < 10 ? "0" + to.minute() : to.minute()
+    }`;
+    return startTime + "-" + endTime;
+  };
 
   const changePassword = (e) => {
     e.preventDefault();
@@ -19,8 +153,14 @@ export default function SellerInfo() {
   // form Data 전송
   const onSubmit = (data) => {
     console.log("data >>> ", data);
-    // alert("입력하지 않은 필수항목이 있습니다. 다시 확인해주세요.");
-    // let formData = new FormData();
+    const centerWeekday = formattedWeekday();
+    const centerWeekend = formattedWeekend();
+    data = {
+      ...data,
+      centerWeekday,
+      centerWeekend,
+    };
+    console.log("new data >>> ", data);
   };
 
   return (
@@ -38,6 +178,10 @@ export default function SellerInfo() {
           <SellerDefaultInfo
             register={register}
             errors={errors}
+            uploadId="profileImg"
+            profileImg={profileImg}
+            uploadProfileImg={uploadProfileImg}
+            removeProfileImg={removeProfileImg}
             setIsModal={setIsModal}
             changePassword={changePassword}
           />
@@ -51,7 +195,22 @@ export default function SellerInfo() {
             </h4>
           </TableTitle>
           {/* 마스터 -> 셀러 정보 변경 테이블 component */}
-          <SellerDetailInfo register={register} errors={errors} />
+          <SellerDetailInfo
+            register={register}
+            errors={errors}
+            uploadId="backImg"
+            backImg={backImg}
+            uploadBackImg={uploadBackImg}
+            removeBackImg={removeBackImg}
+            weekdayFrom={weekdayFrom}
+            weekdayTo={weekdayTo}
+            weekendFrom={weekendFrom}
+            weekendTo={weekendTo}
+            handleWeekdayFrom={handleWeekdayFrom}
+            handleWeekdayTo={handleWeekdayTo}
+            handleWeekendFrom={handleWeekendFrom}
+            handleWeekendTo={handleWeekendTo}
+          />
         </MemberListBox>
         {/* 셀러 배송 정보 */}
         <MemberListBox>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Moment from "react-moment";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -8,44 +7,41 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
-export default function SellerTimePick({ register }) {
-  const [selectedDateFrom, handleDateFromChange] = useState(
-    new Date("2020-10-28T09:00:00")
-  );
-  const [selectedDateTo, handleDateToChange] = useState(
-    new Date("2020-10-28T18:00:00")
-  );
-
-  // console.log("시작", selectedDateFrom);
-  // console.log("끝", selectedDateTo);
+export default function SellerTimePick({
+  register,
+  // selectedDateFrom,
+  // selectedDateTo,
+  // handleDateFromChange,
+  // handleDateToChange,
+  value,
+  onChange,
+}) {
+  console.log("value >>", value);
   return (
     <TimeFromTo>
       <SellerInput>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Moment date={selectedDateFrom}>
-            <KeyboardTimePicker
-              ampm={true}
-              name="FromTime"
-              variant="inline"
-              placeholder="08:00 AM"
-              // value={selectedDateFrom}
-              onChange={handleDateFromChange}
-              forwardedRef={register({ required: true })}
-            />
-          </Moment>
+          <KeyboardTimePicker
+            ampm={true}
+            // name="FromTime"
+            variant="inline"
+            value={value}
+            onChange={onChange}
+            forwardedRef={register({ required: true })}
+          />
         </MuiPickersUtilsProvider>
-        <span className="timeFrom">~</span>
+        {/* <span className="timeFrom">~</span>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardTimePicker
             ampm={true}
             name="ToTime"
             variant="inline"
             placeholder="06:00 PM"
-            // value={selectedDateTo}
+            value={selectedDateTo}
             onChange={handleDateToChange}
             forwardedRef={register({ required: true })}
           />
-        </MuiPickersUtilsProvider>
+        </MuiPickersUtilsProvider> */}
       </SellerInput>
     </TimeFromTo>
   );
@@ -68,9 +64,6 @@ const SellerInput = styled.div`
     &:focus {
       border-radius: 4px;
     }
-  }
-  .timeFrom {
-    margin: 0 12px;
   }
 `;
 

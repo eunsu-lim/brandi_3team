@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SellerBackImg from "./SellerBackImg";
+import ImgUpload from "./ImgUpload";
 import ManagerInfo from "./ManagerInfo";
 import SellerAddress from "./SellerAddress";
 import SellerTimePick from "./SellerTimePick";
@@ -8,9 +8,23 @@ import SellerStatus from "./SellerStatus";
 import { InfoCircleFill, TelephoneFill } from "@styled-icons/bootstrap";
 import { User } from "@styled-icons/boxicons-solid";
 
-export default function SellerDetailTable({ register, errors }) {
+export default function SellerDetailTable({
+  register,
+  errors,
+  uploadId,
+  backImg,
+  uploadBackImg,
+  removeBackImg,
+  weekdayFrom,
+  weekdayTo,
+  weekendFrom,
+  weekendTo,
+  handleWeekdayFrom,
+  handleWeekdayTo,
+  handleWeekendFrom,
+  handleWeekendTo,
+}) {
   const [checked, setChecked] = useState(false);
-
   return (
     <TableContainer>
       <SellerTable>
@@ -19,7 +33,14 @@ export default function SellerDetailTable({ register, errors }) {
             <td>셀러페이지 배경이미지</td>
             <td>
               {/* UploadImg */}
-              <SellerBackImg register={register} />
+              <ImgUpload
+                refImg={register({ required: false })}
+                uploadId={uploadId}
+                name="sellerBackImg"
+                imgFile={backImg}
+                onChange={uploadBackImg}
+                removeFile={removeBackImg}
+              />
               <InfoLine>
                 <InfoSmall>
                   <InfoCircleFill size="14" />
@@ -119,7 +140,18 @@ export default function SellerDetailTable({ register, errors }) {
             </td>
             <td>
               <CustomerTime>
-                <SellerTimePick register={register} errors={errors} />
+                <SellerTimePick
+                  register={register}
+                  value={weekdayFrom}
+                  onChange={handleWeekdayFrom}
+                />
+
+                <span className="timeFrom">~</span>
+                <SellerTimePick
+                  register={register}
+                  value={weekdayTo}
+                  onChange={handleWeekdayTo}
+                />
                 <InfoSmall>
                   <InfoCircleFill size="14" />
                   <span className="info">
@@ -142,7 +174,19 @@ export default function SellerDetailTable({ register, errors }) {
                 <Require> *</Require>
               </td>
               <td>
-                <SellerTimePick register={register} errors={errors} />
+                <CustomerTime>
+                  <SellerTimePick
+                    register={register}
+                    value={weekendFrom}
+                    onChange={handleWeekendFrom}
+                  />
+                  <span className="timeFrom">~</span>
+                  <SellerTimePick
+                    register={register}
+                    value={weekendTo}
+                    onChange={handleWeekendTo}
+                  />
+                </CustomerTime>
               </td>
             </tr>
           )}
@@ -287,5 +331,8 @@ const CustomerTime = styled.div`
   ${({ theme }) => theme.flex(null, "center")};
   svg {
     margin-left: 24px;
+  }
+  .timeFrom {
+    margin: 0 12px;
   }
 `;
