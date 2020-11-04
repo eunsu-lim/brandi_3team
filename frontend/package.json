@@ -16,15 +16,16 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "prop-types": "^15.6.2",
-    "react-datepicker": "^3.3.0",
     "@babel/runtime": "^7.12.1",
     "@material-ui/core": "^4.11.0",
     "axios": "^0.21.0",
     "fragment": "^0.3.0",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
+    "react-datepicker": "^3.3.0",
     "react-dom": "^16.4.1",
     "react-hooks-useform": "^0.1.84",
+    "react-js-pagination": "^3.0.3",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",

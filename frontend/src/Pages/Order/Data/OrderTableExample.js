@@ -34,9 +34,11 @@ const OrderTableExample = [
     order_detail_number: "B2020102100035001",
     seller_name: "메종셀린",
     product_name: "U넥 반팔 티셔츠_메종셀린",
-    option_info: "소라/Free",
+    option_color: "소라",
+    option_size: "S",
     quantity: 3,
     orderer_name: "이성현",
+
     phone_number: "010-1234-1234",
     payment_amount: "11,700",
     order_status: "상품준비",

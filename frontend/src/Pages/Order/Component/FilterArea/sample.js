@@ -34,7 +34,6 @@ function FilterArea({ handleBtn }) {
       setCurrentIndex([...currentIndex, idx]);
     }
   };
-  console.log(currentIndex);
   return (
     <FilterSection>
       {/* 세부 항목, Select Box */}

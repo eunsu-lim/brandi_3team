@@ -1,7 +1,5 @@
 import { combineReducers } from "redux";
+import productReducer from "./productReducer";
 
-function index() {
-  return <div></div>;
-}
-
-export default index;
+// root reducer 작성 완료
+export default combineReducers({ productReducer });

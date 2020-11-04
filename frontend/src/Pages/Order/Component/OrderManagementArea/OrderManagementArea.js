@@ -1,21 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import OrderTableData from "./Component/OrderTableData/OrderTableData";
+import PaginationPart from "./Component/PaginationPart/PaginationPart";
 import { Link } from "react-router-dom";
 import TableDataHeader from "../../Data/TableDataHeader";
-import OrderTableExample from "../../Data/OrderTableExample";
 import styled from "styled-components";
 import { List } from "@styled-icons/open-iconic/List";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
-import { ChevronsLeft } from "@styled-icons/boxicons-regular/ChevronsLeft";
-import { ChevronLeft } from "@styled-icons/boxicons-regular/ChevronLeft";
-import { ChevronRight } from "@styled-icons/boxicons-regular/ChevronRight";
-import { ChevronsRight } from "@styled-icons/boxicons-regular/ChevronsRight";
 import { FileExcel } from "@styled-icons/fa-regular/FileExcel";
 
-function OrderManagementArea() {
+function OrderManagementArea({
+  posts,
+  currentPosts,
+  loading,
+  postsPerPage,
+  totalPosts,
+  currentPage,
+  setCurrentPage,
+  handleSortDate,
+  paginate,
+  handleDataNumber,
+  filterData,
+  setFilterData,
+  postFilterData,
+  indexOfFirstPost,
+}) {
   const [checkItems, setCheckItems] = useState([]);
+  const [changeValue, setChangeValue] = useState(false);
 
   // 체크박스 전체 단일 개체 선택
+
   const handleSingleCheck = (checked, id) => {
     if (checked) {
       setCheckItems([...checkItems, id]);
@@ -23,16 +36,63 @@ function OrderManagementArea() {
       // 체크 해제
       setCheckItems(checkItems.filter((el) => el !== id));
     }
+    setChangeValue(!changeValue);
+
+    // setFilterData && setFilterData({ ...filterData, checkItems: checkItems });
   };
 
   // 체크박스 전체 선택
   const handleAllCheck = (checked) => {
     if (checked) {
       const idArray = [];
-      OrderTableExample.forEach((el) => idArray.push(el.id));
+      // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
+      // 전체 체크 박스 체크
+      currentPosts.forEach((el) => idArray.push(el.id));
       setCheckItems(idArray);
-    } else {
+    }
+    // 반대의 경우 전체 체크 박스 체크 삭제
+    else {
       setCheckItems([]);
+    }
+    setChangeValue(!changeValue);
+
+    // setFilterData({ ...filterData, allCheck: checkItems });
+  };
+
+  const handleChange = (e) => {
+    handleDataNumber(e);
+    setCheckItems([]);
+    // 비동기 해결하기 위해서 만든 가짜 state
+    setChangeValue(!changeValue);
+  };
+
+  // 함수 밖에서 업데이트 된 state를 filterDate에 업데이트한다.
+  useEffect(() => {
+    setFilterData({
+      ...filterData,
+      limit: postsPerPage,
+      offset: indexOfFirstPost,
+      checkItems: checkItems,
+    });
+    // chagneValue에 변화가 있을 때만 실행한다.
+  }, [changeValue]);
+
+  // 엑셀 다운로드 서버에 보낼 정보
+  const handleExcel = (e) => {
+    const { value } = e.target;
+    const excelData = [];
+    // button의 value가 "excelAll"이면
+    if (value === "excelAll") {
+      // 전체 데이터의 id 값을 excelData에 배열로 저장한다.
+      posts.id.map((el) => {
+        excelData.push(el.id);
+      });
+    }
+    // button의 value가 "excelSelected"면
+    else {
+      checkItems.id.map((el) => {
+        excelData.push(el.id);
+      });
     }
   };
 
@@ -52,18 +112,16 @@ function OrderManagementArea() {
         {/* 검색 정렬 */}
         <div>
           <div>
-            <select name="" id="">
-              <option value="">최신주문일순</option>
-              <option value="">주문일의 역순</option>
+            <select name="" id="" onChange={handleSortDate}>
+              <option value="최신주문일순">최신주문일순</option>
+              <option value="주문일의 역순">주문일의 역순</option>
             </select>
           </div>
           <div>
-            <select name="" id="">
+            <select name="" id="" defaultValue="50" onChange={handleChange}>
               <option value="10">10개씩보기</option>
               <option value="20">20개씩보기</option>
-              <option value="50" selected>
-                50개씩보기
-              </option>
+              <option value="50">50개씩보기</option>
               <option value="100">100개씩보기</option>
               <option value="150">150개씩보기</option>
             </select>
@@ -74,17 +132,15 @@ function OrderManagementArea() {
       <NumOfViews>
         <div>
           <span>전체 조회건 수 : </span>
-          <span>{OrderTableExample.length}건</span>
-          {/* <OrderProcessBtn>배송준비처리</OrderProcessBtn>
-          <OrderProcessBtn>주문취소처리</OrderProcessBtn> */}
+          <span>{posts.length}건</span>
           <OrderProcessBtn className="firstBtn">배송처리</OrderProcessBtn>
         </div>
         <div>
-          <ExcelDownloadBtn>
+          <ExcelDownloadBtn value="excelAll" onClick={handleExcel}>
             <FileExcel size="15" />
             전체주문 엑셀다운로드
           </ExcelDownloadBtn>
-          <ExcelDownloadBtn>
+          <ExcelDownloadBtn value="excelSelected" onClick={handleExcel}>
             <FileExcel size="15" />
             선택주문 엑셀다운로드
           </ExcelDownloadBtn>
@@ -102,7 +158,11 @@ function OrderManagementArea() {
                       name="checkAll"
                       type={"checkbox"}
                       onChange={(e) => handleAllCheck(e.target.checked)}
-                      // checked={allChecked}
+                      // 하나라도 빼면 체크 박스 해제
+                      // 체크된 아이템의 수와 페이지에 보이는 수가 같을 때만 전체 체크
+                      checked={
+                        checkItems.length === postsPerPage ? true : false
+                      }
                     />
                   </span>
                 </div>
@@ -113,67 +173,40 @@ function OrderManagementArea() {
             </tr>
           </thead>
           <tbody>
-            {OrderTableExample.map((el, index) => (
+            {currentPosts.map((el, index) => (
               <OrderTableData
-                data={el}
-                index={index}
+                currentPosts={el}
+                key={index}
                 checkItems={checkItems}
                 setCheckItems={setCheckItems}
                 handleSingleCheck={handleSingleCheck}
+                loading={loading}
               />
             ))}
           </tbody>
 
           {/* 페이지네이션 영역 */}
-          <tfoot>
-            <tr>
-              <td>
-                <li>
-                  <a href="">
-                    <ChevronsLeft size="18" />
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <ChevronLeft size="18" />
-                  </a>
-                </li>
-                <li>
-                  <a href="">1</a>
-                </li>
-                <li>
-                  <a href="">2</a>
-                </li>
-                <li>
-                  <a href="">3</a>
-                </li>
-                <li>
-                  <a href="">
-                    <ChevronRight size="18" />
-                  </a>
-                </li>
-                <li>
-                  <a href="">
-                    <ChevronsRight size="18" />
-                  </a>
-                </li>
-              </td>
-            </tr>
-          </tfoot>
+          <PaginationPart
+            paginate={paginate}
+            totalPosts={totalPosts}
+            postsPerPage={postsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            filterData={filterData}
+            setFilterData={setFilterData}
+            postFilterData={postFilterData}
+            indexOfFirstPost={indexOfFirstPost}
+          />
         </table>
       </DataTableArea>
       {/* 하단 작업 버튼 영역 */}
       <BottomArea>
-        {/* <div>
-          <OrderProcessBtn>배송준비처리</OrderProcessBtn>
-          <OrderProcessBtn>주문취소처리</OrderProcessBtn>
-        </div> */}
         <div>
-          <ExcelDownloadBtn>
+          <ExcelDownloadBtn value="excelAll" onClick={handleExcel}>
             <FileExcel size="15" />
             전체주문 엑셀다운로드
           </ExcelDownloadBtn>
-          <ExcelDownloadBtn>
+          <ExcelDownloadBtn value="excelSelected" onClick={handleExcel}>
             <FileExcel size="15" />
             선택주문 엑셀다운로드
           </ExcelDownloadBtn>
@@ -298,12 +331,6 @@ const DataTableArea = styled.article`
   }
 
   tr {
-    /* width: 100%; */
-    /* input {
-      width: 19px;
-      height: 19px;
-    } */
-
     td {
       font-size: 13px;
 
@@ -324,37 +351,6 @@ const DataTableArea = styled.article`
   tr:nth-child(even) {
     &:hover {
       background-color: #f9f9f9;
-    }
-  }
-
-  tfoot {
-    display: flex;
-    padding: 8px;
-    margin: 10px 0;
-
-    td {
-      display: flex;
-      border: none;
-
-      li {
-        list-style: none;
-        margin-left: -1px;
-        padding: 6px 12px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        color: #428bca;
-
-        &:nth-child(1) {
-          border-top-left-radius: 4px;
-          border-bottom-left-radius: 4px;
-        }
-
-        cursor: pointer;
-        &:hover,
-        &:active {
-          background-color: #f9f9f9;
-        }
-      }
     }
   }
 `;
