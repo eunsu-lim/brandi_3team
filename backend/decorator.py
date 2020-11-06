@@ -6,7 +6,7 @@ from flask                import jsonify, request
 from model.seller_dao     import SellerDao
 from config               import SECRET_KEY, ALGORITHM
 from connection           import get_connection
-from internal_code_sheet  import internal_code_sheet
+from internal_code_sheets  import internal_code_sheet
 from exceptions           import NotFoundError, InvalidDataError
 
 def login_required(func):
@@ -28,11 +28,11 @@ def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            access_token    = request.headers.get('Authorization', None) 
-            payload         = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)
-            db_connection   = get_connection()
-            seller          = SellerDao().get_seller_id(db_connection, payload)
-            db_connection.close()
+            access_token       = request.headers.get('Authorization', None) 
+            payload            = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)
+            request.account_id = payload
+            db_connection      = get_connection()
+            seller             = SellerDao().get_seller_id(db_connection, payload)
             if seller['is_delete'] == 0: 
                 request.seller_id = seller['id']
             else:
@@ -43,5 +43,9 @@ def login_required(func):
 
         except NotFoundError:
             return jsonify(internal_code_sheet['S108']), (internal_code_sheet[result]['S108'])
+        
+        finally:
+            db_connection.close()
+
         return func(*args, **kwargs)
     return wrapper 
