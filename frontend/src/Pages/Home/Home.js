@@ -3,6 +3,20 @@ import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
+import {Chart} from "@styled-icons/evil"
+
+import { render } from 'react-dom'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+
+const options = {
+  title: {
+    text: 'My chart'
+  },
+  series: [{
+    data: [1, 2, 3]
+  }]
+}
 
 export default function Home() {
   return (
@@ -11,7 +25,119 @@ export default function Home() {
       <MainBox>
         <Nav />
         <MainContainer>
-          {/* 여기에 component 추가 후 작업해주세요!! */}
+          {/* 상단 컴포넌트 */}
+          <TopStatusContainer>
+            <StatusPanal>
+              <PanelList>
+                <PanelBody>
+                  <PanelContentsText>
+                    상품 준비:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    배송 준비:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    배송 중:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    배송 완료:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    구매 확정:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+              </PanelList>
+            </StatusPanal>
+            <StatusPanal>
+              <PanelList>
+                <PanelBody>
+                  <PanelContentsText>
+                    환불 요청:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    반품 진행:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    주문 취소중:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+                <PanelBody>
+                  <PanelContentsText>
+                    환불 승인중:
+                  </PanelContentsText>
+                  <PanelContentsCount>
+                    0건
+                  </PanelContentsCount>
+                </PanelBody>
+              </PanelList>
+            </StatusPanal>
+          </TopStatusContainer>
+          {/* 차트 컴포넌트 */}
+          <ChartContainer>
+            <ChartPanel>
+              <ChartTop>
+                <ChartTitle>
+                  <Chart size="25"/>
+                  매출 통계 [최근 30일간의 결제완료된 주문 건수의 합계]
+                </ChartTitle>
+              </ChartTop>
+              <ChartBottom>
+              <div>
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={options}
+              />
+              </div>
+              </ChartBottom>
+            </ChartPanel>
+            <ChartPanel>
+              <ChartTop>
+                <ChartTitle>
+                  <Chart size="25"/>
+                  매출 통계 [최근 30일간의 결제완료된 주문 금액의 합계]
+                </ChartTitle>
+              </ChartTop>
+              <ChartBottom>
+
+              </ChartBottom>
+            </ChartPanel>
+          </ChartContainer>
         </MainContainer>
       </MainBox>
       <Footer />
@@ -32,4 +158,117 @@ const MainContainer = styled.div`
   min-height: 100vh;
   height: auto;
   padding-top: 45px;
+`;
+
+// 주문현황 컨테이너
+const TopStatusContainer = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+align-content: center;
+align-items: center;
+border: 1px solid red;
+height: 200px;
+`;
+
+const StatusPanal = styled.div`
+flex: 1 1 auto;
+flex-basis: auto;
+margin:20px;
+width: 100px;
+height: 160px;
+border: 1px solid #ddd;
+border-radius:4px;
+box-shadow:0 1px 1px rgba(0,0,0,.05);
+background-color:#fff;
+box-sizing:border-box;
+margin-bottom: 20px;
+`;
+
+const PanelList = styled.ul`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-content: center;
+align-items: center;
+`;
+
+const PanelBody = styled.li`
+display: flex;
+justify-content: space-between;
+width: 100%;
+padding: 5px 50px;
+font-family: 'Open Sans', sans-serif;
+font-size: 13px;
+margin: 3px;
+direction: ltr;
+`;
+
+const PanelContentsText = styled.span`
+// flex: 1 1 auto;
+flex-basis: auto;
+font-family: 'Open Sans', sans-serif;
+font-size: 13px;
+direction: ltr;
+`;
+
+const PanelContentsCount = styled.span`
+// flex: 1 1 auto;
+flex-basis: auto;
+font-family: 'Open Sans', sans-serif;
+font-weight: bold;
+font-size: 13px;
+direction: ltr;
+`;
+
+// 차트 컨테이너
+const ChartContainer = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+align-content: center;
+align-items: center;
+border: 1px solid blue;
+height: 400px;
+`;
+
+const ChartPanel = styled.div`
+flex: 1 1 auto;
+flex-basis: auto;
+margin:20px;
+width: 100px;
+height: 340px;
+border: 1px solid #ddd;
+border-radius:4px;
+box-shadow:0 1px 1px rgba(0,0,0,.05);
+background-color:#fff;
+box-sizing:border-box;
+margin-bottom: 20px;
+`;
+
+const ChartTop = styled.div`
+display: flex;
+align-items: center;
+flex-basis: auto;
+height: 40px;
+border: 1px solid #ddd;
+box-shadow:0 1px 1px rgba(0,0,0,.05);
+background-color:#f5f5f5;
+`;
+
+const ChartBottom = styled.div`
+// flex: 1 1 auto;
+flex-basis: auto;
+height: 300px;
+border: 1px solid #ddd;
+box-shadow:0 1px 1px rgba(0,0,0,.05);
+background-color:#fff;
+`;
+
+const ChartTitle = styled.span`
+font-family: 'Open Sans', sans-serif;
+font-size: 13px;
+direction: ltr;
+color:gray;
+margin-left: 10px;
 `;
