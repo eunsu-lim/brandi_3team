@@ -17,6 +17,7 @@ class AccountDao:
             """
             cursor.execute(query, {'account_name': account_name})
             row = cursor.fetchone()
+            # account_name과 일치하는 데이터가 db에 없을 경우 NotFoundError 발생
             if row is None:
                 raise NotFoundError('S000')
 
