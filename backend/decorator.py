@@ -6,7 +6,7 @@ from flask                import jsonify, request
 from model.seller_dao     import SellerDao
 from config               import SECRET_KEY, ALGORITHM
 from connection           import get_connection
-from internal_code_sheet  import internal_code_sheet
+from internal_code_sheets  import internal_code_sheet
 from exceptions           import NotFoundError, InvalidDataError
 
 def login_required(func):
