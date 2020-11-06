@@ -15,7 +15,6 @@ def get_connection():
     History :
         2020-10-27  (jisunn0130@gmail.com) : 초기생성
     """
-    
     connection = pymysql.connect(
             host = database['host'],
             port = database['port'],
@@ -24,6 +23,5 @@ def get_connection():
             database = database['database'],
             charset  = database['charset'],
             cursorclass = pymysql.cursors.DictCursor)
-    
     return connection
 
