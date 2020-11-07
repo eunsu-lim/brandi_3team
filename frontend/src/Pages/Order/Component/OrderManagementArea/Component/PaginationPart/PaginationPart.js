@@ -5,7 +5,7 @@ import "./Pagination.css";
 
 function PaginationPart({
   totalPosts,
-  paginate,
+  // paginate,
   postsPerPage,
   currentPage,
   setCurrentPage,
@@ -17,12 +17,16 @@ function PaginationPart({
 
   const handlePageChange = (pageNumber) => {
     // setCurrentPage({ activePage: pageNumber });
+
+    // 제거 예정
     // 부모 컴포넌트(order)에 있는 paginate 함수는
     // 'pageNumber' 인자가 들어가서
     // setCurrentPage의 state를 바꾼다
-    // 그리고...?
-    paginate(pageNumber);
+    // paginate(pageNumber);
+
     setChangeValue(!changeValue);
+    // pageNumber를 인자로 전달해줘서, CurrentPage를 바꾼다.
+    setCurrentPage(pageNumber);
   };
 
   useEffect(() => {
@@ -38,9 +42,14 @@ function PaginationPart({
         <tr>
           <td style={{ border: "none" }}>
             <Pagination
+              // 현재 페이지
               activePage={currentPage}
+              // total / postsPerPage
+              // ex) 500 / 50
+              // => 총 10 개의 번호
               itemsCountPerPage={postsPerPage}
               totalItemsCount={totalPosts}
+              // 몇 개의 버튼이 생길 지 범위
               pageRangeDisplayed={5}
               onChange={handlePageChange}
             />

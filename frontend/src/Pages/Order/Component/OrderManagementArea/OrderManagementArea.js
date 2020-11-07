@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import OrderTableData from "./Component/OrderTableData/OrderTableData";
 import PaginationPart from "./Component/PaginationPart/PaginationPart";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import TableDataHeader from "../../Data/TableDataHeader";
 import styled from "styled-components";
 import { List } from "@styled-icons/open-iconic/List";
@@ -16,8 +17,8 @@ function OrderManagementArea({
   totalPosts,
   currentPage,
   setCurrentPage,
-  handleSortDate,
-  paginate,
+  // handleSortDate,
+  // paginate,
   handleDataNumber,
   filterData,
   setFilterData,
@@ -26,6 +27,27 @@ function OrderManagementArea({
 }) {
   const [checkItems, setCheckItems] = useState([]);
   const [changeValue, setChangeValue] = useState(false);
+
+  console.log(filterData);
+  // 최신 주문 일 수
+  const handleSortDate = async (e) => {
+    const { value } = e.target;
+    if (value === "최신주문일순") {
+      setCurrentPage(1);
+      // setPosts([...posts].sort((a, b) => a.id - b.id));
+      // 최신 주문일순은 1을 서버에 보내고,
+      setFilterData({ filter_ordering: 1 });
+    } else {
+      setCurrentPage(1);
+      // 역순은 2를 서버에 보낸다.
+      setFilterData({ filter_ordering: 2 });
+      // setPosts([...posts].sort((a, b) => a.id - b.id).reverse());
+    }
+
+    setChangeValue(!changeValue);
+  };
+
+  console.log(filterData);
 
   // 체크박스 전체 단일 개체 선택
 
@@ -47,7 +69,7 @@ function OrderManagementArea({
       const idArray = [];
       // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서,
       // 전체 체크 박스 체크
-      currentPosts.forEach((el) => idArray.push(el.id));
+      currentPosts.forEach((el) => idArray.push(el.order_id));
       setCheckItems(idArray);
     }
     // 반대의 경우 전체 체크 박스 체크 삭제
@@ -59,21 +81,38 @@ function OrderManagementArea({
     // setFilterData({ ...filterData, allCheck: checkItems });
   };
 
+  // 화면에 보이는 데이터의 수를 select하는 함수
   const handleChange = (e) => {
     handleDataNumber(e);
     setCheckItems([]);
-    // 비동기 해결하기 위해서 만든 가짜 state
+    // 비동기 해결하기 위해서 만든 state
     setChangeValue(!changeValue);
   };
 
+  // console.log("ggg", filterData);
   // 함수 밖에서 업데이트 된 state를 filterDate에 업데이트한다.
   useEffect(() => {
-    setFilterData({
-      ...filterData,
-      limit: postsPerPage,
-      offset: indexOfFirstPost,
-      checkItems: checkItems,
-    });
+    async function fetchData() {
+      const result = await axios.get(
+        `http://10.58.3.246:5000/orders/lists/4`,
+        {
+          params: {
+            offset: indexOfFirstPost,
+            limit: postsPerPage,
+            filter_ordering: filterData.filter_ordering,
+          },
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("access_token"),
+          },
+        }
+      );
+      setFilterData(result);
+    }
+    // console.log(result);
+
+    fetchData();
     // chagneValue에 변화가 있을 때만 실행한다.
   }, [changeValue]);
 
@@ -161,14 +200,18 @@ function OrderManagementArea({
                       // 하나라도 빼면 체크 박스 해제
                       // 체크된 아이템의 수와 페이지에 보이는 수가 같을 때만 전체 체크
                       checked={
-                        checkItems.length === postsPerPage ? true : false
+                        // 체크된 아이템의 갯 수와 들어오는 데이터의 길이가 같을 때만 전체 체크!
+                        currentPosts.length !== 0 &&
+                        checkItems.length === currentPosts.length
+                          ? true
+                          : false
                       }
                     />
                   </span>
                 </div>
               </th>
               {TableDataHeader.map((el, index) => (
-                <th>{el.table_header}</th>
+                <th key={index}>{el.table_header}</th>
               ))}
             </tr>
           </thead>
@@ -187,7 +230,7 @@ function OrderManagementArea({
 
           {/* 페이지네이션 영역 */}
           <PaginationPart
-            paginate={paginate}
+            // paginate={paginate}
             totalPosts={totalPosts}
             postsPerPage={postsPerPage}
             currentPage={currentPage}

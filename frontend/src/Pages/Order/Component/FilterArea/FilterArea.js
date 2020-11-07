@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import DatePicker from "react-datepicker";
@@ -10,8 +9,10 @@ import SellerAttriFilterData from "../../Data/SellerAttriFilterData";
 import styled, { css } from "styled-components";
 
 function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
+  const [changeValue, setChangeValue] = useState(false);
+  const [selector, setSelector] = useState("");
   const [btnClicked, setBtnClicked] = useState("3일");
-  const [duplicated, setDuplicated] = useState(["전체"]);
+  const [duplicated, setDuplicated] = useState(["1"]);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(
@@ -33,8 +34,8 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
     const currentDate = new Date();
     // 기본값: placeholder 내용
     if (value === "전체") {
-      setStartDate();
-      setEndDate();
+      setStartDate(null);
+      setEndDate(new Date());
     }
     // 오늘 날짜
     if (value === "오늘") {
@@ -89,7 +90,7 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
     // 전체 선택 시, NaN가 나오는데, 조건을 어떻게 주어야할까요?
 
     // 간단 기간 버튼 클릭 시, 서버에 날짜를 보냄
-    console.log(getFormattedDate(startDate), getFormattedDate(endDate));
+    // console.log(getFormattedDate(startDate), getFormattedDate(endDate));
   };
 
   // 선택한 검색기간 날짜를 서버에서 원하는 형식으로 바꾸는 함수(yyyy-mm-dd)
@@ -104,32 +105,29 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
     }`;
   };
 
-  // 선택 버튼이 모드 선택되거나, 선택된 버튼이 없을 시, 전체이 선택되도록 함
+  // 선택 버튼이 모드 선택되거나, 선택된 버튼이 없을 시, 전체 선택되도록 함
   useEffect(() => {
     if (duplicated.length === 7 || duplicated.length === 0) {
-      setDuplicated(["전체"]);
+      setDuplicated(["1"]);
     }
   }, [duplicated]);
 
   // 버튼 중복 선택 함수 및 조건문
-  const handleDuplicated = (e, index, id) => {
-    const { value } = e.target;
-    // isIncludes는 버튼이 들어있는 지 확인
-    const isIncludes = duplicated.find((el) => el === e.target.value);
+  const handleDuplicated = (e) => {
+    const { name, value } = e.target;
+    // isIncludes는 버튼이 들어있는 지 확인하는 변수
+    const isIncludes = duplicated.find((el) => el === name);
     // value가 "전체"일 때, 전체를 배열에 포함
-    if (value === "전체") {
-      setDuplicated(["전체"]);
+    if (name === "1") {
+      setDuplicated(["1"]);
     }
     // isIncludes일 때 === 버튼이 이미 클릭 되어있을 때, 배열에서 제거
     else if (isIncludes) {
-      setDuplicated(duplicated.filter((el) => el !== e.target.value));
+      setDuplicated(duplicated.filter((el) => el !== name));
     }
     // 배열의 길이가 0보다 클 때 === 하나 이상 선택이 되었을 때, "전체"는 제거, 클릭 한, value를 배열에 포함
     else if (duplicated.length > 0) {
-      setDuplicated([
-        ...duplicated.filter((el) => el !== "전체"),
-        e.target.value,
-      ]);
+      setDuplicated([...duplicated.filter((el) => el !== "1"), name]);
     }
     // 여기에서 아래처럼 state를 바꿔주면, 비동기라서
     // state에 업데이트 된 값이 저장되지않는다.
@@ -141,15 +139,17 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
   // 검색어 입력 필터
   const handleInput = (e) => {
     const { value } = e.target;
+    // console.log("??", value);
     setSearch(value);
     setFilterData({
       ...filterData,
       // searchWord: value
-      filter_ordering: value,
+      searching: value,
     });
   };
 
-  const handleSearch = () => {
+  // 검색 버튼
+  const handleSearch = async () => {
     if (!search) {
       alert("로딩 중");
     } else if (startDate && !search) {
@@ -163,40 +163,89 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
       // 여기에서 중요한 점은 프론트에서는 데이터를 모아서
       // 검색을 눌렀을 때, 서버에 request 한다는 점!!!
       // 그래서 실시간으로 서버랑 소통하지않는 이상,
-      // 필요할 때만 서버와 통신하기위해서 준비하기.
-      setFilterData({
-        ...filterData,
-        searchDataFrom: getFormattedDate(startDate),
-        searchDataTo: getFormattedDate(endDate),
-        sellerAttri: duplicated.join(),
-      });
+      // 필요할 때(검색을 누를 때!)만 서버와 통신하기위해서 준비하기.
+      setChangeValue(!changeValue);
+
       // return fetchDatas();
+      // const getOrderData = async () => {
+      const result = await axios.get(
+        `http://10.58.3.246:5000/orders/lists/4`,
+        {
+          params: filterData,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("access_token"),
+          },
+        }
+      );
+      // console.log(result);
+      setFilterData(result);
+      // setPosts()
+      // };
     }
   };
 
   // 초기화 버튼
-  const resetBtn = (e) => {
+  const resetBtn = async (e) => {
     const { name } = e.target;
-    if (name) {
-      alert("데이터를 불러오고 있습니다.");
-      window.location.reload();
+    if (name === "reset") {
+      setSelector("");
+      setSearch("");
+      setBtnClicked("3일");
+      setDuplicated(["1"]);
+      setStartDate(new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000));
+      setEndDate(new Date());
     }
+    setChangeValue(!changeValue);
+
+    const result = await axios.get(
+      `http://10.58.3.246:5000/orders/lists/4`,
+      {
+        params: {
+          // selector: "",
+          filter_date_from: getFormattedDate(
+            new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000)
+          ),
+          filter_date_to: getFormattedDate(new Date()),
+          seller_attribute_id: "1",
+        },
+      },
+      {
+        headers: {
+          Authorization: localStorage.getItem("access_token"),
+        },
+      }
+    );
+    setFilterData(result);
   };
 
   const selectFilter = (e) => {
     // 입력한 값을 filterData에 저장
+    // console.log(e.target.value);
+    setSelector(e.target.value);
+    setChangeValue(!changeValue);
+  };
+
+  // changeValue가 실행 될 때마다,
+  // filterData의 내용을 바꿔준다.
+  useEffect(() => {
     setFilterData({
       ...filterData,
       // selectFilter: e.target.value
-      searching: e.target.value,
+      searching_category: selector,
+      filter_date_from: getFormattedDate(startDate),
+      filter_date_to: getFormattedDate(endDate),
+      seller_attribute_id: duplicated.sort().join(),
     });
-  };
+  }, [changeValue]);
 
   return (
     <FilterSection>
       {/* 세부 항목, Select Box */}
       <FilterSearch>
-        <SelectFilter name="" id="" onChange={selectFilter}>
+        {/* select를 초기화 하기 위해서 value에 빈 state를 줍니다. */}
+        <SelectFilter value={selector} onChange={selectFilter}>
           {SelectFilterData.map((el, index) => (
             <option key={index} value={el.id} disabled={el.disabled}>
               {el.value}
@@ -204,7 +253,8 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
           ))}
         </SelectFilter>
         <FilterKeyword
-          name="search"
+          // name="search"
+          value={search}
           onChange={handleInput}
           type="text"
           placeholder="검색어를 입력하세요."
@@ -266,9 +316,10 @@ function FilterArea({ posts, filterData, setFilterData, fetchDatas }) {
               type="button"
               // onClick={() => handleDuplicated(index, el.id)}
               onClick={handleDuplicated}
+              name={el.name}
               value={el.value}
               backgroundColor={duplicated.find(
-                (element) => element === el.value
+                (element) => element === el.name
               )}
             >
               {el.value}
