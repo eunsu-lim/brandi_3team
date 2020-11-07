@@ -56,7 +56,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
-                    value="1"
+                    value="2"
                     ref={register({ required: true })}
                   />
                 </label>
@@ -65,7 +65,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
-                    value="2"
+                    value="3"
                     ref={register({ required: true })}
                   />
                 </label>
@@ -74,7 +74,7 @@ export default function SellerDefaultInfo({
                   <input
                     type="radio"
                     name="status"
-                    value="3"
+                    value="4"
                     ref={register({ required: true })}
                   />
                 </label>

@@ -11,6 +11,8 @@ import { User } from "@styled-icons/boxicons-solid";
 export default function SellerDetailTable({
   register,
   errors,
+  checked,
+  setChecked,
   uploadId,
   backImg,
   uploadBackImg,
@@ -24,7 +26,6 @@ export default function SellerDetailTable({
   handleWeekendFrom,
   handleWeekendTo,
 }) {
-  const [checked, setChecked] = useState(false);
   return (
     <TableContainer>
       <SellerTable>
@@ -141,6 +142,7 @@ export default function SellerDetailTable({
             <td>
               <CustomerTime>
                 <SellerTimePick
+                  checked={checked}
                   register={register}
                   value={weekdayFrom}
                   onChange={handleWeekdayFrom}
@@ -148,6 +150,7 @@ export default function SellerDetailTable({
 
                 <span className="timeFrom">~</span>
                 <SellerTimePick
+                  checked={checked}
                   register={register}
                   value={weekdayTo}
                   onChange={handleWeekdayTo}
@@ -176,12 +179,14 @@ export default function SellerDetailTable({
               <td>
                 <CustomerTime>
                   <SellerTimePick
+                    checked={checked}
                     register={register}
                     value={weekendFrom}
                     onChange={handleWeekendFrom}
                   />
                   <span className="timeFrom">~</span>
                   <SellerTimePick
+                    checked={checked}
                     register={register}
                     value={weekendTo}
                     onChange={handleWeekendTo}

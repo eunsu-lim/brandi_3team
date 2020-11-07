@@ -1,5 +1,6 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import Resizer from "react-image-file-resizer";
 import dayjs from "dayjs";
@@ -28,6 +29,13 @@ export default function SellerInfo() {
   // 이미지 파일 업데이트 관리
   const [profileImg, setProfileImg] = useState();
   const [backImg, setBackImg] = useState();
+
+  const [checked, setChecked] = useState(false);
+
+  // backend 통신 회원 정보 가져오기
+  useEffect(() => {
+    // console.log(getData);
+  }, []);
 
   // 이미지 파일 업로드
   const uploadProfileImg = (e) => {
@@ -121,28 +129,18 @@ export default function SellerInfo() {
     setBackImg();
   };
 
-  const formattedWeekday = () => {
-    const from = dayjs(weekdayFrom);
-    const to = dayjs(weekdayTo);
-    const startTime = `${from.hour() < 10 ? "0" + from.hour() : from.hour()}:${
-      from.minute() < 10 ? "0" + from.minute() : from.minute()
-    }`;
-    const endTime = `${to.hour() < 10 ? "0" + to.hour() : to.hour()}:${
-      to.minute() < 10 ? "0" + to.minute() : to.minute()
-    }`;
-    return startTime + "-" + endTime;
+  const formattedWeekdayFrom = () => {
+    const from = dayjs(weekdayFrom).format(THHmm);
+    // Time  09:00 형식으로 변경
+    return from;
   };
 
-  const formattedWeekend = () => {
-    const from = dayjs(weekendFrom);
-    const to = dayjs(weekendTo);
-    const startTime = `${from.hour() < 10 ? "0" + from.hour() : from.hour()}:${
-      from.minute() < 10 ? "0" + from.minute() : from.minute()
-    }`;
+  const formattedWeekdayTo = () => {
+    const to = dayjs(weekdayTo);
     const endTime = `${to.hour() < 10 ? "0" + to.hour() : to.hour()}:${
       to.minute() < 10 ? "0" + to.minute() : to.minute()
     }`;
-    return startTime + "-" + endTime;
+    return endTime;
   };
 
   const changePassword = (e) => {
@@ -153,13 +151,9 @@ export default function SellerInfo() {
   // form Data 전송
   const onSubmit = (data) => {
     console.log("data >>> ", data);
-    const centerWeekday = formattedWeekday();
-    const centerWeekend = formattedWeekend();
-    data = {
-      ...data,
-      centerWeekday,
-      centerWeekend,
-    };
+    const startTime = formattedWeekdayFrom();
+    const endTime = formattedWeekdayTo();
+    data = { ...data, startTime, endTime };
     console.log("new data >>> ", data);
   };
 
@@ -198,6 +192,8 @@ export default function SellerInfo() {
           <SellerDetailInfo
             register={register}
             errors={errors}
+            checked={checked}
+            setChecked={setChecked}
             uploadId="backImg"
             backImg={backImg}
             uploadBackImg={uploadBackImg}

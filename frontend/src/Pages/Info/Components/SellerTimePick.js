@@ -7,15 +7,7 @@ import {
   KeyboardTimePicker,
 } from "@material-ui/pickers";
 
-export default function SellerTimePick({
-  register,
-  // selectedDateFrom,
-  // selectedDateTo,
-  // handleDateFromChange,
-  // handleDateToChange,
-  value,
-  onChange,
-}) {
+export default function SellerTimePick({ checked, register, value, onChange }) {
   console.log("value >>", value);
   return (
     <TimeFromTo>
@@ -23,25 +15,12 @@ export default function SellerTimePick({
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardTimePicker
             ampm={true}
-            // name="FromTime"
             variant="inline"
             value={value}
             onChange={onChange}
-            forwardedRef={register({ required: true })}
+            forwardedRef={checked ? register({ required: true }) : ""}
           />
         </MuiPickersUtilsProvider>
-        {/* <span className="timeFrom">~</span>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardTimePicker
-            ampm={true}
-            name="ToTime"
-            variant="inline"
-            placeholder="06:00 PM"
-            value={selectedDateTo}
-            onChange={handleDateToChange}
-            forwardedRef={register({ required: true })}
-          />
-        </MuiPickersUtilsProvider> */}
       </SellerInput>
     </TimeFromTo>
   );
