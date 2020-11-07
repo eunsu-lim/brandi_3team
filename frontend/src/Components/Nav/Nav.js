@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import regeneratorRuntime from "regenerator-runtime";
 import axios from "axios";
 import styled from "styled-components";
-import NAVMENU from "./NavMenu";
 import MenuItem from "./MenuItem";
 import { ArrowDropRight } from "@styled-icons/remix-line";
 
@@ -13,7 +12,7 @@ export default function Nav() {
   const [listId, setListId] = useState();
 
   // 통신 받아 올 nav data
-  const [navli, setNavli] = useState();
+  const [navList, setNavList] = useState();
 
   // 사이드 메뉴 클릭 시
   const handleBar = () => {
@@ -33,12 +32,12 @@ export default function Nav() {
     setSideMenuOver(true);
   };
 
-  // 페이지 로드 시 get 요청
+  // 페이지 로드 시 메뉴 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await axios.get(`public/Data/NavData.json`);
-        setNavli(result.data.data.nav_data);
+        setNavList(result.data.data.nav_data);
       } catch (error) {
         console.log(error);
       }
@@ -53,8 +52,8 @@ export default function Nav() {
       </MenuToggle>
       {/* 메뉴 리스트 영역 */}
       <MenuBox isSideBar={isSideBar}>
-        {navli &&
-          navli.map((nav, idx) => {
+        {navList &&
+          navList.map((nav, idx) => {
             return (
               <MenuItem
                 key={idx}
