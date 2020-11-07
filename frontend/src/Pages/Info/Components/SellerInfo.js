@@ -34,7 +34,7 @@ export default function SellerInfo() {
 
   // backend 통신 회원 정보 가져오기
   useEffect(() => {
-    // console.log(getData);
+    console.log(getData);
   }, []);
 
   // 이미지 파일 업로드
