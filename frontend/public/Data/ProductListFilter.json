@@ -1,0 +1,206 @@
+{
+  "data": {
+    "account_type": "master",
+    "filter_list": [
+      {
+        "category": "셀러속성",
+        "btnList": [
+          { "id": "1", "btn": "전체" },
+          { "id": "2", "btn": "쇼핑몰" },
+          { "id": "3", "btn": "마켓" },
+          { "id": "4", "btn": "로드샵" },
+          { "id": "5", "btn": "디자이너브랜드" },
+          { "id": "6", "btn": "제너럴브랜드" },
+          { "id": "7", "btn": "내셔녈브랜드" },
+          { "id": "8", "btn": "뷰티" }
+        ]
+      },
+      {
+        "category": "판매여부",
+        "btnList": [
+          { "id": "1", "btn": "전체" },
+          { "id": "2", "btn": "판매" },
+          { "id": "3", "btn": "미판매" }
+        ]
+      },
+      {
+        "category": "진열여부",
+        "btnList": [
+          { "id": "1", "btn": "전체" },
+          { "id": "2", "btn": "진열" },
+          { "id": "3", "btn": "미진열" }
+        ]
+      },
+      {
+        "category": "할인여부",
+        "btnList": [
+          { "id": "1", "btn": "전체" },
+          { "id": "2", "btn": "할인" },
+          { "id": "3", "btn": "미할인" }
+        ]
+      }
+    ],
+    "product_list": [
+      {
+        "id": "1",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "2",
+        "status": "등록중",
+        "date": "2020-10-12 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893314_1603864305_image1_S.jpg",
+        "name": "스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "3",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893308_1603862120_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "4",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893294_1603846910_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "5",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "6",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "7",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "8",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "9",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      },
+      {
+        "id": "10",
+        "status": "등록완료",
+        "date": "2020-10-11 09:00:00",
+        "img": "https://image.brandi.me/cproduct/2020/10/28/17893304_1603846912_image1_S.jpg",
+        "name": "골드체인 절개라인 스판 스커트",
+        "code": "SB000000000009045079",
+        "number": "17893304",
+        "type": "쇼핑몰",
+        "seller_name": "오드",
+        "price": "99,000",
+        "discount_price": "99,000",
+        "sale": "판매",
+        "display": "진열",
+        "discount": "미할인"
+      }
+    ]
+  }
+}
