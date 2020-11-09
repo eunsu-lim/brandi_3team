@@ -33,6 +33,8 @@ def create_account_endpoints(account_service):
                 account_type_id = user_credential['account_type_id'] 
                 account_id      = user_credential['id']
 
+                nav_list = account_service.get_nav_and_button(account_type_id, db_connection)
+
                 # service의 generate_access_token 함수를 통해 생성한 token을 token에 저장
                 token           = account_service.generate_access_token(account_id)
                 
@@ -40,7 +42,8 @@ def create_account_endpoints(account_service):
                 return jsonify({
                     'access_token'    : token,
                     # 마스터일 경우 1, 셀러일 경우 2
-                    'account_type_id' : account_type_id
+                    'account_type_id' : account_type_id,
+                    'nav_list' : nav_list
                 })
             # 로그인 실패 - 비밀번호 불일치
             else:

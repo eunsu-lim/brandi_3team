@@ -3,5 +3,5 @@ from .seller_service import SellerService
 
 __all__ = [
     'AccountService',
-    'SellerSevice'
+    'SellerService'
 ]

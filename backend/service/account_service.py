@@ -31,4 +31,7 @@ class AccountService:
 
         return token.decode('UTF-8')
 
-
+    def get_nav_and_button(self, account_type_id, db_connection):
+        test = self.account_dao.get_nav_list(account_type_id, db_connection)
+        nav_list = {}
+        return test
