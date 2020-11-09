@@ -147,3 +147,7 @@ class SellerDao:
             """
             cursor.execute(get_seller_id_query, account_id)
             return cursor.fetchone()
+            
+    def get_seller_data(self, seller_id, db_connection):
+        print("seller_id >>>>", seller_id)
+        return "seller_dao"

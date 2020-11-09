@@ -52,7 +52,6 @@ class SellerService:
         result = self.seller_dao.insert_seller(seller_info, db_connection)
         return 'S100'
     
-   
-      
-
-
+    def get_seller_data(self, seller_id, db_connection):
+        result = self.seller_dao.get_seller_data(seller_id, db_connection)
+        return result

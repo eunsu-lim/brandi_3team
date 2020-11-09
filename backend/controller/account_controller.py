@@ -1,6 +1,11 @@
 import jwt
 
 from flask import request, jsonify, Blueprint
+from flask_request_validator  import(
+    Param,
+    JSON,
+    validate_params
+)
 
 from connection import get_connection
 from exceptions import NotFoundError
@@ -10,6 +15,11 @@ def create_account_endpoints(account_service):
     account_bp = Blueprint('accounts', __name__, url_prefix='/accounts')
 
     @account_bp.route('/login', methods=['POST'])
+    @validate_params(
+    #들어온 파라미터들을 유효성 검사
+    Param('sellerId',JSON,str,required=True),
+    Param('sellerPassword',JSON,str,required=True),
+    )
     def login(*args):
         try:
             db_connection  = get_connection()
