@@ -179,8 +179,13 @@ class SellerDao:
         """
         with db_connection.cursor() as cursor:
             get_seller_data_query = """
-            
-            WHERE account_id = %(seller_id)s
+            SELECT count(orders.id), order_status_id
+            FROM orders
+            JOIN products ON orders.product_id = products.id
+            JOIN sellers ON products.seller_id = sellers.id
+            WHERE seller_id = %(seller_id)s
+            GROUP BY order_status_id
             """
             cursor.execute(get_seller_data_query, seller_id)
-        return cursor.fetchall()
+            print("seller_data", cursor.execute(get_seller_data_query, seller_id))
+            return cursor.fetchall()

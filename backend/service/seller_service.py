@@ -31,9 +31,9 @@ class SellerService:
             History:
                 2020.11.08(최지선) : 초기 생성
         """
-        print('sss',seller_id)
         order_counts = self.seller_dao.get_seller_order_counts(db_connection, seller_id)
-        return order_counts
+        seller_data = self.seller_dao.get_seller_data(seller_id, db_connection)
+        return {'order_counts': order_counts, 'seller_data': seller_data}
 
 
     def create_new_account(self, seller_info, db_connection):
@@ -74,10 +74,3 @@ class SellerService:
                 ).decode('utf-8')
         result = self.seller_dao.insert_seller(seller_info, db_connection)
         return 'S100'
-    
-    def get_seller_data(self, seller_id, db_connection):
-        """
-        Home 화면에 나타나는 seller의 data를 가져옵니다.
-        """
-        seller_data = self.seller_dao.get_seller_data(seller_id, db_connection)
-        return seller_data

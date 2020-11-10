@@ -45,7 +45,6 @@ def create_seller_endpoints(seller_service):
         try:
             db_connection = get_connection()
             seller_id  = request.seller_id
-            print(seller_id,'control')
             result = seller_service.get_seller_orders(db_connection, {"seller_id":seller_id})
             return jsonify(result),(internal_code_sheet['S100']['code'])
         
@@ -129,22 +128,4 @@ def create_seller_endpoints(seller_service):
         finally:
             db_connection.close()
 
-    # 홈 엔드포인트
-    @seller_bp.route('/home', methods=['GET'])
-    @login_required
-    def home():
-        try:
-            # db 접속
-            db_connection = get_connection()
-            # 데코레이터에서 seller_id를 받습니다.
-            seller_id = request.seller_id
-            # seller_id와 일치하는 상품준비, 배송완료, 전체상품 수, 노출상품 수를 가져 옵니다.
-            seller_data = seller_service.get_seller_data(seller_id, db_connection)
-            # 그러기 위해서는 service에 함수
-            # 그리고 dao에 함수
-            # 상품준비, 배송완료, 전체상품 수, 노출상품 수 return
-            return seller_data
-            
-        finally:
-            db_connection.close()
     return seller_bp
