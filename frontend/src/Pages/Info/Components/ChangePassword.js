@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -7,6 +8,7 @@ import { Close } from "@styled-icons/evaicons-solid";
 
 export default function ChangePassword({ setIsModal }) {
   const { register, handleSubmit, watch, errors } = useForm();
+  const history = useHistory();
 
   const onSubmit = async (data) => {
     if (data) {
@@ -27,6 +29,7 @@ export default function ChangePassword({ setIsModal }) {
             }
           );
           alert("비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.");
+          history.push("/");
         } catch (err) {
           console.log(err);
           alert(
