@@ -106,7 +106,7 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
     }`;
   };
 
-  // 셀로 속성 버튼이 모두 선택되거나, 선택된 버튼이 없을 시, '전체' 버튼으로 변경됩니다.
+  // 셀러 속성 버튼이 모두 선택되거나, 선택된 버튼이 없을 시, '전체' 버튼으로 변경됩니다.
   useEffect(() => {
     if (duplicated.length === 7 || duplicated.length === 0) {
       setDuplicated(["1"]);
@@ -115,10 +115,10 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
 
   // 버튼 중복 선택 함수 및 조건문
   const handleDuplicated = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     // isIncludes는 버튼이 들어있는 지 찾는 함수
     const isIncludes = duplicated.find((el) => el === name);
-    // value가 "전체"일 때, 전체를 배열에 포함합니다.
+    // value가 "전체"일 때 === name이 "1"일 때, 전체를 배열에 포함합니다.
     if (name === "1") {
       setDuplicated(["1"]);
     }
@@ -134,6 +134,7 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
 
   // 검색어 입력 함수
   const handleInput = (e) => {
+    ㄴㄴ;
     const { value } = e.target;
     setSearch(value);
     // setChangeValue(!changeValue);
@@ -142,16 +143,6 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
   // 검색 버튼 함수
   const handleSearch = async () => {
     setChangeValue(!changeValue);
-
-    // if (!search) {
-    //   alert("로딩 중");
-    // } else if (startDate && !search) {
-    //   alert("검색어를 입력해주세요.");
-    // } else if (!search && !startDate && !endDate)
-    //   return alert(
-    //     "날짜 조건이 없을 경우에는 필수 필터 조건 검색이 존재합니다. \n주문번호 or 주문상세번호 or 주문자명 or 핸드폰번호"
-    //   );
-    // else {
 
     // GET 메서드를 사용하고, 서버에
     // params를 인자로 보내고, 들어온 데이터를 result라는 변수에 저장합니다.
