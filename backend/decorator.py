@@ -43,7 +43,7 @@ def login_required(func):
 
         except NotFoundError:
             return jsonify(internal_code_sheet['S108']), (internal_code_sheet['S108']['code'])
-        
+       
         finally:
             db_connection.close()
 

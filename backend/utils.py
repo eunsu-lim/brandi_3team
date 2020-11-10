@@ -1,4 +1,6 @@
-from exceptions import PasswordError
+from exceptions           import (
+    PasswordError
+)
 
 def validate_password(password):
     validators = [

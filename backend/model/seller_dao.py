@@ -3,6 +3,30 @@ import pymysql
 from exceptions    import NotFoundError
 
 class SellerDao:
+    def get_seller_order_counts(self, db_connection, seller_id):
+        with db_connection.cursor() as cursor:
+            get_seller_orders_query = """    
+            SELECT
+                DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') as date,
+                SUM(paid_total) as amounts,
+                count(order_status_history.id) as counts
+            FROM orders
+            INNER JOIN products ON orders.product_id = products.id
+            INNER JOIN order_status_history ON orders.id = order_status_history.order_id
+            INNER JOIN sellers ON products.seller_id = sellers.id
+            WHERE orders.order_status_id = 5
+            AND sellers.id = %(seller_id)s
+            AND order_status_history.updated_at 
+            BETWEEN 
+                SUBDATE(NOW(), INTERVAL 30 day) AND now()
+            GROUP BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
+            """
+            cursor.execute(get_seller_orders_query, seller_id)
+            seller_orders = cursor.fetchall()
+            if not seller_orders:
+                raise NotFoundError('S000')      
+            return seller_orders
+
     def insert_seller(self, seller_info, db_connection):
         """
         회원가입시 sellers테이블에 넣어줄 데이터

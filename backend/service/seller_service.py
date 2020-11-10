@@ -12,6 +12,28 @@ class SellerService:
     def __init__(self, seller_dao, config):
         self.seller_dao = seller_dao
         self.config     = config
+    
+    def get_seller_orders(self, db_connection, seller_id):
+        """
+        셀러의 주문 현황를 조회합니다. 
+            Args:
+                seller_id: 셀러 아이디
+             
+            Returns:
+                {
+                    "date": 날짜,
+                    "counts": 주문건수,
+                    "amounts":주문금액
+                }   
+            Authors:
+                jisunn0130@gmail.com(최지선)
+            
+            History:
+                2020.11.08(최지선) : 초기 생성
+        """
+        order_counts = self.seller_dao.get_seller_order_counts(db_connection, seller_id)
+        return {"order_lists":order_counts}
+
 
     def create_new_account(self, seller_info, db_connection):
         """
