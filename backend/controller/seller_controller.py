@@ -144,6 +144,7 @@ def create_seller_endpoints(seller_service):
             # 그리고 dao에 함수
             # 상품준비, 배송완료, 전체상품 수, 노출상품 수 return
             return seller_data
+            
         finally:
             db_connection.close()
     return seller_bp
