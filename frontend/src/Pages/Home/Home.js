@@ -24,7 +24,7 @@ export default function Home() {
             Authorization: localStorage.getItem("access_token")
           }
         }).then(res => setData(
-          res.data.order_lists.reduce((acc, cur, idx) => {
+          res.data.chart_data.reduce((acc, cur, idx) => {
             if (idx === 0) {
               return {
               date: [cur.date],
@@ -152,7 +152,7 @@ export default function Home() {
               <PanelList>
                 <PanelBody>
                   <PanelContentsText>
-                    환불 요청:
+                    즐겨 찾기 수:
                   </PanelContentsText>
                   <PanelContentsCount>
                     0건
@@ -160,7 +160,7 @@ export default function Home() {
                 </PanelBody>
                 <PanelBody>
                   <PanelContentsText>
-                    반품 진행:
+                    전체 상품 수:
                   </PanelContentsText>
                   <PanelContentsCount>
                     0건
@@ -168,7 +168,7 @@ export default function Home() {
                 </PanelBody>
                 <PanelBody>
                   <PanelContentsText>
-                    주문 취소중:
+                    노출 상품 수:
                   </PanelContentsText>
                   <PanelContentsCount>
                     0건
@@ -176,10 +176,10 @@ export default function Home() {
                 </PanelBody>
                 <PanelBody>
                   <PanelContentsText>
-                    환불 승인중:
+                    
                   </PanelContentsText>
                   <PanelContentsCount>
-                    0건
+                   
                   </PanelContentsCount>
                 </PanelBody>
               </PanelList>
