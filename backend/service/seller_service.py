@@ -75,5 +75,8 @@ class SellerService:
         return 'S100'
     
     def get_seller_data(self, seller_id, db_connection):
-        result = self.seller_dao.get_seller_data(seller_id, db_connection)
-        return result
+        """
+        Home 화면에 나타나는 seller의 data를 가져옵니다.
+        """
+        seller_data = self.seller_dao.get_seller_data(seller_id, db_connection)
+        return seller_data

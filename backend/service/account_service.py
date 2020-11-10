@@ -35,15 +35,13 @@ class AccountService:
         # dao에서 받은 데이터를 nav_data에 선언
         nav_data = self.account_dao.get_nav_list(account_type_id, db_connection)
         
-        temp_list = []
-        final_dict = []
-
+        # nav에 url을 추가하기 위해 menu_url과 sub_url을 선언
         menu_url = {
-            '홈':'sellers',
+            '홈':'/home',
             '통계':'',
-            '주문관리':'orders',
+            '주문관리':'',
             '취소/환불관리':'',
-            '상품관리':'products',
+            '상품관리':'',
             '고객응대관리':'',
             '기획전/쿠폰관리':'',
             '회원관리':'',
@@ -52,18 +50,18 @@ class AccountService:
             '진열관리':'',
             '고객센터':''
         }
-        
+
         sub_url = {
             '시간단위분석':'',
             '결제완료관리':'',
-            '상품준비관리':'/lists/1',
-            '배송중관리':'/lists/3',
-            '배송완료관리':'/lists/4',
-            '구매확정관리':'/lists/5',
+            '상품준비관리':'/order/1',
+            '배송중관리':'/order/3',
+            '배송완료관리':'/order/4',
+            '구매확정관리':'/order/5',
             '환불요청관리':'',
             '환불완료관리':'',
             '주문취소완료관리':'',
-            '상품관리':'/product_list',
+            '상품관리':'/product',
             '상품등록':'',
             'Q&A관리':'',
             '텍스트리뷰':'',
@@ -87,7 +85,7 @@ class AccountService:
             '주문별 판매수수료':'',
             '셀러별 서버이용료':'',
             '상점진열관리':'',
-            '셀러 정보 관리':'',
+            '셀러 정보 관리':'/user',
             '패널티 셀러 관리':'',
             '도매처 관리':'',
             '헬피 신청 안내':'',
@@ -96,6 +94,14 @@ class AccountService:
             'MD에게 제안':'',
             '오류/수정 제안':''
         }
+
+        #  dao에서 받은 nav_data의 형태를 가공하기 위해 for문 실행
+        temp_list = [1]
+        final_dict = [{
+            "id": 1,
+            "menuTitle" :'홈',
+            "menu_url" : '/home'
+            }]
 
         for nav in nav_data:
             if nav['id'] not in temp_list:

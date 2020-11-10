@@ -173,4 +173,13 @@ class SellerDao:
             return cursor.fetchone()
             
     def get_seller_data(self, seller_id, db_connection):
-        return "seller_dao"
+        """
+        로그인 데코레이터에서 토큰에 담긴 seller_id 로 셀러의 홈 데이터를 가져오는 쿼리
+        """
+        with db_connection.cursor() as cursor:
+            get_seller_data_query = """
+            
+            WHERE account_id = %(seller_id)s
+            """
+            cursor.execute(get_seller_data_query, seller_id)
+        return cursor.fetchall()
