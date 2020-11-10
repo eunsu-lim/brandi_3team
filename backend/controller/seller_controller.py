@@ -45,7 +45,6 @@ def create_seller_endpoints(seller_service):
         try:
             db_connection = get_connection()
             seller_id  = request.seller_id
-            print(seller_id,'control')
             result = seller_service.get_seller_orders(db_connection, {"seller_id":seller_id})
             return jsonify(result),(internal_code_sheet['S100']['code'])
         
@@ -128,4 +127,5 @@ def create_seller_endpoints(seller_service):
         
         finally:
             db_connection.close()
+
     return seller_bp
