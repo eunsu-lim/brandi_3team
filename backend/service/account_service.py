@@ -52,6 +52,7 @@ class AccountService:
             '진열관리':'',
             '고객센터':''
         }
+        
         sub_url = {
             '시간단위분석':'',
             '결제완료관리':'',
@@ -95,6 +96,7 @@ class AccountService:
             'MD에게 제안':'',
             '오류/수정 제안':''
         }
+
         for nav in nav_data:
             if nav['id'] not in temp_list:
                 temp_list.append(nav['id'])
