@@ -16,7 +16,7 @@ export default function SellerDefaultInfo({
   changePassword,
 }) {
   const [clickValue, setClickValue] = useState(0);
-  // console.log("values", values);
+
   return (
     <TableContainer>
       <SellerTable>

@@ -8,7 +8,6 @@ import {
 } from "@material-ui/pickers";
 
 export default function SellerTimePick({ checked, register, value, onChange }) {
-  console.log("value >>", value);
   return (
     <TimeFromTo>
       <SellerInput>

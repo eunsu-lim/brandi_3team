@@ -79,10 +79,7 @@ export default function SellerInfo() {
               setTimeout(() => {
                 window.location.reload(), window.scrollTo(0, 0), 3000;
               });
-
-              // setInfos(res.data.seller_data);
             });
-          // console.log("result222 >>> ", result);
         } catch (err) {
           console.log(err);
           alert("오류 발생!!");
@@ -95,10 +92,7 @@ export default function SellerInfo() {
   // 이미지 파일 업로드
   const uploadProfileImg = (e) => {
     let reader = new FileReader();
-    console.log("e.target.files >>> ", e.target.files);
-
     let file = e.target.files[0];
-
     if (file) {
       reader.readAsDataURL(file);
       // 이미지의 새로운 base64 URI로 반환
@@ -133,18 +127,14 @@ export default function SellerInfo() {
   // 이미지 삭제 버튼 클릭시 초기화
   const removeProfileImg = () => {
     var file = document.getElementById("profile_image").files;
-    console.log("file >>> ", file);
     setValue("profile_image", null);
     setProfileImg(null);
     setProfileChange(false);
-    console.log("del >>> ", file);
   };
 
   // 이미지 파일 업로드
   const uploadBackImg = (e) => {
     let reader = new FileReader();
-    console.log("e.target.files >>> ", e.target.files);
-
     let file = e.target.files[0];
 
     if (file) {
@@ -181,11 +171,9 @@ export default function SellerInfo() {
   // 이미지 삭제 버튼 클릭시 초기화
   const removeBackImg = () => {
     var file = document.getElementById("background_image_url").files;
-    console.log("file >>> ", file);
     setValue("background_image_url", null);
     setBackImg(null);
     setBackChange(false);
-    console.log("del >>> ", file);
   };
 
   const formattedWeekdayFrom = () => {
