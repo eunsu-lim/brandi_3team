@@ -1,0 +1,4 @@
+{
+  "python.pythonPath": "/opt/miniconda3/envs/brandi/bin/python",
+  "python.linting.pylintEnabled": true
+}
