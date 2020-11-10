@@ -179,7 +179,9 @@ class SellerDao:
         """
         with db_connection.cursor() as cursor:
             get_seller_data_query = """
-            SELECT count(orders.id), order_status_id
+            SELECT 
+                count(orders.id) as count, 
+                order_status_id
             FROM orders
             JOIN products ON orders.product_id = products.id
             JOIN sellers ON products.seller_id = sellers.id

@@ -22,22 +22,19 @@
     "date-fns": "^2.16.1",
     "@babel/runtime": "^7.12.1",
     "axios": "^0.21.0",
+    "file-saver": "^2.0.2",
     "fragment": "^0.3.0",
     "material-ui": "^0.20.2",
     "react": "^16.4.1",
-<<<<<<< HEAD
     "react-daum-postcode": "^2.0.1",
-=======
+    "highcharts": "^8.2.2",
+    "highcharts-react-official": "^3.0.0",
     "react-datepicker": "^3.3.0",
->>>>>>> master
     "react-dom": "^16.4.1",
-    "react-hook-form": "^6.9.6",
+    "react-hook-form": "^6.10.1",
     "react-hooks-useform": "^0.1.84",
-<<<<<<< HEAD
     "react-input-mask": "^2.0.4",
-=======
     "react-js-pagination": "^3.0.3",
->>>>>>> master
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",

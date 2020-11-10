@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import regeneratorRuntime from "regenerator-runtime";
+import axios from "axios";
 import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
@@ -8,6 +10,22 @@ import { Home } from "@styled-icons/boxicons-solid";
 import { ArrowIosForwardOutline } from "@styled-icons/evaicons-outline";
 
 export default function User() {
+  const [sellerList, setSellerList] = useState([]);
+
+  // 페이지 로드 시 리스트 데이터 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(`public/Data/SellerList.json`);
+        setSellerList(result.data.SellerList);
+        console.log("result>>>", result.data.SellerList);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <UserWrap>
       <Header />
@@ -33,7 +51,7 @@ export default function User() {
                 <li>셀러 회원 리스트</li>
               </ul>
             </MenuBar>
-            <MemberList />
+            <MemberList sellerList={sellerList} setSellerList={setSellerList} />
           </UserContent>
         </UserContainer>
       </UserBox>
