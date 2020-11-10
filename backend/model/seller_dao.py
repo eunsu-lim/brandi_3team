@@ -20,6 +20,7 @@ class SellerDao:
             BETWEEN 
                 SUBDATE(NOW(), INTERVAL 30 day) AND now()
             GROUP BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
+            ORDER BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
             """
             cursor.execute(get_seller_orders_query, seller_id)
             seller_orders = cursor.fetchall()
