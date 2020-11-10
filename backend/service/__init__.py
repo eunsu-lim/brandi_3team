@@ -5,6 +5,6 @@ from .order_service   import OrderService
 
 __all__ = [
     'AccountService',
-    'SellerSevice',
+    'SellerService',
     'OrderService'
 ]
