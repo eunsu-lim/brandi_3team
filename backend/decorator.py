@@ -39,11 +39,11 @@ def login_required(func):
                 raise  InvalidDataError('S107')
 
         except jwt.DecodeError:
-            return jsonify(internal_code_sheet['S107']), (internal_code_sheet[result]['S107'])
+            return jsonify(internal_code_sheet['S107']), (internal_code_sheet['S107']['code'])
 
         except NotFoundError:
-            return jsonify(internal_code_sheet['S108']), (internal_code_sheet[result]['S108'])
-        
+            return jsonify(internal_code_sheet['S108']), (internal_code_sheet['S108']['code'])
+       
         finally:
             db_connection.close()
 
