@@ -82,7 +82,6 @@ class OrderService:
   
         product_size_options = self.order_dao.get_product_size_options(db_connection, product)
         product_color_options = self.order_dao.get_product_color_options(db_connection, product)
-        print(product_color_options)
         color_options = []
         for color_option in product_color_options:
             if color_option not in color_options:

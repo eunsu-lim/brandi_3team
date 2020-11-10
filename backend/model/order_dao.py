@@ -135,7 +135,7 @@ class OrderDao:
                 """
                 get_order_count_query += add_query
             
-            if filter_dict['order_status_id'] in [3,4,5]:
+            if filter_dict['order_status_id'] in [2,3,4,5]:
                 add_query = """
                 AND order_status_history.order_status_id=%(order_status_id)s
                 """
@@ -255,7 +255,6 @@ class OrderDao:
     
             #주문상태
             if filter_dict.get('order_status_id', None):
-                print(filter_dict['order_status_id'])
                 add_query = """
                 AND orders.order_status_id=%(order_status_id)s
                 """
