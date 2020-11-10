@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 
 from flask     import request
 
@@ -13,7 +14,7 @@ class OrderService:
     def __init__(self, order_dao):
         self.order_dao = order_dao
     
-    def change_order_status(self,db_connection, orders_dict):
+    def change_order_status(self,db_connection, order_lists):
         """
         주문 상태를 변경합니다.
         Args:
@@ -27,10 +28,14 @@ class OrderService:
             2020.11.03(최지선) : 초기 생성
             2020.11.05(최지선) : 슬랙봇 삭제
         """
-        updated_order_count = self.order_dao.update_order_status(db_connection, orders_dict)
+        order_lists['order_id'] = tuple(order_lists['order_id'])
+        order_lists['order_status_id'] = int(order_lists['order_status_id'])
+
+        updated_order_count = self.order_dao.update_order_status(db_connection, order_lists)
+        
         in_charge = request.account_id
-        orders_dict['account_id'] = in_charge['account_id']
-        self.order_dao.insert_order_history(db_connection, orders_dict)
+        order_lists['account_id'] = in_charge['account_id']
+        self.order_dao.insert_order_history(db_connection, order_lists)
         return updated_order_count
     
     def create_order_lists(self, db_connection, filter_dict):
@@ -58,6 +63,8 @@ class OrderService:
         History:
             2020.11.03(최지선) : 초기 생성
         """
+        if filter_dict['filter_date_to']:
+            filter_dict['filter_date_to'] += datetime.timedelta(days=1)
         order_counts = self.order_dao.get_order_counts(db_connection, filter_dict)
         order_lists  = self.order_dao.get_orders(db_connection, filter_dict)
         return {"order_counts":order_counts, "order_lists":order_lists}
@@ -82,7 +89,6 @@ class OrderService:
   
         product_size_options = self.order_dao.get_product_size_options(db_connection, product)
         product_color_options = self.order_dao.get_product_color_options(db_connection, product)
-        print(product_color_options)
         color_options = []
         for color_option in product_color_options:
             if color_option not in color_options:
