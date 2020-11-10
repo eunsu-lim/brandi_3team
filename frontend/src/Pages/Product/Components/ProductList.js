@@ -49,6 +49,8 @@ function ProductList({
     postSortData();
   }, [sortData.offset]);
 
+  console.log("productData", productData);
+
   return (
     <ProductListWrap>
       {/* 상품관리 리스트 상단 page bar */}
@@ -127,8 +129,7 @@ function ProductList({
       <List>
         {/* 상품관리 리스트 data의 length로 전체 조회건 수 출력 */}
         <p>
-          전체 조회건 수 :
-          <span> {productData && productData.product_list.length}</span> 건
+          전체 조회건 수 :<span> {productData && productData.length}</span> 건
         </p>
         {/* 상품관리 리스트 table */}
         <ListTable>
@@ -167,7 +168,7 @@ function ProductList({
             <tbody>
               {/* 상품관리 리스트 data들을 map을 사용해서 table에 한 줄씩 생성 */}
               {productData &&
-                productData.product_list.map((list, i) => {
+                productData.map((list, i) => {
                   return (
                     <tr key={i}>
                       <td>
@@ -179,25 +180,34 @@ function ProductList({
                           productData={productData}
                         />
                       </td>
-                      {isMaster && <td>{list.status}</td>}
-                      <td>{list.date}</td>
+                      {isMaster && (
+                        <td>
+                          {list.register_status === 1 ? "등록완료" : "등록중"}
+                        </td>
+                      )}
+                      <td>{list.created_at}</td>
                       <td>
                         <ImgBox>
-                          <img src={list.img} />
+                          <img src={list.thumbnail} />
                         </ImgBox>
                       </td>
                       <td>{list.name}</td>
                       <td>
                         <a href="">{list.code}</a>
                       </td>
-                      <td>{list.number}</td>
+                      <td>{list.id}</td>
                       {isMaster && <td>{list.type}</td>}
-                      {isMaster && <td>{list.seller_name}</td>}
-                      <td>{list.price}</td>
-                      <td>{list.discount_price}</td>
-                      <td>{list.sale}</td>
-                      <td>{list.display}</td>
-                      <td>{list.discount}</td>
+                      {isMaster && <td>{list.name_korean}</td>}
+                      <td>
+                        {list.sales_price && list.sales_price.toLocaleString()}
+                      </td>
+                      <td>
+                        {list.discounted_price &&
+                          list.discounted_price.toLocaleString()}
+                      </td>
+                      <td>{list.sales_status}</td>
+                      <td>{list.display_status}</td>
+                      <td>{list.discount_status}</td>
                       <td>
                         <GetButton>구매하기</GetButton>
                       </td>
@@ -211,7 +221,7 @@ function ProductList({
         <PageButton>
           <Pagination
             activePage={pageNumber} // 현재 활성화 된 page
-            itemsCountPerPage={10} // 한 페이지에 보여줄 list의 갯수
+            itemsCountPerPage={sortData && sortData.limit} // 한 페이지에 보여줄 list의 갯수
             totalItemsCount={450} // 전체 data의 갯수
             onChange={handlePageChange} // 클릭시 해당 함수를 실행하여 현재 활성화 된 Page Number state값 변경
           />
