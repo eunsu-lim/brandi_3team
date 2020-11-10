@@ -36,7 +36,8 @@ export default function Nav() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await axios.get(`public/Data/NavData.json`);
+        // (`public/Data/NavData.json`) => (`/public/Data/NavData.json`)로 변경
+        const result = await axios.get(`/public/Data/NavData.json`);
         setNavList(result.data.data.nav_data);
       } catch (error) {
         console.log(error);
@@ -62,6 +63,9 @@ export default function Nav() {
                 menuIcon={nav.menuIcon}
                 menuTitle={nav.menuTitle}
                 subMenu={nav.subMenu}
+                // navData.json id 3 > url 추가 >
+                // 아래 url props 부분 추가하였습니다 - 김상준
+                url={nav.url}
                 isSideBar={isSideBar}
                 isSubMenuOpen={isSubMenuOpen}
                 isSideMenuOver={isSideMenuOver}

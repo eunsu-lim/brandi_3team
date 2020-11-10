@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-function OrderTableData({
+function DeliveryOrderTableData({
   currentPosts,
   handleSingleCheck,
   checkItems,
@@ -51,25 +51,24 @@ function OrderTableData({
           </div>
         </td>
         <td>{currentPosts.paid_date}</td>
+        <td>{currentPosts.updated_at}</td>
         <td>{currentPosts.order_number}</td>
         <td>
           <Link to="/orderdetail">{currentPosts.detailed_order_number}</Link>
         </td>
         <td>{currentPosts.seller_name}</td>
         <td>{currentPosts.product_name}</td>
-        <td>{currentPosts.color + "/" + currentPosts.size}</td>
-        <td>{currentPosts.quantity}</td>
         <td>{currentPosts.customer_name}</td>
         <td>{currentPosts.phone_number}</td>
         <td>{currentPosts.paid_total.toLocaleString()}</td>
-        {/*  주문 번호에 따른 주문 상태 표시 */}
         <td>{orderStatus[currentPosts.order_status_id]}</td>
+        {/*  주문 번호에 따른 주문 상태 표시 */}
       </TableRow>
     </Fragment>
   );
 }
 
-export default OrderTableData;
+export default DeliveryOrderTableData;
 
 const TableRow = styled.tr`
   a {

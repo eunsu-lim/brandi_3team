@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, Fragment } from "react";
 import Nav from "../../Components/Nav/Nav";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -7,11 +6,20 @@ import { useHistory, useParams } from "react-router-dom";
 import Title from "./Component/Title/Title";
 import FilterArea from "./Component/FilterArea/FilterArea";
 import OrderManagementArea from "./Component/OrderManagementArea/OrderManagementArea";
+import DeliveryTitle from "./Component/Title/DeliveryTitle";
+import DeliveryFilterArea from "./Component/FilterArea/DeliveryFilterArea";
+import DeliveryManagementArea from "./Component/OrderManagementArea/DeliveryManagementArea";
+import CompleteTitle from "./Component/Title/CompleteTitle";
+import CompleteFilterArea from "./Component/FilterArea/CompleteFilterArea";
+import CompleteManagementArea from "./Component/OrderManagementArea/CompleteManagementArea";
+import PurchaseTitle from "./Component/Title/PurchaseTitle";
+import PurchaseFilterArea from "./Component/FilterArea/PurchaseFilterArea";
+import PurchaseManagementArea from "./Component/OrderManagementArea/PurchaseManagementArea";
 import axios from "axios";
 import styled from "styled-components";
 
-function Order(props) {
-  // 서버에 요청 할 데이터 객체
+function Order() {
+  // 서버에 데이터를 요청할 때 쿼리스트링으로 사용할 데이터를 담을 state
   const [filterData, setFilterData] = useState({
     offset: "0",
     limit: "50",
@@ -25,27 +33,6 @@ function Order(props) {
   const [currentPage, setCurrentPage] = useState(1);
   // 한 페이지에 해당하는 데이터의 수(초기값 50)
   const [postsPerPage, setPostsPerPage] = useState(50);
-
-  // 서버에 데이터를 요청하는 axios
-  // 초기화 버튼 누를 때,
-  // 3일인 초기 값의 데이터가 들어오도록 구현해야함!
-  useEffect(() => {
-    axios
-      .request({
-        method: "GET",
-        url: `http://localhost:3042/public/Data/OrderTableData.json`,
-        headers: {
-          // "Content-Type": "application/json",
-          Authorization: localStorage.getItem("access_token"),
-        },
-      })
-      // axios 사용할 때, 들어오는 데이터에 data라는 키 값이 생긴다.
-      .then((res) => setPosts(res.data.order_lists));
-  }, []);
-
-  // useEffect(() => {
-  //   getOrderData();
-  // }, []);
 
   // Get 현재 페이지
   // 마지막 데이터의 인덱스 = 현재 페이지 * 페이지에 들어온 데이터
@@ -63,38 +50,130 @@ function Order(props) {
     setCurrentPage(1);
   };
 
+  const params = useParams();
+
   return (
     <Orderwrap>
       <Header />
       <OrderBox>
         <Nav />
-        <OrderContainer>
-          {/* 타이틀 영역 */}
-          <Title />
-          {/* 필터 영역 */}
-          <FilterArea
-            posts={posts}
-            filterData={filterData}
-            setFilterData={setFilterData}
-          />
-          {/* 주문 관리 리스트 영역 */}
-          <OrderManagementArea
-            // data는 전체 데이터를 받아옴.
-            posts={posts}
-            currentPosts={currentPosts}
-            loading={loading}
-            postsPerPage={postsPerPage}
-            totalPosts={posts.length}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            // handleSortDate={handleSortDate}
-            // paginate={paginate}
-            handleDataNumber={handleDataNumber}
-            filterData={filterData}
-            setFilterData={setFilterData}
-            indexOfFirstPost={indexOfFirstPost}
-          />
-        </OrderContainer>
+        {/* 상품준비관리 페이지 */}
+        {params.id === "1" && (
+          <OrderContainer>
+            {/* 타이틀 영역 */}
+            <Title />
+            {/* 필터 영역 */}
+            <FilterArea
+              posts={posts}
+              setPosts={setPosts}
+              filterData={filterData}
+              setFilterData={setFilterData}
+            />
+            {/* 주문 관리 리스트 영역 */}
+            <OrderManagementArea
+              posts={posts}
+              setPosts={setPosts}
+              currentPosts={currentPosts}
+              loading={loading}
+              postsPerPage={postsPerPage}
+              totalPosts={posts.length}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              handleDataNumber={handleDataNumber}
+              filterData={filterData}
+              setFilterData={setFilterData}
+              indexOfFirstPost={indexOfFirstPost}
+            />
+          </OrderContainer>
+        )}
+        {/* 배송중관리 페이지 */}
+        {params.id === "3" && (
+          <OrderContainer>
+            {/* 타이틀 영역 */}
+            <DeliveryTitle />
+            {/* 필터 영역 */}
+            <DeliveryFilterArea
+              posts={posts}
+              setPosts={setPosts}
+              filterData={filterData}
+              setFilterData={setFilterData}
+            />
+            {/* 배송중관리 리스트 영역 */}
+            <DeliveryManagementArea
+              posts={posts}
+              setPosts={setPosts}
+              currentPosts={currentPosts}
+              loading={loading}
+              postsPerPage={postsPerPage}
+              totalPosts={posts.length}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              handleDataNumber={handleDataNumber}
+              filterData={filterData}
+              setFilterData={setFilterData}
+              indexOfFirstPost={indexOfFirstPost}
+            />
+          </OrderContainer>
+        )}
+        {/* 배송완료관리 페이지 */}
+        {params.id === "4" && (
+          <OrderContainer>
+            {/* 타이틀 영역 */}
+            <CompleteTitle />
+            {/* 필터 영역 */}
+            <CompleteFilterArea
+              posts={posts}
+              setPosts={setPosts}
+              filterData={filterData}
+              setFilterData={setFilterData}
+            />
+            {/* 배송완료관리 리스트 영역 */}
+            <CompleteManagementArea
+              posts={posts}
+              setPosts={setPosts}
+              currentPosts={currentPosts}
+              loading={loading}
+              postsPerPage={postsPerPage}
+              totalPosts={posts.length}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              handleDataNumber={handleDataNumber}
+              filterData={filterData}
+              setFilterData={setFilterData}
+              indexOfFirstPost={indexOfFirstPost}
+            />
+          </OrderContainer>
+        )}
+        {/* 구매확정관리 페이지 */}
+        {params.id === "5" && (
+          <OrderContainer>
+            {/* 타이틀 영역 */}
+            <PurchaseTitle />
+            {/* 필터 영역 */}
+            <PurchaseFilterArea
+              posts={posts}
+              setPosts={setPosts}
+              filterData={filterData}
+              setFilterData={setFilterData}
+            />
+            {/* 구매확정관리 리스트 영역 */}
+            <PurchaseManagementArea
+              // data는 전체 데이터를 받아옴.
+              posts={posts}
+              setPosts={setPosts}
+              currentPosts={currentPosts}
+              loading={loading}
+              postsPerPage={postsPerPage}
+              totalPosts={posts.length}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              handleDataNumber={handleDataNumber}
+              filterData={filterData}
+              setFilterData={setFilterData}
+              indexOfFirstPost={indexOfFirstPost}
+            />
+          </OrderContainer>
+        )}
       </OrderBox>
       <Footer />
     </Orderwrap>
@@ -121,128 +200,19 @@ const OrderContainer = styled.div`
   width: calc(100% - 214px);
 `;
 
-// 직접 구현한다면(페이지네이션)
-// const paginate = (pageNumber) => {
-//   setCurrentPage(pageNumber);
-
-//   // setFilterData(indexOfFirstPost.toString());
-// };
-
-// 서버에 filtering 요청을 하기 위한 함수
-// const postFilterData = () => {
-//   // 기존의 sellerAttri이 배열 형태이기 때문에 string으로 변환해서 서버에 전달한다 === queryString에서는 배열을 받지 못함
-//   // 서버에 보낼 때만 사용하는 postData 변수를 만들어서 filterData를 복제
-//   let postData = { ...filterData };
-//   // join 메서드를 사용해서 sellerAttri의 value인 배열을 string으로 변환하고, toStringSellerAttri라는 변수로 지정한다.
-//   const toStringSellerAttri =
-//     postData.sellerAttri && postData.sellerAttri.join();
-//   // postData.selletAttri의 value를 toStringSellerAttri로 교체
-//   postData.sellerAttri ? (postData.sellerAttri = toStringSellerAttri) : null;
-//   console.log("postData!!!", postData);
-// };
-
-// const history = useHistory();
-// const [orderId, setOrderId] = useState(props.match.params.id);
-// console.log(props.match.params.id);
-
-// const handleChange = (e) => {
-//   history.push(`/product/${e}`);
-//   window.location.reload();
-// };
-
-// =======================================
-
-// fetch 다른 방법
-// const getOrderData = () => {
-//   fetch(`http://192.168.7.7:5000/orders/lists/4`)
-//     // fetch("192.168.7.7:5000/orders/lists/4")
-//     .then((response) => response.json())
-//     .then(
-//       (result) => {
-//         console.log("result", result);
-//       }
-//       // setPosts(result)
-//       // );
-//     );
-// };
-
+// // 서버에 데이터를 요청하는 axios
+// // 초기화 버튼 누를 때,
+// // 3일인 초기 값의 데이터가 들어오도록 구현해야함!
 // useEffect(() => {
-//   getOrderData();
-// }, [posts]);
-
-// =============================
-// useEffect(() => {
-//   console.log("자, 데이터가 들어오고 있나요?", posts);
-// }, [posts]);
-
-// useEffect(() => {
-//   console.log("검색 클릭 시, 들어가는 데이터 확인", filterData);
-// }, [filterData]);
-
-// console.log("filterData>>>>>", filterData);
-
-// =============================
-
-// 처음 렌더할 때, 서버에 주문관리 Data를 Get으로 요청해서 state에 저장한다.
-// useEffect(() => {
-//   const fetchDatas = () => {
-//     setLoading(true);
-//     const res = axios.get(
-//       // "http://localhost:3042/public/Data/OrderTableData.json"
-//       "http://192.168.7.7:5000/orders/lists/4"
-//       // , data
-//     );
-//     // setPosts(res.data);
-
-//     console.log("res", res);
-//     console.log("res.data", res.data);
-//     // axio.get으로 받으면 data라는 key가 생성
-//     // setPosts(res.data.order_lists);
-//     setLoading(!loading);
-//   };
-
-//   fetchDatas();
+//   axios
+//     .request({
+//       method: "GET",
+//       url: `http://10.251.1.99:5000/orders/lists/4`,
+//       headers: {
+//         // "Content-Type": "application/json",
+//         Authorization: localStorage.getItem("access_token"),
+//       },
+//     })
+//     // axios 사용할 때, 들어오는 데이터에 data라는 키 값이 생긴다.
+//     .then((res) => setPosts(res.data.order_lists));
 // }, []);
-
-// const getOrderData = () => {
-//   console.log(1);
-//   fetch(`http://10.58.3.246:5000/orders/lists/4`, {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: localStorage.getItem("access_token"),
-//     },
-//   }).then((response) => console.log("response", response.json));
-//   // .then(
-//   //   (result) => {
-//   //     // console.log("result", JSON.stringify(result));
-//   //     setPosts(result.order_lists);
-//   //   }
-//   // );
-//   // );
-// };
-
-// ===============================
-
-// 서버에 데이터 요청
-// axios.request({
-//   // setLoading(true),
-//   method: "GET",
-//   url: `http://10.58.3.246:5000/orders/lists/4`,
-//   headers: { Authorization: localStorage.getItem("access_token") },
-//   // request할 때, JSON.stringify(데이터)를 사용해서 서버에 요청해야한다.
-//   // dataFilter는 이미 Object
-//   params: JSON.stringify(filterData),
-//   // setLoading(true),
-//   // setPosts(res.data),
-//   // console.log(filterData)
-// });
-
-// useEffect(() => {
-//   setTimeout(() => {
-//     fetch(`http://192.168.7.7:5000/orders/lists/4`)
-//       .then((response) => response.json())
-//       .then((res) => {
-//         resolve(console.log(res));
-//       });
-//   }, []);
-// });

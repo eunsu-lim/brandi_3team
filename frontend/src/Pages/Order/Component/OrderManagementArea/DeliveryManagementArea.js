@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import OrderTableData from "./Component/OrderTableData/OrderTableData";
+import DeliveryOrderTableData from "./Component/OrderTableData/DeliveryOrderTableData";
 import PaginationPart from "./Component/PaginationPart/PaginationPart";
 import choiApi from "../../../../Config/api";
 import { useHistory } from "react-router-dom";
@@ -10,7 +10,7 @@ import { List } from "@styled-icons/open-iconic/List";
 import { ArrowForwardIos } from "@styled-icons/material-sharp/ArrowForwardIos";
 import { FileExcel } from "@styled-icons/fa-regular/FileExcel";
 
-function OrderManagementArea({
+function DeliveryManagementArea({
   posts,
   setPosts,
   currentPosts,
@@ -30,6 +30,8 @@ function OrderManagementArea({
   const [changeValue, setChangeValue] = useState(false);
   const [tableHead, setTableHead] = useState([]);
 
+  const history = useHistory();
+
   // th 데이터를 mock data로 가져옵니다.
   useEffect(() => {
     axios
@@ -43,64 +45,59 @@ function OrderManagementArea({
       })
       // axios 사용할 때, 들어오는 데이터에 data라는 키 값이 생긴다.
       .then((res) =>
-        setTableHead(res.data.data.order_table_data[0].product_header)
+        setTableHead(res.data.data.order_table_data[1].delivery_header)
       );
   }, []);
 
-  const history = useHistory();
-
-  // handleDelivery를 클릭했을 때, 체크한 상품들을
-  // 서버에 POST를 하고, 배송중 페이지(/order/3)로 이동하도록합니다.
-  const handleDelivery = async () => {
+  // handleComplet을 클릭했을 때, 체크한 상품들을
+  // 서버에 POST를 하고, 배송 완료 페이지(/order/4)로 이동하도록합니다.
+  const handleComplete = async () => {
     if (checkItems.length === 0) {
-      alert("배송준비 처리할 주문건을 선택해주세요.");
+      alert("배송완료처리하실 주문건을 선택해주세요.");
     } else {
       const res = await fetch(`${choiApi}/orders/status-updates`, {
         method: "POST",
         headers: {
-          // Content-Type으로 application/json을 사용합니다.
-          // 인가가 반복, 받을 때랑 없을 때랑 생각하면서 코드 작성
+          // 아래 코드 한 줄을 넣지않으면 실행이 안되었습니다. 이유는?
           "Content-Type": "application/json",
           Authorization: localStorage.getItem("access_token"),
         },
         body: JSON.stringify({
           // 주문 상태 id
-          order_status_id: 3, // 주문상태: 배송 중
-          // 체크된 상품들의 id를 넣어서, array에 넣습니다.
+          order_status_id: 4, // 주문상태: 배송 완료
+          // 체크된 상품들
           order_id: checkItems,
           // order_id: [67],
         }),
-      })
-        // post를 request 한 후에, 변경된 데이터를 다시 get 해줍니다.
-        .then((res) =>
-          axios
-            .get(`${choiApi}/orders/lists/1`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: localStorage.getItem("access_token"),
-              },
-            })
-            .then((res) => setPosts(res.data.order_lists))
-        );
+      }).then((res) =>
+        axios
+          .get(`${choiApi}/orders/lists/3`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: localStorage.getItem("access_token"),
+            },
+          })
+          .then((res) => setPosts(res.data.order_lists))
+      );
+
+      // history.push("/order/4");
+      // 페이지를 이동하는 게 필요한가?
     }
   };
 
-  // 주문일 최신/역순 select 함수
+  // 최신 주문 일 수
   const handleSortDate = async (e) => {
     const { value } = e.target;
     if (value === "최신주문일순") {
       setCurrentPage(1);
       // 최신 주문일순(1)이면 1을 filterData에 저장해서 서버에 보낼 준비를한다.
-      // state 초기값과 type이 같은 지 확인합니다.
       setFilterData({ ...filterData, filter_ordering: "1" });
     } else {
       setCurrentPage(1);
       // 역순(2)이면 2를 filterData에 저장해서 서버에 보낼 준비를한다.
-      // state 초기값과 type이 같은 지 확인합니다.
       setFilterData({ ...filterData, filter_ordering: "2" });
     }
 
-    // changeValue 상태를 변경해서 아래 select를 실행합니다.
     setChangeValue(!changeValue);
   };
 
@@ -130,7 +127,7 @@ function OrderManagementArea({
     else {
       setCheckItems([]);
     }
-    // setChangeValue(!changeValue);
+    setChangeValue(!changeValue);
 
     // setFilterData({ ...filterData, allCheck: checkItems });
   };
@@ -143,18 +140,16 @@ function OrderManagementArea({
     setChangeValue(!changeValue);
   };
 
-  // 함수 밖에서 useEffect를 사용해서
-  // 테이블에 보여주는 posts 상태 값을 업데이트합니다..
+  // 함수 밖에서 업데이트 된 state를 filterDate에 업데이트한다.
   useEffect(() => {
     async function fetchData() {
       const result = await axios
-        .get(`${choiApi}/orders/lists/1`, {
+        .get(`${choiApi}/orders/lists/3`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: localStorage.getItem("access_token"),
           },
           params: {
-            // 이전에 추가한 filter 속성들을 다 가져옵니다.
             ...filterData,
             offset: indexOfFirstPost,
             limit: postsPerPage,
@@ -166,7 +161,7 @@ function OrderManagementArea({
     }
 
     fetchData();
-    // 아래 state가 변경될 때만 실행합니다.
+    // chagneValue에 변화가 있을 때만 실행합니다.
   }, [changeValue]);
 
   // 엑셀 다운로드 서버에 보낼 정보
@@ -180,7 +175,7 @@ function OrderManagementArea({
   //       excelData.push(el.id);
   //     });
   //   }
-  //   // button의 value가 "excelSelected"면 id값을 넣어준다.
+  //   // button의 value가 "excelSelected"면
   //   else {
   //     checkItems.id.map((el) => {
   //       excelData.push(el.id);
@@ -196,9 +191,9 @@ function OrderManagementArea({
           <List size="16" />
           <li>주문관리</li>
           <ArrowForwardIos size="13" />
-          <li>상품준비 관리</li>
+          <li>배송중 관리</li>
           <ArrowForwardIos size="13" />
-          <li>상품준비 리스트</li>
+          <li>배송중 리스트</li>
         </ul>
 
         {/* 검색 정렬 */}
@@ -227,9 +222,9 @@ function OrderManagementArea({
           <span>{posts.length}건</span>
           <OrderProcessBtn
             className="firstBtn"
-            onClick={() => handleDelivery()}
+            onClick={() => handleComplete()}
           >
-            배송처리
+            배송완료처리
           </OrderProcessBtn>
         </div>
         <div>
@@ -274,13 +269,14 @@ function OrderManagementArea({
                   </span>
                 </div>
               </th>
-              {tableHead &&
-                tableHead.map((el, index) => <th key={index}>{el}</th>)}
+              {tableHead.map((el, index) => (
+                <th key={index}>{el}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {currentPosts.map((el, index) => (
-              <OrderTableData
+              <DeliveryOrderTableData
                 currentPosts={el}
                 key={index}
                 checkItems={checkItems}
@@ -292,8 +288,6 @@ function OrderManagementArea({
           </tbody>
 
           {/* 페이지네이션 영역 */}
-          {/* 들어오는 데이터의 수가 10개 이상일 때만, */}
-          {/* 페이지네이션 버튼을 나타냅니다. */}
           {posts.length >= 10 ? (
             <PaginationPart
               // paginate={paginate}
@@ -321,7 +315,7 @@ function OrderManagementArea({
           </ExcelDownloadBtn>
           <ExcelDownloadBtn
             value="excelSelected"
-            // onClick={handleExcel}
+            //  onClick={handleExcel}
           >
             <FileExcel size="15" />
             선택주문 엑셀다운로드
@@ -332,7 +326,7 @@ function OrderManagementArea({
   );
 }
 
-export default OrderManagementArea;
+export default DeliveryManagementArea;
 
 const OrderManagementSection = styled.section``;
 
@@ -449,6 +443,7 @@ const DataTableArea = styled.article`
   tr {
     td {
       font-size: 13px;
+      /* text-align: center; */
 
       a {
         color: #0d638f;

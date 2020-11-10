@@ -3,8 +3,11 @@ import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
+import { useSelector } from "react-redux";
 
 export default function Home() {
+  const test = useSelector((store) => store.dataReducer);
+  console.log("initial_state >>>>>>", test);
   return (
     <MainWrap>
       <Header />

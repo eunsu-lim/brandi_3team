@@ -3,12 +3,12 @@ import choiApi from "../../../../Config/api";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import SelectFilterData from "../../Data/SelectFilterData";
-import DateFilterData from "../../Data/DateFilterData";
+import DeliveryDataFilterData from "../../Data/DeliveryDataFilterData";
 import SellerAttriFilterData from "../../Data/SellerAttriFilterData";
 import styled, { css } from "styled-components";
 import "./DatePicker.css";
 
-function FilterArea({ posts, filterData, setFilterData, setPosts }) {
+function PurchaseFilterArea({ posts, filterData, setFilterData, setPosts }) {
   const [changeValue, setChangeValue] = useState(false);
   const [selector, setSelector] = useState("");
   const [btnClicked, setBtnClicked] = useState("3일");
@@ -60,36 +60,24 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
       setStartDate(threeDaysAgo);
       setEndDate(new Date());
     }
-    // 1주일 전부터 오늘까지의 기간
-    if (value === "1주일") {
-      let weekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-      startDate = new Date(weekAgo);
+    // 7일 전부터 오늘까지의 기간
+    if (value === "7일") {
+      let sevenDaysAgo = new Date(
+        currentDate.getTime() - 7 * 24 * 60 * 60 * 1000
+      );
+      startDate = new Date(sevenDaysAgo);
       endDate = new Date();
-      setStartDate(weekAgo);
+      setStartDate(sevenDaysAgo);
       setEndDate(new Date());
     }
-    // 1개월 전부터 오늘까지의 기간
-    if (value === "1개월") {
-      let oneMonthAgo = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() - 1,
-        new Date().getDate()
+    // 15일 전부터 오늘까지의 기간
+    if (value === "15일") {
+      let fifteenDaysAgo = new Date(
+        currentDate.getTime() - 15 * 24 * 60 * 60 * 1000
       );
-      startDate = new Date(oneMonthAgo);
-      endDate = new Date(new Date());
-      setStartDate(oneMonthAgo);
-      setEndDate(new Date());
-    }
-    // 3개월 전부터 오늘까지의 기간
-    if (value === "3개월") {
-      let threeMonthAgo = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() - 3,
-        new Date().getDate()
-      );
-      startDate = new Date(threeMonthAgo);
-      endDate = new Date(new Date());
-      setStartDate(threeMonthAgo);
+      startDate = new Date(fifteenDaysAgo);
+      endDate = new Date();
+      setStartDate(fifteenDaysAgo);
       setEndDate(new Date());
     }
   };
@@ -106,7 +94,7 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
     }`;
   };
 
-  // 셀로 속성 버튼이 모두 선택되거나, 선택된 버튼이 없을 시, '전체' 버튼으로 변경됩니다.
+  // 선택 버튼이 모드 선택되거나, 선택된 버튼이 없을 시, 전체 선택되도록 함
   useEffect(() => {
     if (duplicated.length === 7 || duplicated.length === 0) {
       setDuplicated(["1"]);
@@ -116,23 +104,23 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
   // 버튼 중복 선택 함수 및 조건문
   const handleDuplicated = (e) => {
     const { name, value } = e.target;
-    // isIncludes는 버튼이 들어있는 지 찾는 함수
+    // isIncludes는 버튼이 들어있는 지 확인하는 변수
     const isIncludes = duplicated.find((el) => el === name);
-    // value가 "전체"일 때, 전체를 배열에 포함합니다.
+    // value가 "전체"일 때, 전체를 배열에 포함
     if (name === "1") {
       setDuplicated(["1"]);
     }
-    // isIncludes일 때 === 버튼이 이미 클릭 되어있을 때, 배열에서 제거합니다.
+    // isIncludes일 때 === 버튼이 이미 클릭 되어있을 때, 배열에서 제거
     else if (isIncludes) {
       setDuplicated(duplicated.filter((el) => el !== name));
     }
-    // 배열의 길이가 0보다 클 때 === 하나 이상 선택이 되었을 때, "전체"는 제거, 클릭 한, name를 배열에 포함
+    // 배열의 길이가 0보다 클 때 === 하나 이상 선택이 되었을 때, "전체"는 제거, 클릭 한, value를 배열에 포함
     else if (duplicated.length > 0) {
       setDuplicated([...duplicated.filter((el) => el !== "1"), name]);
     }
   };
 
-  // 검색어 입력 함수
+  // 검색어 입력 필터
   const handleInput = (e) => {
     const { value } = e.target;
     setSearch(value);
@@ -153,11 +141,11 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
     //   );
     // else {
 
-    // GET 메서드를 사용하고, 서버에
-    // params를 인자로 보내고, 들어온 데이터를 result라는 변수에 저장합니다.
+    // GET 메서드를 사용하고, 서버에 url을 첫번 째 인자로,
+    // params를 두번 째 인자로 보내고, 들어온 데이터를 result라는 변수에 저장합니다.
     const result = await axios.request({
       method: "GET",
-      url: `${choiApi}/orders/lists/1`,
+      url: `${choiApi}/orders/lists/5`,
       headers: {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("access_token"),
@@ -199,7 +187,7 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
     // 초기화 버튼은 초기 상태의 데이터가 들어오도록 설정합니다.
     const result = await axios.request({
       method: "GET",
-      url: `${choiApi}/orders/lists/1`,
+      url: `${choiApi}/orders/lists/5`,
       headers: {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("access_token"),
@@ -238,11 +226,11 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
       </FilterSearch>
       {/* 날짜 필터 */}
       <DateFilter>
-        <DateLabel htmlFor="">결제완료일:</DateLabel>
+        <DateLabel htmlFor="">배송시작일:</DateLabel>
 
         {/* 간편 날짜 설정 버튼 목록 */}
         <SimpleDateBtn>
-          {DateFilterData.map((el, idx) => (
+          {DeliveryDataFilterData.map((el, idx) => (
             <DateInput
               onClick={handleBtnClicked}
               key={idx}
@@ -323,7 +311,7 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
   );
 }
 
-export default FilterArea;
+export default PurchaseFilterArea;
 
 const FilterSection = styled.section`
   border: 3px solid #eee;

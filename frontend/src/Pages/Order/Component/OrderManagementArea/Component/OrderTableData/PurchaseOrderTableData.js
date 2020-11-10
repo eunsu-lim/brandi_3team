@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-function OrderTableData({
+function PurchaseOrderTableData({
   currentPosts,
   handleSingleCheck,
   checkItems,
@@ -51,6 +51,7 @@ function OrderTableData({
           </div>
         </td>
         <td>{currentPosts.paid_date}</td>
+        <td>{currentPosts.updated_at}</td>
         <td>{currentPosts.order_number}</td>
         <td>
           <Link to="/orderdetail">{currentPosts.detailed_order_number}</Link>
@@ -69,7 +70,7 @@ function OrderTableData({
   );
 }
 
-export default OrderTableData;
+export default PurchaseOrderTableData;
 
 const TableRow = styled.tr`
   a {
