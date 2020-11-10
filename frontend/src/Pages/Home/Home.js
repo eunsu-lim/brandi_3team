@@ -1,24 +1,101 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Header from "../../Components/Header/Header";
 import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import {Chart} from "@styled-icons/evil"
+import axios from "axios";
 
 import { render } from 'react-dom'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
-const options = {
-  title: {
-    text: 'My chart'
-  },
-  series: [{
-    data: [1, 2, 3]
-  }]
-}
 
 export default function Home() {
+  // const axios = require('axios')
+  const [data, setData] = useState();
+ 
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try{
+        const result = await axios.get(`http://10.58.4.160:5000/sellers/home`, {
+          headers:{
+            "Content-Type":"application/json",
+            Authorization: localStorage.getItem("access_token")
+          }
+        }).then(res => setData(
+          res.data.order_lists.reduce((acc, cur, idx) => {
+            if (idx === 0) {
+              return {
+              date: [cur.date],
+              counts: [Number(cur.counts)],
+              amounts: [Number(cur.amounts)]
+            }
+            }
+            return {
+              date: [...acc.date, cur.date],
+              counts: [...acc.counts, Number(cur.counts)],
+              amounts: [...acc.amounts, Number(cur.amounts)]
+            }
+          }, {})
+        ));
+      } catch (error) {
+        console.log(error);
+      } 
+    };
+    fetchChartData();
+  }, []);
+
+  const countOptions ={
+    title: {
+      text: '주문건수'
+    },
+    xAxis: {  //여기!!
+      categories: data && data.date,
+    },
+    yAxis: {  //y축
+        title: {
+            text: '단위 (건)'
+        },
+    },
+    colors:['#495464'],
+    credits: {
+      enabled: false
+      },
+    series: [{  //여기!!
+      data: data && data.counts
+    }],
+    legend: {
+      enabled:false
+    }
+  }
+
+  const amountOptions = {
+    title: {
+      text: '주문금액'
+    },
+    xAxis: {  //x축
+      categories: data && data.date,
+    },
+    yAxis: {  //y축
+        title: {
+            text: '단위 (원)'
+        },
+    },
+    colors:['#aa3a3a'],
+    credits: {
+      enabled: false
+      },
+    series: [{
+      data: data && data.amounts
+    }],
+    legend: {
+      enabled:false
+    },
+  };
+
+  console.log("data",data);
+
   return (
     <MainWrap>
       <Header />
@@ -121,7 +198,7 @@ export default function Home() {
               <div>
               <HighchartsReact
                 highcharts={Highcharts}
-                options={options}
+                options={countOptions}
               />
               </div>
               </ChartBottom>
@@ -134,7 +211,12 @@ export default function Home() {
                 </ChartTitle>
               </ChartTop>
               <ChartBottom>
-
+              <div>
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={amountOptions}
+              />
+              </div>
               </ChartBottom>
             </ChartPanel>
           </ChartContainer>
@@ -229,7 +311,7 @@ justify-content: space-around;
 align-content: center;
 align-items: center;
 border: 1px solid blue;
-height: 400px;
+padding-bottom: 60px;
 `;
 
 const ChartPanel = styled.div`
@@ -237,7 +319,6 @@ flex: 1 1 auto;
 flex-basis: auto;
 margin:20px;
 width: 100px;
-height: 340px;
 border: 1px solid #ddd;
 border-radius:4px;
 box-shadow:0 1px 1px rgba(0,0,0,.05);
@@ -259,7 +340,6 @@ background-color:#f5f5f5;
 const ChartBottom = styled.div`
 // flex: 1 1 auto;
 flex-basis: auto;
-height: 300px;
 border: 1px solid #ddd;
 box-shadow:0 1px 1px rgba(0,0,0,.05);
 background-color:#fff;
