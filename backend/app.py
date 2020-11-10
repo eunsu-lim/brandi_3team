@@ -8,7 +8,7 @@ from flask.json import JSONEncoder
 
 from model   import SellerDao, OrderDao
 from service import SellerService, OrderService
-from view    import create_seller_endpoints, create_order_endpoints
+from controller    import create_seller_endpoints, create_order_endpoints
 
 class CustomEncoder(JSONEncoder):
     def default(self, obj):
@@ -22,14 +22,12 @@ class CustomEncoder(JSONEncoder):
 def create_app(test_config=None):
     app = Flask(__name__)
     app.json_encoder = CustomEncoder
-
     CORS(app, resources={r'*':{'origins':'*'}})
-    
     if test_config is None:
         app.config.from_pyfile('config.py')
     else:
         app.config.update(test_config)
-
+    
     #persistence layer
     seller_dao = SellerDao()
     order_dao  = OrderDao()
