@@ -6,6 +6,7 @@ import Order from "./Pages/Order/Order";
 import Product from "./Pages/Product/Product";
 import SignUp from "./Pages/SignUp/SignUp";
 import User from "./Pages/User/User";
+import Info from "./Pages/Info/Info";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 import Nav from "./Components/Nav/Nav";
@@ -23,6 +24,7 @@ function Routes() {
         <Route exact path="/product" component={Product} />
         <Route exact path="/signup" component={SignUp} />
         <Route exact path="/user" component={User} />
+        <Route exact path="/info" component={Info} />
       </Switch>
     </Router>
   );
