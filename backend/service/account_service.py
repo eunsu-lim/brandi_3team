@@ -32,6 +32,7 @@ class AccountService:
         return token.decode('UTF-8')
 
     def get_nav_and_button(self, account_type_id, db_connection):
+        # dao에서 받은 데이터를 nav_data에 선언
         nav_data = self.account_dao.get_nav_list(account_type_id, db_connection)
         
         temp_list = []

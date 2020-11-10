@@ -28,15 +28,16 @@ def create_account_endpoints(account_service):
 
             # 로그인 성공
             if authorized:
+                # service의 generate_access_token 함수를 통해 생성한 token을 token에 저장
+                token           = account_service.generate_access_token(account_id)
+
                 # service에서 해당 함수를 실행하여 sellerId와 일치하는 id와 password를 가져온다
                 user_credential = account_service.get_user_info(credential['sellerId'], db_connection)
                 account_type_id = user_credential['account_type_id'] 
                 account_id      = user_credential['id']
 
+                # service에서 nav_list와 button_list를 가져오는 함수를 실행
                 nav_list = account_service.get_nav_and_button(account_type_id, db_connection)
-
-                # service의 generate_access_token 함수를 통해 생성한 token을 token에 저장
-                token           = account_service.generate_access_token(account_id)
                 
                 # token과 account_type_id을 클라이언트에게 전송
                 return jsonify({

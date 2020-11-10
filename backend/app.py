@@ -33,25 +33,16 @@ def create_app(test_config=None):
     #persistence layer
     account_dao = AccountDao()
     seller_dao = SellerDao()
+    order_dao = OrderDao()
 
     #business layer
     account_service = AccountService(account_dao, config)
     seller_service = SellerService(seller_dao, config)
+    order_service = OrderService(order_dao)
 
     #presentation layer(엔드포인트 생성)
     app.register_blueprint(create_account_endpoints(account_service))
     app.register_blueprint(create_seller_endpoints(seller_service))
-
-    return app 
-    seller_dao = SellerDao()
-    order_dao  = OrderDao()
-
-    #business layer
-    seller_service = SellerService(seller_dao, config)
-    order_service  = OrderService(order_dao)
- 
-    #presentation layer(엔드포인트 생성)
-    app.register_blueprint(create_seller_endpoints(seller_service))
     app.register_blueprint(create_order_endpoints(order_service))
-    
+
     return app 

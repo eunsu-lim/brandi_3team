@@ -31,20 +31,13 @@ class AccountDao:
         with db_connection.cursor() as cursor:
             query = """
                 SELECT
-                    main_menus.name as MainName,
-                    sub_menus.name as SubName
-                FROM
-                    account_type_menus 
-                JOIN
-                    sub_menus
-                ON
-                    account_type_menus.sub_menu_id = sub_menus.id 
-                JOIN
-                    main_menus
-                ON
-                    sub_menus.main_menu_id=main_menus.id
-                WHERE
-                    account_type_menus.account_type_id=%(account_type_id)s;
+                    main_menus.id, main_menus.name as main,
+                    sub_menus.id, sub_menus.name as sub,
+                    account_type_id as account_type
+                FROM main_menus
+                LEFT JOIN sub_menus ON main_menus.id=sub_menus.main_menu_id
+                LEFT JOIN account_type_menus ON account_type_menus.sub_menu_id=sub_menus.id
+                WHERE account_type_id=%(account_type_id)s
             """
             cursor.execute(query, {'account_type_id': account_type_id})
             nav_list = cursor.fetchall()
