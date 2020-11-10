@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchChartData = async () => {
       try{
-        const result = await axios.get(`http://10.58.4.160:5000/sellers/home`, {
+        const result = await axios.get(`http://192.168.7.23:5000/sellers/home`, {
           headers:{
             "Content-Type":"application/json",
             Authorization: localStorage.getItem("access_token")
