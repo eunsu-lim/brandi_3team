@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -27,6 +28,8 @@ export default function SellerInfo() {
     new Date("2020-10-28T18:00:00")
   );
 
+  const history = useHistory();
+
   // 이미지 파일 업데이트 관리
   const [profileImg, setProfileImg] = useState(null);
   const [isProfileChange, setProfileChange] = useState(false);
@@ -38,44 +41,48 @@ export default function SellerInfo() {
 
   // backend 통신 회원 정보 가져오기
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(`${ACCOUNT_API}/sellers/seller-details`, {
+    axios
+      .get(`${ACCOUNT_API}/sellers/seller-details`, {
         headers: { Authorization: localStorage.getItem("Authorization") },
+      })
+      .then((res) => {
+        setInfos(res.data.seller_data);
       });
-      console.log(result, "--------------------result");
-      setInfos(result.data.seller_data);
-      // console.log(result.data.seller_data);
-    };
-    fetchData();
   }, []);
 
   // formData 전송
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     if (data) {
       const editInfo = confirm("셀러 정보를 수정하시겠습니까?");
       if (editInfo == true) {
         try {
           console.log("data:", data);
           const formData = new FormData();
+          formData.append("profile_image", data.profile_image[0]);
+          formData.append("background_image_url", data.background_image_url[0]);
           Object.keys(data).forEach((key) => formData.append(key, data[key]));
+
           const opening_time = formattedWeekdayFrom();
           const closing_time = formattedWeekdayTo();
 
           data = { ...data, opening_time, closing_time };
 
-          const result = await axios.patch(
-            `${ACCOUNT_API}/sellers/edit-seller-details`,
-            data,
-            {
+          axios
+            .patch(`${ACCOUNT_API}/sellers/edit-seller-details`, formData, {
               headers: {
                 Authorization: localStorage.getItem("Authorization"),
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
               },
-            }
-          );
-          console.log("result222 >>> ", result);
-          alert("셀러 정보가 수정되었습니다.");
-          return result;
+            })
+            .then((res) => {
+              alert("셀러 정보가 수정되었습니다.");
+              setTimeout(() => {
+                window.location.reload(), window.scrollTo(0, 0), 3000;
+              });
+
+              // setInfos(res.data.seller_data);
+            });
+          // console.log("result222 >>> ", result);
         } catch (err) {
           console.log(err);
           alert("오류 발생!!");

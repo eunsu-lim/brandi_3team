@@ -30,7 +30,7 @@ export default function SellerDefaultInfo({
               {/* UploadImg 컴포넌트 분리 */}
               <ImgUpload
                 refImg={
-                  profileImg
+                  !isChangeImg
                     ? register({ required: false })
                     : register({ required: true })
                 }
