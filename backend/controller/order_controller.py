@@ -51,7 +51,6 @@ def create_order_endpoints(order_service):
         try:
             db_connection = get_connection()
             order_lists   = request.json
-            print(order_lists,'control')
             result = order_service.change_order_status(db_connection,order_lists)
             if result:
                 db_connection.commit()
@@ -134,7 +133,6 @@ def create_order_endpoints(order_service):
                 'seller_attribute_id': args[8]
             }
             #filter_dict = {f'{key}':f'{value}' for (key, value) in filters.items() if value}
-            print(filter_dict,'filter_dict')
             result = order_service.create_order_lists(db_connection, filter_dict)
             return jsonify(result),(internal_code_sheet['S100']['code'])
         
