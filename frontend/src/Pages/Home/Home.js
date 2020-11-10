@@ -249,7 +249,7 @@ flex-direction: row;
 justify-content: space-around;
 align-content: center;
 align-items: center;
-border: 1px solid red;
+border: 1px solid transparent;
 height: 200px;
 `;
 
@@ -310,7 +310,7 @@ flex-direction: row;
 justify-content: space-around;
 align-content: center;
 align-items: center;
-border: 1px solid blue;
+border: 1px solid transparent;
 padding-bottom: 60px;
 `;
 
