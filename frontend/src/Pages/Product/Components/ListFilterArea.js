@@ -89,7 +89,7 @@ function ListFilterArea({
   useEffect(() => {
     // 기존에 선택된 select가 있을 경우, 해당 key와 value를 삭제 후 새로 선택된 select를 sortData에 추가
     sortData.productName && delete sortData.productName;
-    sortData.productNo && delete sortData.productNo;
+    sortData.product_id && delete sortData.product_id;
     sortData.productCode && delete sortData.productCode;
     setSortData({ ...sortData, [select]: selectFilter });
   }, [select]);
@@ -172,7 +172,7 @@ function ListFilterArea({
           <select onChange={(e) => setSelect(e.target.value)}>
             <option>Select</option>
             <option value="productName">상품명</option>
-            <option value="productNo">상품번호</option>
+            <option value="product_id">상품번호</option>
             <option value="productCode">상품코드</option>
           </select>
         </SearchSelect>
