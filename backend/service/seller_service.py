@@ -31,8 +31,9 @@ class SellerService:
             History:
                 2020.11.08(최지선) : 초기 생성
         """
+        print('sss',seller_id)
         order_counts = self.seller_dao.get_seller_order_counts(db_connection, seller_id)
-        return {"order_lists":order_counts}
+        return order_counts
 
 
     def create_new_account(self, seller_info, db_connection):

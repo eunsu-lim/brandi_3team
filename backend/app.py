@@ -22,14 +22,12 @@ class CustomEncoder(JSONEncoder):
 def create_app(test_config=None):
     app = Flask(__name__)
     app.json_encoder = CustomEncoder
-
     CORS(app, resources={r'*':{'origins':'*'}})
-    
     if test_config is None:
         app.config.from_pyfile('config.py')
     else:
         app.config.update(test_config)
-
+    
     #persistence layer
     account_dao = AccountDao()
     seller_dao = SellerDao()
