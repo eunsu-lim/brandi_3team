@@ -187,7 +187,6 @@ class SellerDao:
             GROUP BY order_status_id
             """
             cursor.execute(get_seller_data_query, seller_id)
-            print("seller_data", cursor.execute(get_seller_data_query, seller_id))
             return cursor.fetchall()
 
     
