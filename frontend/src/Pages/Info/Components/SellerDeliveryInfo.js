@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { InfoCircleFill, TelephoneFill } from "@styled-icons/bootstrap";
 
-export default function SellerDeliveryTable({ register, errors }) {
+export default function SellerDeliveryTable({ register, errors, infos }) {
   return (
     <TableContainer>
       <SellerTable>
@@ -13,13 +13,14 @@ export default function SellerDeliveryTable({ register, errors }) {
               <Require> *</Require>
             </td>
             <td>
-              <DeliveryContent isError={errors.deliveryInfo}>
+              <DeliveryContent isError={errors.delivery_description}>
                 <textarea
                   placeholder="ex)&#13;&#10;도서산간 지역은 배송비가 추가비용이 발생할 수 있습니다.&#13;&#10;결제 완료 후 1~3일 후 출고됩니다."
-                  name="deliveryInfo"
+                  name="delivery_description"
+                  defaultValue={infos.delivery_description}
                   ref={register({ required: true })}
                 />
-                {errors.deliveryInfo && (
+                {errors.delivery_description && (
                   <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>
                 )}
                 <InfoLine>
@@ -39,13 +40,14 @@ export default function SellerDeliveryTable({ register, errors }) {
               <Require> *</Require>
             </td>
             <td>
-              <DeliveryContent isError={errors.deliveryRefund}>
+              <DeliveryContent isError={errors.refund_description}>
                 <textarea
                   placeholder="ex)&#13;&#10;브랜디는 소비자보호법 및 전자상거래법을 기반한 환불보장제를 운영 중에 있습니다. &#13;&#10;정당하지 않은 사유로 인한 환불 거부 등은 제재 사유가 될 수 있는 점 참고 부탁드립니다."
-                  name="deliveryRefund"
+                  name="refund_description"
+                  defaultValue={infos.refund_description}
                   ref={register({ required: true })}
                 />
-                {errors.deliveryRefund && (
+                {errors.refund_description && (
                   <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>
                 )}
                 <InfoLine>

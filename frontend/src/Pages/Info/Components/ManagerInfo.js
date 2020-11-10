@@ -6,7 +6,7 @@ import { TelephoneFill } from "@styled-icons/bootstrap";
 import { Email } from "@styled-icons/material";
 import { Plus } from "@styled-icons/fa-solid";
 
-export default function ManagerInfo({ register, errors }) {
+export default function ManagerInfo({ register, errors, infos }) {
   return (
     <Manager>
       <ManagerInput>
@@ -15,7 +15,8 @@ export default function ManagerInfo({ register, errors }) {
           <input
             type="text"
             placeholder="담당자명"
-            name="ManagerInfo"
+            name="person_in_charge"
+            defaultValue={infos && infos.person_in_charge}
             ref={register({ required: true })}
           />
         </SellerInput>
@@ -25,25 +26,26 @@ export default function ManagerInfo({ register, errors }) {
         <SellerInput>
           <TelephoneFill size="14" color="#ddd" />
           <InputMask
-            mask="999-9999-9999"
             type="text"
             placeholder="담당자 핸드폰번호"
-            name="ManagerTel"
+            name="phone_number"
+            defaultValue={infos && infos.phone_number}
             inputRef={register}
           />
         </SellerInput>
       </ManagerInput>
       <ManagerInput>
-        <SellerInput isError={errors.ManagerEmail}>
+        <SellerInput isError={errors.email}>
           <Email size="14" color="#ddd" />
           <input
             type="text"
             placeholder="담당자 이메일"
-            name="ManagerEmail"
+            name="email"
+            defaultValue={infos && infos.email}
             ref={register({ required: true })}
           />
         </SellerInput>
-        {errors.ManagerEmail && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+        {errors.email && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
       </ManagerInput>
     </Manager>
   );

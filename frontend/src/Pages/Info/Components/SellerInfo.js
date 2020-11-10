@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { ACCOUNT_API } from "../../../Config/api";
 import Resizer from "react-image-file-resizer";
 import dayjs from "dayjs";
 import SellerDefaultInfo from "./SellerDefaultInfo";
@@ -27,16 +28,63 @@ export default function SellerInfo() {
   );
 
   // 이미지 파일 업데이트 관리
-  const [profileImg, setProfileImg] = useState();
-  const [backImg, setBackImg] = useState();
-
+  const [profileImg, setProfileImg] = useState(null);
+  const [isProfileChange, setProfileChange] = useState(false);
+  const [backImg, setBackImg] = useState(null);
+  const [isBackChange, setBackChange] = useState(false);
   const [checked, setChecked] = useState(false);
+  // backend 통신으로 가져올 데이터 관리
+  const [infos, setInfos] = useState("");
 
   // backend 통신 회원 정보 가져오기
   useEffect(() => {
-    console.log(getData);
+    const fetchData = async () => {
+      const result = await axios.get(`${ACCOUNT_API}/sellers/seller-details`, {
+        headers: { Authorization: localStorage.getItem("Authorization") },
+      });
+      console.log(result, "--------------------result");
+      setInfos(result.data.seller_data);
+      // console.log(result.data.seller_data);
+    };
+    fetchData();
   }, []);
 
+  // formData 전송
+  const onSubmit = async (data) => {
+    if (data) {
+      const editInfo = confirm("셀러 정보를 수정하시겠습니까?");
+      if (editInfo == true) {
+        try {
+          console.log("data:", data);
+          const formData = new FormData();
+          Object.keys(data).forEach((key) => formData.append(key, data[key]));
+          const opening_time = formattedWeekdayFrom();
+          const closing_time = formattedWeekdayTo();
+
+          data = { ...data, opening_time, closing_time };
+
+          const result = await axios.patch(
+            `${ACCOUNT_API}/sellers/edit-seller-details`,
+            data,
+            {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("result222 >>> ", result);
+          alert("셀러 정보가 수정되었습니다.");
+          return result;
+        } catch (err) {
+          console.log(err);
+          alert("오류 발생!!");
+        }
+      } else {
+        alert("정보 수정이 취소 되었습니다.");
+      }
+    }
+  };
   // 이미지 파일 업로드
   const uploadProfileImg = (e) => {
     let reader = new FileReader();
@@ -70,17 +118,19 @@ export default function SellerInfo() {
       // 이미지 미리보기
       if (preview) {
         setProfileImg(preview.toString());
+        setProfileChange(true);
       }
     };
   };
 
   // 이미지 삭제 버튼 클릭시 초기화
   const removeProfileImg = () => {
-    var file = document.getElementById("profileImg").files;
+    var file = document.getElementById("profile_image").files;
     console.log("file >>> ", file);
-    setValue("sellerProfileImg", (file.FileList = null));
+    setValue("profile_image", null);
+    setProfileImg(null);
+    setProfileChange(false);
     console.log("del >>> ", file);
-    setProfileImg();
   };
 
   // 이미지 파일 업로드
@@ -116,45 +166,35 @@ export default function SellerInfo() {
       // 이미지 미리보기
       if (preview) {
         setBackImg(preview.toString());
+        setBackChange(true);
       }
     };
   };
 
   // 이미지 삭제 버튼 클릭시 초기화
   const removeBackImg = () => {
-    var file = document.getElementById("backImg").files;
+    var file = document.getElementById("background_image_url").files;
     console.log("file >>> ", file);
-    setValue("sellerBackImg", (file.FileList = null));
+    setValue("background_image_url", null);
+    setBackImg(null);
+    setBackChange(false);
     console.log("del >>> ", file);
-    setBackImg();
   };
 
   const formattedWeekdayFrom = () => {
-    const from = dayjs(weekdayFrom).format(THHmm);
-    // Time  09:00 형식으로 변경
+    // ex) 09:00 AM
+    const from = dayjs(weekdayFrom).format("h:mm a");
     return from;
   };
 
   const formattedWeekdayTo = () => {
-    const to = dayjs(weekdayTo);
-    const endTime = `${to.hour() < 10 ? "0" + to.hour() : to.hour()}:${
-      to.minute() < 10 ? "0" + to.minute() : to.minute()
-    }`;
-    return endTime;
+    const to = dayjs(weekdayTo).format("h:mm a");
+    return to;
   };
 
   const changePassword = (e) => {
     e.preventDefault();
     setIsModal(true);
-  };
-
-  // form Data 전송
-  const onSubmit = (data) => {
-    console.log("data >>> ", data);
-    const startTime = formattedWeekdayFrom();
-    const endTime = formattedWeekdayTo();
-    data = { ...data, startTime, endTime };
-    console.log("new data >>> ", data);
   };
 
   return (
@@ -172,8 +212,10 @@ export default function SellerInfo() {
           <SellerDefaultInfo
             register={register}
             errors={errors}
-            uploadId="profileImg"
-            profileImg={profileImg}
+            infos={infos}
+            uploadId="profile_image"
+            profileImg={profileImg ? profileImg : infos && infos.profile_image}
+            isChangeImg={isProfileChange}
             uploadProfileImg={uploadProfileImg}
             removeProfileImg={removeProfileImg}
             setIsModal={setIsModal}
@@ -192,10 +234,12 @@ export default function SellerInfo() {
           <SellerDetailInfo
             register={register}
             errors={errors}
+            infos={infos}
             checked={checked}
             setChecked={setChecked}
-            uploadId="backImg"
-            backImg={backImg}
+            uploadId="background_image_url"
+            backImg={backImg ? backImg : infos && infos.background_image_url}
+            isChangeImg={isBackChange}
             uploadBackImg={uploadBackImg}
             removeBackImg={removeBackImg}
             weekdayFrom={weekdayFrom}
@@ -217,7 +261,11 @@ export default function SellerInfo() {
             </h4>
           </TableTitle>
           {/* 셀러 배송 정보 테이블 component */}
-          <SellerDeliveryInfo register={register} errors={errors} />
+          <SellerDeliveryInfo
+            register={register}
+            errors={errors}
+            infos={infos}
+          />
         </MemberListBox>
 
         <SellerInfoBtn>

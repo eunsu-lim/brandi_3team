@@ -4,7 +4,7 @@ import DaumPostcode from "react-daum-postcode";
 import { MailOpen } from "@styled-icons/heroicons-outline";
 import { LocationPin } from "@styled-icons/entypo";
 
-export default function SellerAddress({ register, errors }) {
+export default function SellerAddress({ register, errors, infos }) {
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isAddress, setIsAddress] = useState("");
   const [isZoneCode, setIsZoneCode] = useState();
@@ -55,8 +55,8 @@ export default function SellerAddress({ register, errors }) {
           <input
             type="text"
             placeholder="우편번호"
-            name="postalCode"
-            defaultValue={isZoneCode}
+            name="postal_code"
+            defaultValue={isZoneCode ? isZoneCode : infos && infos.postal_code}
             ref={register}
             readOnly={true}
           />
@@ -80,20 +80,21 @@ export default function SellerAddress({ register, errors }) {
           <input
             type="text"
             placeholder="주소 ( 택배 수령지 )"
-            name="sellerAddr"
-            defaultValue={isAddress}
+            name="address_1"
+            defaultValue={isAddress ? isAddress : infos.address_1}
             ref={register}
             readOnly={true}
           />
         </SellerInput>
       </AddressInput>
       <AddressInput>
-        <SellerInput isError={errors.detailAddr}>
+        <SellerInput isError={errors.address_2}>
           <LocationPin size="14" color="#ddd" />
           <input
             type="text"
             placeholder="상세 주소 ( 택배 수령지 )"
-            name="detailAddr"
+            name="address_2"
+            defaultValue={infos.address_2}
             ref={register({ required: true })}
           />
         </SellerInput>

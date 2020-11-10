@@ -11,9 +11,11 @@ import { User } from "@styled-icons/boxicons-solid";
 export default function SellerDetailTable({
   register,
   errors,
+  infos,
   checked,
   setChecked,
   uploadId,
+  isChangeImg,
   backImg,
   uploadBackImg,
   removeBackImg,
@@ -37,7 +39,8 @@ export default function SellerDetailTable({
               <ImgUpload
                 refImg={register({ required: false })}
                 uploadId={uploadId}
-                name="sellerBackImg"
+                name="background_image_url"
+                isChangeImg={isChangeImg}
                 imgFile={backImg}
                 onChange={uploadBackImg}
                 removeFile={removeBackImg}
@@ -72,22 +75,30 @@ export default function SellerDetailTable({
               <Require> *</Require>
             </td>
             <td>
-              <SellerInput isError={errors.sellerInfo}>
+              <SellerInput isError={errors.short_description}>
                 <User size="14" color="#ddd" />
                 <input
                   type="text"
                   placeholder="셀러 한줄소개"
-                  name="sellerInfo"
+                  name="short_description"
+                  defaultValue={infos && infos.short_description}
                   ref={register({ required: true })}
                 />
               </SellerInput>
-              {errors.sellerInfo && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+              {errors.short_description && (
+                <ErrorMsg>필수 입력항목입니다.</ErrorMsg>
+              )}
             </td>
           </tr>
           <tr>
             <td>셀러 상세 소개</td>
             <td>
-              <TextArea placeholder="셀러 상세소개" name="sellerDetailInfo" />
+              <TextArea
+                placeholder="셀러 상세소개"
+                name="detailed_description"
+                ref={register({ required: false })}
+                defaultValue={infos && infos.detailed_description}
+              />
               <InfoLine>
                 <InfoSmall>
                   <InfoCircleFill size="14" />
@@ -104,7 +115,7 @@ export default function SellerDetailTable({
               <Require> *</Require>
             </td>
             <td>
-              <ManagerInfo register={register} errors={errors} />
+              <ManagerInfo register={register} errors={errors} infos={infos} />
             </td>
           </tr>
           <tr>
@@ -113,16 +124,17 @@ export default function SellerDetailTable({
               <Require> *</Require>
             </td>
             <td>
-              <SellerInput isError={errors.customerTel}>
+              <SellerInput isError={errors.cs_contact}>
                 <TelephoneFill size="14" color="#ddd" />
                 <input
                   type="text"
                   placeholder="고객센터 전화번호"
-                  name="customerTel"
+                  name="cs_contact"
+                  defaultValue={infos && infos.cs_contact}
                   ref={register({ required: true })}
                 />
               </SellerInput>
-              {errors.customerTel && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+              {errors.cs_contact && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
             </td>
           </tr>
           <tr>
@@ -131,7 +143,11 @@ export default function SellerDetailTable({
               <Require> *</Require>
             </td>
             <td>
-              <SellerAddress register={register} errors={errors} />
+              <SellerAddress
+                register={register}
+                errors={errors}
+                infos={infos}
+              />
             </td>
           </tr>
           <tr>

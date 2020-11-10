@@ -1,17 +1,38 @@
 import React, { Fragment, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { ACCOUNT_API } from "../../../Config/api";
 import { Close } from "@styled-icons/evaicons-solid";
 
 export default function ChangePassword({ setIsModal }) {
   const { register, handleSubmit, watch, errors } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("data111 >>> ", data);
+  const onSubmit = async (data) => {
     if (data) {
       const changePwd = confirm("비밀번호를 변경하시겠습니까?");
       if (changePwd == true) {
-        alert("비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.");
+        try {
+          const result = await axios.patch(
+            `${ACCOUNT_API}/sellers/edit-password`,
+            {
+              password: data.password,
+              new_password: data.new_password,
+            },
+            {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          alert("비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.");
+        } catch (err) {
+          console.log(err);
+          alert(
+            "비밀번호 변경 도중 오류가 발생했습니다. \n현재 비밀번호가 일치하지 않습니다."
+          );
+        }
       } else {
         alert("취소되었습니다.");
       }
@@ -31,23 +52,23 @@ export default function ChangePassword({ setIsModal }) {
             </button>
           </ModalHeader>
           <ModalBody>
-            <SellerInput isError={errors.cuurentPwd}>
+            <SellerInput isError={errors.password}>
               <label htmlFor="cuurentPwd">현재 비밀번호</label>
               <input
                 type="password"
                 placeholder="현재 비밀번호"
-                name="cuurentPwd"
+                name="password"
                 autoComplete="off"
                 ref={register({ required: true })}
               />
-              {errors.cuurentPwd && <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>}
+              {errors.password && <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>}
             </SellerInput>
 
-            <SellerInput isError={errors.password}>
+            <SellerInput isError={errors.new_password}>
               <label htmlFor="password">변경할 비밀번호</label>
               <input
                 id="password"
-                name="password"
+                name="new_password"
                 ref={register({
                   required: true,
                   pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
@@ -56,15 +77,17 @@ export default function ChangePassword({ setIsModal }) {
                 placeholder="변경할 비밀번호"
                 autoComplete="off"
               />
-              {errors.password && errors.password.type === "required" && (
-                <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>
-              )}
-              {errors.password && errors.password.type === "pattern" && (
-                <ErrorMsg>
-                  비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를 조합해야
-                  합니다.
-                </ErrorMsg>
-              )}
+              {errors.new_password &&
+                errors.new_password.type === "required" && (
+                  <ErrorMsg>필수 입력 항목입니다.</ErrorMsg>
+                )}
+              {errors.new_password &&
+                errors.new_password.type === "pattern" && (
+                  <ErrorMsg>
+                    비밀번호는 8~20글자의 영문대소문자, 숫자, 특수문자를
+                    조합해야 합니다.
+                  </ErrorMsg>
+                )}
             </SellerInput>
             {/* 유효성 검사 에러 메세지 */}
             <SellerInput isError={errors.rePasswrod}>
@@ -76,7 +99,7 @@ export default function ChangePassword({ setIsModal }) {
                 ref={register({
                   required: true,
                   validate: (value) =>
-                    value === watch("password") ||
+                    value === watch("new_password") ||
                     "비밀번호가 일치하지 않습니다",
                 })}
                 autoComplete="off"

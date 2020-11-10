@@ -7,12 +7,15 @@ import { User } from "@styled-icons/boxicons-solid";
 export default function SellerDefaultInfo({
   register,
   errors,
+  infos,
   uploadId,
+  isChangeImg,
   profileImg,
   uploadProfileImg,
   removeProfileImg,
   changePassword,
 }) {
+  const [clickValue, setClickValue] = useState(0);
   // console.log("values", values);
   return (
     <TableContainer>
@@ -26,9 +29,14 @@ export default function SellerDefaultInfo({
             <td>
               {/* UploadImg 컴포넌트 분리 */}
               <ImgUpload
-                refImg={register({ required: true })}
+                refImg={
+                  profileImg
+                    ? register({ required: false })
+                    : register({ required: true })
+                }
                 uploadId={uploadId}
-                name="sellerProfileImg"
+                name="profile_image"
+                isChangeImg={isChangeImg}
                 imgFile={profileImg}
                 onChange={uploadProfileImg}
                 removeFile={removeProfileImg}
@@ -42,95 +50,32 @@ export default function SellerDefaultInfo({
           </tr>
           <tr>
             <td>셀러 상태</td>
-            <td>입점대기</td>
-          </tr>
-          <tr>
             <td>
-              셀러 속성
-              <Require> *</Require>
-            </td>
-            <td>
-              <SellerStatus>
-                <label>
-                  <span>쇼핑몰</span>
-                  <input
-                    type="radio"
-                    name="status"
-                    value="2"
-                    ref={register({ required: true })}
-                  />
-                </label>
-                <label>
-                  <span>마켓</span>
-                  <input
-                    type="radio"
-                    name="status"
-                    value="3"
-                    ref={register({ required: true })}
-                  />
-                </label>
-                <label>
-                  <span>로드샵</span>
-                  <input
-                    type="radio"
-                    name="status"
-                    value="4"
-                    ref={register({ required: true })}
-                  />
-                </label>
-              </SellerStatus>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="2">
-              <span className="info">
-                <InfoCircleFill size="14" />
-                셀러명(한글, 영문) 변경시 셀러명과 동일하게 등록된 브랜드 정보는
-                자동으로 변경되지 않습니다. 관리자께서는 이점 유의해주시기
-                바라며, 브랜드 정보 수정은 [이전 버전 관리 > 브랜드관리] 에서
-                가능합니다.
-              </span>
+              {(infos.seller_status_id === 1 && "입점 대기") ||
+                (infos.seller_status_id === 2 && "입점") ||
+                (infos.seller_status_id === 3 && "퇴점 대기") ||
+                (infos.seller_status_id === 4 && "퇴점") ||
+                (infos.seller_status_id === 5 && "휴점")}
             </td>
           </tr>
           <tr>
             <td>셀러 한글명</td>
             <td>
-              {/* 셀러 한글명 input */}
-              <SellerInput isError={errors.sellerNameKo}>
-                <User size="14" color="#ddd" />
-                <input
-                  type="text"
-                  placeholder="셀러 한글명"
-                  name="sellerNameKo"
-                  ref={register({ required: true })}
-                />
-              </SellerInput>
-              {errors.sellerNameKo && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
-              {/*  isSeller && 삼항연산자
-                <span>{seller_name_ko}</span>
-              */}
+              {/* 셀러 한글명  */}
+              <span>{infos && infos.name_korean}</span>
             </td>
           </tr>
           <tr>
-            {/* 셀러 영문명 input */}
             <td>셀러 영문명</td>
             <td>
-              <SellerInput isError={errors.sellerNameEn}>
-                <User size="14" color="#ddd" />
-                <input
-                  type="text"
-                  placeholder="셀러 영문명"
-                  name="sellerNameEn"
-                  ref={register({ required: true })}
-                />
-              </SellerInput>
-              {errors.sellerNameEn && <ErrorMsg>필수 입력항목입니다.</ErrorMsg>}
+              {/* 셀러 영문명  */}
+              <span>{infos && infos.name_english}</span>
             </td>
           </tr>
           <tr>
             <td>셀러 계정</td>
             <td>
-              Brandi
+              {infos.account_name}
               <BtnDanger onClick={(e) => changePassword(e)}>
                 비밀번호 변경하기
               </BtnDanger>

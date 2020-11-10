@@ -4,6 +4,7 @@ import styled from "styled-components";
 export default function ImgUpload({
   refImg,
   uploadId,
+  isChangeImg,
   imgFile,
   name,
   onChange,
@@ -23,7 +24,7 @@ export default function ImgUpload({
         )}
         <ChangeBtn>
           <label htmlFor={uploadId} className={imgFile ? "reImgUpload" : ""}>
-            <span>{imgFile ? "변경" : "이미지 선택"}</span>
+            <span>{isChangeImg ? "변경" : "이미지 선택"}</span>
             <input
               type="file"
               id={uploadId}
@@ -33,7 +34,7 @@ export default function ImgUpload({
               accept="image/*"
             />
           </label>
-          {imgFile && (
+          {isChangeImg && (
             <button
               type="button"
               className="btn deleteBtn"
