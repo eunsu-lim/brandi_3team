@@ -30,7 +30,6 @@ class OrderDao:
                 raise NotFoundError('S000')
             return order
     
-
     def insert_order_history(self, db_connection, order_history_info):
         """
         새 주문이 생성된 시점 / 기존 주문이 변경되는 시점에 주문 상태 기록을 생성합니다. 
@@ -271,7 +270,7 @@ class OrderDao:
             INNER JOIN sellers ON products.seller_id = sellers.id
             INNER JOIN shipments ON orders.shipment_id = shipments.id
             INNER JOIN order_status_history ON orders.id = order_status_history.order_id
-            WHERE orders.id >= 1
+            WHERE 1 = 1
             """
     
             #주문상태
@@ -282,7 +281,7 @@ class OrderDao:
                 get_order_lists_query += add_query
             
             #주문상태 변경시각 
-            if filter_dict['order_status_id'] in [3,4,5]:
+            if filter_dict['order_status_id'] in [2,3,4,5]:
                 add_query = """
                 AND order_status_history.order_status_id=%(order_status_id)s
                 """
@@ -325,7 +324,7 @@ class OrderDao:
                     AND products.name = %(searching)s
                     """
                     get_order_lists_query += add_query
-            #조회 기간
+            #조회기간
             if filter_dict.get('filter_date_from', None):
                 add_query= """
                 AND orders.created_at >= %(filter_date_from)s
@@ -376,9 +375,7 @@ class OrderDao:
                     LIMIT %(limit)s
                     """
                     get_order_lists_query += add_query
-            
             cursor.execute(get_order_lists_query,filter_dict)
-            
             return cursor.fetchall()
 
     def get_order_id(self, db_connection):
