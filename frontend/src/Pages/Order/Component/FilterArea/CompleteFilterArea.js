@@ -226,7 +226,7 @@ function CompleteFilterArea({ posts, filterData, setFilterData, setPosts }) {
       </FilterSearch>
       {/* 날짜 필터 */}
       <DateFilter>
-        <DateLabel htmlFor="">배송시작일:</DateLabel>
+        <DateLabel htmlFor="">배송완료일:</DateLabel>
 
         {/* 간편 날짜 설정 버튼 목록 */}
         <SimpleDateBtn>
