@@ -8,9 +8,9 @@ from exceptions    import (
 class OrderDao:
     def get_order_info(self, db_connection, new_order):
         """
-        주문 기록을 조회합니다. 
+        주문이 생성된 시점에 이력정보를 저장하기 위해 주문 기록을 조회합니다. 
         Args:
-            new_order       : 주문 아이디,
+            new_order : 주문 아이디,
         Returns:
             order: 주문 아이디, 주문상태아이디, 생성일을 담은 주문 정보
         Authors:
@@ -32,13 +32,14 @@ class OrderDao:
     
     def insert_order_history(self, db_connection, order_history_info):
         """
-        주문 상태를 변경 기록을 생성합니다. 
+        새 주문이 생성된 시점 / 기존 주문이 변경되는 시점에 주문 상태 기록을 생성합니다. 
         Args:
-            order_id        : 셀러 아이디,
-            order_status_id : 주문상태 아이디,
+            order_status_id : 변경할 주문 상태
+            order_id : 주문 아이디
+            updated_at: 주문 생성 시점
+            account_id : 주문한 계정
         Returns:
-    
-
+            cursor.lastrowid : 변경된 주문기록에 대한 아이디
         Authors:
             jisunn0130@gmail.com(최지선)
         
@@ -60,6 +61,8 @@ class OrderDao:
             )
             """
             cursor.execute(insert_order_history_query, order_history_info)
+            if not cursor.lastrowid:
+                raise NotFoundError('S000')
             return cursor.lastrowid
 
     def update_order_status(self, db_connection, orders_dict):
@@ -84,9 +87,119 @@ class OrderDao:
             WHERE id=%(order_id)s
             """
             cursor.execute(update_order_status_query, orders_dict)
-            if cursor.rowcount == 0:
-                raise NotFoundError('S000')
             return cursor.rowcount
+    
+    def get_order_counts(self, db_connection, filter_dict):
+        """
+        조건에 맞는 주문 건수를 조회합니다. 
+        Args:
+            filter_dict = {
+                order_status_id     : 주문 상태 아이디
+                searching_category  : 검색항목
+                searching           : 검색어
+                filter_ordering     : 정렬기준
+                filter_date_from    : 필터 시작날짜
+                filter_date_to      : 필터 끝날짜
+                offset              : 페이지네이션 시작
+                limit               : 페이지네이션 끝
+                seller_attribute_id : 셀러속성
+            }
+        Returns:
+            order_counts : 주문 건수
+
+        Authors:
+            jisunn0130@gmail.com(최지선)
+        
+        History:
+            2020.11.04(최지선) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            get_order_count_query = """
+            SELECT
+                count(orders.id) as count
+            FROM orders
+            INNER JOIN colors ON orders.color_id=colors.id
+            INNER JOIN sizes ON orders.size_id=sizes.id
+            INNER JOIN products ON orders.product_id = products.id
+            INNER JOIN sellers ON products.seller_id = sellers.id
+            INNER JOIN shipments ON orders.shipment_id = shipments.id
+            INNER JOIN order_status_history ON orders.id = order_status_history.order_id
+            WHERE orders.id >= 1
+            """
+            
+            #주문상태
+            if filter_dict.get('order_status_id', None):
+                add_query = """
+                AND orders.order_status_id=%(order_status_id)s
+                """
+                get_order_count_query += add_query
+            
+            if filter_dict['order_status_id'] in [3,4,5]:
+                add_query = """
+                AND order_status_history.order_status_id=%(order_status_id)s
+                """
+                get_order_count_query += add_query
+
+            if filter_dict.get('searching_category', None):
+                #주문번호
+                if filter_dict['searching_category'] == '1': 
+                    add_query = """
+                    AND order_number = %(searching)s
+                    """
+                    get_order_count_query += add_query
+                #주문상세번호
+                elif filter_dict['searching_category'] == '2': 
+                    add_query = """
+                    AND detailed_order_number = %(searching)s
+                    """
+                    get_order_count_query += add_query
+                #주문자명
+                elif filter_dict['searching_category'] == '3': 
+                    add_query = """
+                    AND customer_name = %(searching)s
+                    """
+                    get_order_count_query+= add_query
+                #핸드폰번호
+                elif filter_dict['searching_category'] == '4': 
+                    add_query = """
+                    AND phone_number = %(searching)s
+                    """
+                    get_order_count_query += add_query
+                #셀러명
+                elif filter_dict['searching_category'] == '5': 
+                    add_query = """
+                    AND sellers.name_korean = %(searching)s
+                    """
+                    get_order_count_query += add_query
+                #상품명
+                elif filter_dict['searching_category'] == '6': 
+                    add_query = """
+                    AND products.name = %(searching)s
+                    """
+                    get_order_count_query += add_query
+            #조회 기간
+            if filter_dict.get('filter_date_from', None):
+                add_query= """
+                AND orders.created_at >= %(filter_date_from)s
+                """
+                get_order_count_query += add_query
+            
+            if filter_dict.get('filter_date_to', None):
+                add_query= """
+                AND orders.created_at <= %(filter_date_to)s
+                """
+                get_order_count_query += add_query
+
+            #셀러 속성
+            if filter_dict.get('seller_attribute_id', None):
+                add_query = """
+                AND sellers.seller_attribute_id in %(seller_attribute_id)s
+                """
+                get_order_count_query += add_query
+            
+            cursor.execute(get_order_count_query,filter_dict)
+            orders = cursor.fetchone()
+            return orders['count']
 
     def get_orders(self, db_connection, filter_dict):
         """
@@ -125,25 +238,34 @@ class OrderDao:
                 shipments.customer_name, 
                 shipments.phone_number,
                 paid_total, 
-                order_status_id,
+                orders.order_status_id,
                 colors.color,
-                sizes.size
+                sizes.size,
+                order_status_history.updated_at
             FROM orders
             INNER JOIN colors ON orders.color_id=colors.id
             INNER JOIN sizes ON orders.size_id=sizes.id
             INNER JOIN products ON orders.product_id = products.id
             INNER JOIN sellers ON products.seller_id = sellers.id
             INNER JOIN shipments ON orders.shipment_id = shipments.id
-            WHERE orders.id >= 1
-                """
-            
+            INNER JOIN order_status_history ON orders.id = order_status_history.order_id
+            WHERE 1 = 1
+            """
+    
             #주문상태
             if filter_dict.get('order_status_id', None):
                 add_query = """
-                AND order_status_id=%(order_status_id)s
+                AND orders.order_status_id=%(order_status_id)s
                 """
                 get_order_lists_query += add_query
             
+            #주문상태 변경시각 
+            if filter_dict['order_status_id'] in [2,3,4,5]:
+                add_query = """
+                AND order_status_history.order_status_id=%(order_status_id)s
+                """
+                get_order_lists_query += add_query
+    
             if filter_dict.get('searching_category', None):
                 #주문번호
                 if filter_dict['searching_category'] == '1': 
@@ -181,7 +303,7 @@ class OrderDao:
                     AND products.name = %(searching)s
                     """
                     get_order_lists_query += add_query
-            
+            #조회기간
             if filter_dict.get('filter_date_from', None):
                 add_query= """
                 AND orders.created_at >= %(filter_date_from)s
@@ -189,7 +311,6 @@ class OrderDao:
                 get_order_lists_query += add_query
             
             if filter_dict.get('filter_date_to', None):
-                print(filter_dict['filter_date_to'])
                 add_query= """
                 AND orders.created_at <= %(filter_date_to)s
                 """
@@ -230,10 +351,7 @@ class OrderDao:
                     LIMIT %(limit)s
                     """
                     get_order_lists_query += add_query
-
-            print(get_order_lists_query)
             cursor.execute(get_order_lists_query,filter_dict)
-            
             return cursor.fetchall()
 
     def get_order_id(self, db_connection):
@@ -294,8 +412,6 @@ class OrderDao:
             )
             """
             cursor.execute(insert_shipment_query, order_info)
-            #결과보기
-            #예외처리
             return cursor.lastrowid
     
     def insert_order(self, db_connection, order_info):
@@ -388,6 +504,70 @@ class OrderDao:
             if not available_stock:
                 raise OutofStockError('S110')
             return available_stock
+    
+    def get_product_size_options(self, db_connection, product):
+        """
+        상품 사이즈 옵션을 조회합니다. 
+        Args:
+            product_id        : 상품 아이디
+        Returns:
+            cursor.fetchall() : 상품 사이즈 옵션
+        Authors:
+            jisunn0130@gmail.com(최지선)
+        
+        History:
+            2020.11.08(최지선) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            get_product_size_query = """
+            SELECT 
+                sizes.size
+            FROM 
+                product_options
+            INNER JOIN products ON product_options.product_id=products.id
+            INNER JOIN sizes ON product_options.size_id=sizes.id
+            WHERE is_delete=0
+            AND sales_status_id=2
+            AND display_status_id=2
+            AND products.id=%(product_id)s
+            """
+            cursor.execute(get_product_size_query, product)
+            sizes = cursor.fetchall()
+            if not sizes:
+                raise OutofStockError('S110')
+            return sizes
+    
+    def get_product_color_options(self, db_connection, product):
+        """
+        상품 컬러 옵션을 조회합니다. 
+        Args:
+            product_id        : 상품 아이디
+        Returns:
+            cursor.fetchall() : 상품 사이즈 옵션
+        Authors:
+            jisunn0130@gmail.com(최지선)
+        
+        History:
+            2020.11.08(최지선) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            get_product_color_query = """
+            SELECT 
+                colors.color
+            FROM 
+                product_options
+            INNER JOIN products ON product_options.product_id=products.id
+            INNER JOIN colors ON product_options.color_id=colors.id
+            WHERE is_delete=0
+            AND sales_status_id=2
+            AND display_status_id=2
+            AND products.id=%(product_id)s
+            """
+            cursor.execute(get_product_color_query, product)
+            colors = cursor.fetchall()
+            if not colors:
+                raise OutofStockError('S110')
+            return colors
     
     def get_product_price(self, db_connection, order_info):
         """
