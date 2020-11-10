@@ -102,11 +102,7 @@ class OrderDao:
             update_order_status_query = """ 
             UPDATE orders
             SET order_status_id = %(order_status_id)s
-<<<<<<< HEAD
-            WHERE id=%(order_id)s
-=======
             WHERE id in %(order_id)s
->>>>>>> master
             """
             cursor.execute(update_order_status_query, order_lists)
             return cursor.rowcount

@@ -1,0 +1,25 @@
+{
+  "sellerAccountData": [
+    {
+      "id": 1,
+      "attr": "쇼핑몰",
+      "seller_id": "abc123",
+      "seller_name_kr": "브랜디",
+      "seller_name_en": "brandi",
+      "seller_info":"안녕하세요",
+      "manager_name": "이이이",
+      "manager_contact": "010-0111-2111",
+      "manager_email": "adsf@gmail.com",
+      "customer_center":"010-2222-2121",
+      "post_code":"111-111",
+      "address":"",
+      "address_detail":"",
+      "status_history": [
+        { "status": "입점승인", "changed_at": "2020-09-04-18-20" },
+        { "status": "휴점대기", "changed_at": "2020-09-04-20-20" }
+      ],
+      "delivery_info":"",
+      "refund_info":""
+    }
+  ]
+}
