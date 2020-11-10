@@ -15,7 +15,7 @@ from flask_request_validator  import(
 
 from decorator            import login_required
 from connection           import get_connection
-from internal_code_sheet  import internal_code_sheet
+from internal_code_sheets  import internal_code_sheet
 from exceptions           import (
     NotFoundError,
     InvalidDataError,
@@ -51,14 +51,8 @@ def create_order_endpoints(order_service):
         try:
             db_connection = get_connection()
             order_lists   = request.json
-            print(order_lists,'request')
-            for order in order_lists['order_id']:
-                orders_dict   = {
-                    "order_id": order,
-                    "order_status_id" : order_lists['order_status_id']
-                }
-            orders_dict['account_id'] = request.account_id
-            result = order_service.change_order_status(db_connection,orders_dict)
+            print(order_lists,'control')
+            result = order_service.change_order_status(db_connection,order_lists)
             if result:
                 db_connection.commit()
                 return jsonify(internal_code_sheet['S100']), (internal_code_sheet['S100']['code'])
@@ -162,7 +156,6 @@ def create_order_endpoints(order_service):
         Args:
             product_id     : 상품 아이디
         Returns:
-
 
         Authors:
             jisunn0130@gmail.com(최지선)

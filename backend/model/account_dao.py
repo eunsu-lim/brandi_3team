@@ -26,3 +26,20 @@ class AccountDao:
                 'password'        : row['password'],
                 'account_type_id' : row['account_type_id']
             }
+    
+    def get_nav_list(self, account_type_id, db_connection):
+        with db_connection.cursor() as cursor:
+            query = """
+                SELECT
+                    main_menus.id, main_menus.name as main,
+                    sub_menus.id, sub_menus.name as sub,
+                    account_type_id as account_type
+                FROM main_menus
+                LEFT JOIN sub_menus ON main_menus.id=sub_menus.main_menu_id
+                LEFT JOIN account_type_menus ON account_type_menus.sub_menu_id=sub_menus.id
+                WHERE account_type_id=%(account_type_id)s
+            """
+            cursor.execute(query, {'account_type_id': account_type_id})
+            nav_list = cursor.fetchall()
+
+            return nav_list

@@ -33,6 +33,8 @@ def login_required(func):
             request.account_id = payload
             db_connection      = get_connection()
             seller             = SellerDao().get_seller_id(db_connection, payload)
+            db_connection.close()
+            
             if seller['is_delete'] == 0: 
                 request.seller_id = seller['id']
             else:
@@ -43,9 +45,5 @@ def login_required(func):
 
         except NotFoundError:
             return jsonify(internal_code_sheet['S108']), (internal_code_sheet['S108']['code'])
-       
-        finally:
-            db_connection.close()
-
         return func(*args, **kwargs)
     return wrapper 

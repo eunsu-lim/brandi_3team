@@ -20,6 +20,7 @@ class SellerDao:
             BETWEEN 
                 SUBDATE(NOW(), INTERVAL 30 day) AND now()
             GROUP BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
+            ORDER BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
             """
             cursor.execute(get_seller_orders_query, seller_id)
             seller_orders = cursor.fetchall()
@@ -171,3 +172,22 @@ class SellerDao:
             """
             cursor.execute(get_seller_id_query, account_id)
             return cursor.fetchone()
+            
+    def get_seller_data(self, seller_id, db_connection):
+        """
+        로그인 데코레이터에서 토큰에 담긴 seller_id 로 셀러의 홈 데이터를 가져오는 쿼리
+        """
+        with db_connection.cursor() as cursor:
+            get_seller_data_query = """
+            SELECT 
+                count(orders.id) as count, 
+                order_status_id
+            FROM orders
+            JOIN products ON orders.product_id = products.id
+            JOIN sellers ON products.seller_id = sellers.id
+            WHERE seller_id = %(seller_id)s
+            GROUP BY order_status_id
+            """
+            cursor.execute(get_seller_data_query, seller_id)
+            print("seller_data", cursor.execute(get_seller_data_query, seller_id))
+            return cursor.fetchall()
