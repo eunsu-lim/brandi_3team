@@ -8,8 +8,8 @@ import axios from "axios";
 import { api } from "../../Config/api";
 
 import { render } from "react-dom";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+// import Highcharts from "highcharts";
+// import HighchartsReact from "highcharts-react-official";
 
 export default function Home() {
   // const axios = require('axios')
