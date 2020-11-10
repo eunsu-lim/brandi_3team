@@ -101,40 +101,47 @@ function ProductContent() {
   const handleApply = ({ applyOption }) => {
     // product_id  salesStatusModify  displayStatusModify
 
-    let applyObj = { product_id: checkedList.join() };
+    let applyObj = {
+      product_id: checkedList.join(),
+    };
 
     // applyOption에서 sale이 있을 경우
     if (applyOption.sale) {
       // sale: "Y"인 경우(판매 선택)
       if (applyOption.sale === "Y") {
-        applyObj = { ...applyObj, salesStatusModify: 1 };
+        applyObj = { ...applyObj, salesStatusModify: 2 };
       } else if (applyOption.sale === "N") {
         // sale: "N"인 경우(미판매 선택)
-        applyObj = { ...applyObj, salesStatusModify: 2 };
+        applyObj = { ...applyObj, salesStatusModify: 3 };
       }
     }
     // applyOption에서 display가 있을 경우
     if (applyOption.display) {
       // display: "Y"인 경우(진열 선택)
       if (applyOption.display === "Y") {
-        applyObj = { ...applyObj, displayStatusModify: 1 };
+        applyObj = { ...applyObj, displayStatusModify: 2 };
       } else if (applyOption.display === "N") {
         // display: "N"인 경우(미진열 선택)
-        applyObj = { ...applyObj, displayStatusModify: 2 };
+        applyObj = { ...applyObj, displayStatusModify: 3 };
       }
     }
+
+    console.log("applyObj >>>>>", applyObj);
 
     axios
       .request({
         method: "POST",
         url: `${api}/products/modify`,
         headers: { "Content-Type": "application/json" },
-        data: applyObj,
+        params: applyObj,
       })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => postSortData());
+    // axios
+    //   .post(`${api}/products/modify`, applyObj, {
+    //     headers: { "Content-Type": "application/json" },
+    //   })
+    //   .then((res) => console.log(res));
 
-    console.log(applyObj);
     // // newList라는 변수에 product_list 데이터를 복제
     // const newList = [...productData.product_list];
 
