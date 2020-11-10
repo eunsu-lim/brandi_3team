@@ -5,6 +5,7 @@ import Nav from "../../Components/Nav/Nav";
 import Footer from "../../Components/Footer/Footer";
 import {Chart} from "@styled-icons/evil"
 import axios from "axios";
+import {api} from "../../Config/api"
 
 import { render } from 'react-dom'
 import Highcharts from 'highcharts'
@@ -14,31 +15,33 @@ import HighchartsReact from 'highcharts-react-official'
 export default function Home() {
   // const axios = require('axios')
   const [data, setData] = useState();
+  const [chartData, setChartData] = useState();
  
   useEffect(() => {
     const fetchChartData = async () => {
       try{
-        const result = await axios.get(`http://192.168.7.23:5000/sellers/home`, {
+        const result = await axios.get(`${api}/sellers/home`, {
           headers:{
             "Content-Type":"application/json",
             Authorization: localStorage.getItem("access_token")
           }
-        }).then(res => setData(
-          res.data.chart_data.reduce((acc, cur, idx) => {
+        }).then(res => {
+          setData(res.data);
+          setChartData(res.data.order_counts.reduce((acc, cur, idx) => {
             if (idx === 0) {
               return {
               date: [cur.date],
               counts: [Number(cur.counts)],
               amounts: [Number(cur.amounts)]
-            }
+              }
             }
             return {
               date: [...acc.date, cur.date],
               counts: [...acc.counts, Number(cur.counts)],
               amounts: [...acc.amounts, Number(cur.amounts)]
             }
-          }, {})
-        ));
+          }, {}))
+        })
       } catch (error) {
         console.log(error);
       } 
@@ -51,7 +54,7 @@ export default function Home() {
       text: '주문건수'
     },
     xAxis: {  //여기!!
-      categories: data && data.date,
+      categories: chartData && chartData.date,
     },
     yAxis: {  //y축
         title: {
@@ -63,7 +66,7 @@ export default function Home() {
       enabled: false
       },
     series: [{  //여기!!
-      data: data && data.counts
+      data: chartData && chartData.counts
     }],
     legend: {
       enabled:false
@@ -75,7 +78,7 @@ export default function Home() {
       text: '주문금액'
     },
     xAxis: {  //x축
-      categories: data && data.date,
+      categories: chartData && chartData.date,
     },
     yAxis: {  //y축
         title: {
@@ -87,14 +90,12 @@ export default function Home() {
       enabled: false
       },
     series: [{
-      data: data && data.amounts
+      data: chartData && chartData.amounts
     }],
     legend: {
       enabled:false
     },
   };
-
-  console.log("data",data);
 
   return (
     <MainWrap>
@@ -111,7 +112,7 @@ export default function Home() {
                     상품 준비:
                   </PanelContentsText>
                   <PanelContentsCount>
-                    0건
+                    {data && data.seller_data.filter((el)=>el.order_status_id===1)[0].count}건
                   </PanelContentsCount>
                 </PanelBody>
                 <PanelBody>
@@ -127,7 +128,7 @@ export default function Home() {
                     배송 중:
                   </PanelContentsText>
                   <PanelContentsCount>
-                    0건
+                  {data && data.seller_data.filter((el)=>el.order_status_id===3)[0].count}건
                   </PanelContentsCount>
                 </PanelBody>
                 <PanelBody>
@@ -135,7 +136,7 @@ export default function Home() {
                     배송 완료:
                   </PanelContentsText>
                   <PanelContentsCount>
-                    0건
+                  {data && data.seller_data.filter((el)=>el.order_status_id===4)[0].count}건
                   </PanelContentsCount>
                 </PanelBody>
                 <PanelBody>
@@ -143,7 +144,7 @@ export default function Home() {
                     구매 확정:
                   </PanelContentsText>
                   <PanelContentsCount>
-                    0건
+                  {data && data.seller_data.filter((el)=>el.order_status_id===5)[0].count}건
                   </PanelContentsCount>
                 </PanelBody>
               </PanelList>
