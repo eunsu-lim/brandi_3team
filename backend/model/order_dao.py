@@ -136,13 +136,19 @@ class OrderDao:
             SELECT
                 count(orders.id) as count
             FROM orders
-            INNER JOIN colors ON orders.color_id=colors.id
-            INNER JOIN sizes ON orders.size_id=sizes.id
-            INNER JOIN products ON orders.product_id = products.id
-            INNER JOIN sellers ON products.seller_id = sellers.id
-            INNER JOIN shipments ON orders.shipment_id = shipments.id
-            INNER JOIN order_status_history ON orders.id = order_status_history.order_id
-            WHERE orders.id >= 1
+            INNER JOIN 
+                colors ON orders.color_id=colors.id
+            INNER JOIN 
+                sizes ON orders.size_id=sizes.id
+            INNER JOIN 
+                products ON orders.product_id = products.id
+            INNER JOIN 
+                sellers ON products.seller_id = sellers.id
+            INNER JOIN 
+                shipments ON orders.shipment_id = shipments.id
+            INNER JOIN 
+                order_status_history ON orders.id = order_status_history.order_id
+            WHERE 1 = 1
             """
             
             #주문상태
@@ -197,16 +203,28 @@ class OrderDao:
                     get_order_count_query += add_query
             #조회 기간
             if filter_dict.get('filter_date_from', None):
-                add_query= """
-                AND orders.created_at >= %(filter_date_from)s
-                """
-                get_order_count_query += add_query
-            
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at >= %(filter_date_from)s
+                    """
+                    get_order_count_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at >= %(filter_date_from)s
+                    """
+                    get_order_count_query += add_query
+
             if filter_dict.get('filter_date_to', None):
-                add_query= """
-                AND orders.created_at <= %(filter_date_to)s
-                """
-                get_order_count_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at <= %(filter_date_to)s
+                    """
+                    get_order_count_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at <= %(filter_date_to)s
+                    """
+                    get_order_count_query += add_query
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):
@@ -263,13 +281,20 @@ class OrderDao:
                 colors.color,
                 sizes.size,
                 order_status_history.updated_at
-            FROM orders
-            INNER JOIN colors ON orders.color_id=colors.id
-            INNER JOIN sizes ON orders.size_id=sizes.id
-            INNER JOIN products ON orders.product_id = products.id
-            INNER JOIN sellers ON products.seller_id = sellers.id
-            INNER JOIN shipments ON orders.shipment_id = shipments.id
-            INNER JOIN order_status_history ON orders.id = order_status_history.order_id
+            FROM 
+                orders
+            INNER JOIN 
+                colors ON orders.color_id=colors.id
+            INNER JOIN 
+                sizes ON orders.size_id=sizes.id
+            INNER JOIN 
+                products ON orders.product_id = products.id
+            INNER JOIN 
+                sellers ON products.seller_id = sellers.id
+            INNER JOIN 
+                shipments ON orders.shipment_id = shipments.id
+            INNER JOIN 
+                order_status_history ON orders.id = order_status_history.order_id
             WHERE 1 = 1
             """
     
@@ -326,16 +351,31 @@ class OrderDao:
                     get_order_lists_query += add_query
             #조회기간
             if filter_dict.get('filter_date_from', None):
-                add_query= """
-                AND orders.created_at >= %(filter_date_from)s
-                """
-                get_order_lists_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at >= %(filter_date_from)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query)
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at >= %(filter_date_from)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query,'1')
             
             if filter_dict.get('filter_date_to', None):
-                add_query= """
-                AND orders.created_at <= %(filter_date_to)s
-                """
-                get_order_lists_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at <= %(filter_date_to)s
+                    """
+                    get_order_lists_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at <= %(filter_date_to)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query,'2')
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):
@@ -618,7 +658,9 @@ class OrderDao:
             AND products.id=%(product_id)s
             """
             cursor.execute(get_price_query, order_info)
-            return cursor.fetchone()
+            result = cursor.fetchone()
+            print(result,'dao')
+            return result
     
     def get_product_sales_quantity(self, db_connection, order_info):
         """

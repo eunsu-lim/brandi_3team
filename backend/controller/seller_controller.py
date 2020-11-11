@@ -9,6 +9,7 @@ from flask_request_validator  import(
     validate_params
 )
 
+
 from decorator            import login_required
 from connection           import get_connection
 from internal_code_sheets  import internal_code_sheet
@@ -19,8 +20,48 @@ from exceptions           import (
     PasswordError
 )
 
+
+
 def create_seller_endpoints(seller_service):
     seller_bp = Blueprint('sellers', __name__, url_prefix = '/sellers')
+
+    @seller_bp.route('/home', methods=['GET'])
+    @login_required
+    def get_seller_order_status(*args):
+        """
+        셀러의 주문 현황를 조회합니다. 
+            Args:
+                seller_id: 셀러 아이디
+             
+            Returns:
+                {
+                    "date": 날짜,
+                    "counts": 주문건수,
+                    "amounts":주문금액
+                }   
+            Authors:
+                jisunn0130@gmail.com(최지선)
+            
+            History:
+                2020.11.08(최지선) : 초기 생성
+        """
+        try:
+            db_connection = get_connection()
+            seller_id  = request.seller_id
+            result = seller_service.get_seller_orders(db_connection, {"seller_id":seller_id})
+            return jsonify(result),(internal_code_sheet['S100']['code'])
+        
+        except NotFoundError as e:
+            db_connection.rollback()
+            message = internal_code_sheet[e.code]
+            return jsonify(message), (message['code'])
+        
+        except Exception as e:
+            db_connection.rollback()
+            return jsonify(e), 400
+
+        finally:
+            db_connection.close()
     
     @seller_bp.route('/sign-up', methods=['POST'])
     @validate_params(
@@ -86,9 +127,6 @@ def create_seller_endpoints(seller_service):
         finally:
             db_connection.close()
 
-
-    # 
-
     # 비밀번호 변경 엔드포인트 sellers/edit-password
 
     @seller_bp.route('/edit-password', methods=['PATCH'])
@@ -125,7 +163,7 @@ def create_seller_endpoints(seller_service):
             # request 로 들어온 seller_info(request.json프론트 요청) 받습니다.
             seller_info = request.json
             # account_id라는 key를 seller_info에 추가하고 value를 token에서 받아온 account_id를 넣어줌
-            seller_info['account_id'] = request.account_id['account_id']
+            seller_info['account_id'] = request.account_id
             # request.seller_id = seller['id'] => service
             result = seller_service.edit_seller_password(seller_info, db_connection)
             # 비밀번호 변경 성공 
@@ -185,7 +223,7 @@ def create_seller_endpoints(seller_service):
             seller_info = {}
 
             # account_id라는 key를 seller_info에 추가하고 value를 token에서 받아온 account_id를 넣어줌
-            seller_info['account_id'] = request.account_id['account_id']
+            seller_info['account_id'] = request.account_id
 
             # request.seller_id = seller['id'] => service
             result = seller_service.seller_detail_infos(seller_info, db_connection)
@@ -207,23 +245,23 @@ def create_seller_endpoints(seller_service):
     
     # 계정 정보 수정페이지 수정 엔드포인트 생성
     @seller_bp.route('/edit-seller-details', methods=['PATCH'])
-    @validate_params(
-        # 들어온 파라미터들을 유효성 검사
-        # 셀러 기본 정보
-        Param('short_description', JSON, str, required=True),
-        Param('detailed_description', JSON, str, required=True),
-        # 담당자 정보
-        Param('person_in_charge', JSON, str, required=True),
-        Param('phone_number', JSON, str, required=True),
-        Param('email', JSON, str, required=True),
-        # 주소
-        Param('postal_code', JSON, str, required=True),
-        Param('address_1', JSON, str, required=True),
-        Param('address_2', JSON, str, required=True),
-        # 배송 / 환불 정보
-        Param('delivery_description',JSON, str, required=True),
-        Param('refund_description',JSON, str, required=True)
-    )
+    # @validate_params(
+    #     # 들어온 파라미터들을 유효성 검사
+    #     # 셀러 기본 정보
+    #     Param('short_description', JSON, str, required=True),
+    #     Param('detailed_description', JSON, str, required=True),
+    #     # 담당자 정보
+    #     Param('person_in_charge', JSON, str, required=True),
+    #     Param('phone_number', JSON, str, required=True),
+    #     Param('email', JSON, str, required=True),
+    #     # 주소
+    #     Param('postal_code', JSON, str, required=True),
+    #     Param('address_1', JSON, str, required=True),
+    #     Param('address_2', JSON, str, required=True),
+    #     # 배송 / 환불 정보
+    #     Param('delivery_description',JSON, str, required=True),
+    #     Param('refund_description',JSON, str, required=True)
+    # )
     @login_required
     def edit_seller_detail_infos(*args):
         """
@@ -264,7 +302,7 @@ def create_seller_endpoints(seller_service):
             seller_back = request.files.get('background_image_url', None)
 
             # account_id라는 key를 seller_info에 추가하고 value를 token에서 받아온 account_id를 넣어줌
-            seller_info['account_id'] = request.account_id['account_id']
+            seller_info['account_id'] = request.account_id
 
             # request.seller_id = seller['id'] => service
             result = seller_service.edit_seller_detail_infos(seller_info, seller_profile, seller_back, db_connection)
@@ -286,9 +324,5 @@ def create_seller_endpoints(seller_service):
         
         finally:
             db_connection.close()
-        
-
-
-
 
     return seller_bp

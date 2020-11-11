@@ -29,14 +29,14 @@ def login_required(func):
     def wrapper(*args, **kwargs):
         try:
             access_token       = request.headers.get('Authorization', None) 
-            payload            = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)
+            payload            = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)            
             request.account_type_id = payload['account_type_id']
             request.account_id = payload['account_id']
             db_connection      = get_connection()
             seller             = SellerDao().get_seller_id(db_connection, payload)
             db_connection.close()
             
-            if seller['is_delete'] == 0: 
+            if seller['is_delete'] == 0:
                 request.seller_id = seller['id']
             else:
                 raise  InvalidDataError('S107')

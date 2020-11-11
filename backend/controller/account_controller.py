@@ -54,6 +54,7 @@ def create_account_endpoints(account_service):
                 
                 # service의 generate_access_token 함수를 통해 생성한 token을 token에 저장
                 token           = account_service.generate_access_token(account_id, account_type_id)
+                print(token)
                 
                 # service에서 nav_list와 button_list를 가져오는 함수를 실행
                 nav_list = account_service.get_nav_and_button(account_type_id, db_connection)

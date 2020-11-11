@@ -76,7 +76,7 @@ def create_order_endpoints(order_service):
     @order_bp.route('/lists/<int:order_status_id>', methods=['GET'])
     @validate_params(
         Param('order_status_id',PATH,int,required=False),   #주문상태
-        Param('searching_category',GET,str,required=False),  #검색어 종류
+        Param('searching_category',GET,str,required=False),  #검색 카테고리
         Param('searching', GET,str,required=False),  #검색어
         Param('filter_ordering',GET,str,required=False),   #정렬기준 : 주문일순 or 주문일역순
         Param('filter_date_from',GET,str,required=False),  #주문일 시작
