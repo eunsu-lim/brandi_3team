@@ -87,7 +87,7 @@ def create_seller_endpoints(seller_service):
             db_connection.close()
 
 
-    # ======================================================
+    # 
 
     # 비밀번호 변경 엔드포인트 sellers/edit-password
 

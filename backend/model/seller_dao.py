@@ -192,7 +192,7 @@ class SellerDao:
             return cursor.fetchall()
 
     
-    # =========== 비밀번호 변경
+    # 비밀번호 변경
 
     # 기존 비밀번호 변경을 가져오는 query
     def get_seller_password(self, seller_data, db_connection):
