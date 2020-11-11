@@ -1,23 +1,81 @@
 {
-  "data": {
-    "nav_data": [
-      {
+  "nav_list": [
+    {
         "id": 1,
-        "menuTitle": "홈"
-      },
-      {
+        "menuTitle": "홈",
+        "menu_url": "/home"
+    },
+    {
+        "id": 9,
+        "menuTitle": "공지사항",
+        "menu_url": "",
+        "subMenu": [
+            {
+                "id": 26,
+                "subTitle": "브랜디 공지",
+                "sub_url": ""
+            },
+            {
+                "id": 27,
+                "subTitle": "기획전 상품 신청",
+                "sub_url": ""
+            }
+        ]
+    },
+    {
         "id": 2,
         "menuTitle": "통계",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "시간단위분석"
-          }
+            {
+                "id": 2,
+                "subTitle": "기간별 통계",
+                "sub_url": ""
+            },
+            {
+                "id": 3,
+                "subTitle": "베스트 상품분석",
+                "sub_url": ""
+            },
+            {
+                "id": 4,
+                "subTitle": "판매추세 분석(상품별)",
+                "sub_url": ""
+            }
         ]
-      },
-      {
+    },
+    {
         "id": 3,
         "menuTitle": "주문관리",
+<<<<<<< HEAD
+        "menu_url": "",
+        "subMenu": [
+            {
+                "id": 6,
+                "subTitle": "상품준비관리",
+                "sub_url": "/order/1"
+            },
+            {
+                "id": 7,
+                "subTitle": "배송중관리",
+                "sub_url": "/order/3"
+            },
+            {
+                "id": 8,
+                "subTitle": "배송완료관리",
+                "sub_url": "/order/4"
+            },
+            {
+                "id": 9,
+                "subTitle": "구매확정관리",
+                "sub_url": "/order/5"
+            },
+            {
+                "id": 10,
+                "subTitle": "전체주문관리",
+                "sub_url": ""
+            }
+=======
         "url": "/order",
         "subMenu": [
           {
@@ -40,82 +98,189 @@
             "id": 5,
             "sub": "구매확정관리"
           }
+>>>>>>> master
         ]
-      },
-      {
+    },
+    {
         "id": 4,
-        "menuTitle": "취소/환불 관리",
+        "menuTitle": "취소/환불관리",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "환불요청관리"
-          },
-          {
-            "id": 2,
-            "sub": "환불완료관리"
-          },
-          {
-            "id": 3,
-            "sub": "주문취소완료관리"
-          }
+            {
+                "id": 11,
+                "subTitle": "환불요청관리",
+                "sub_url": ""
+            },
+            {
+                "id": 12,
+                "subTitle": "환불완료관리",
+                "sub_url": ""
+            },
+            {
+                "id": 13,
+                "subTitle": "주문취소완료관리",
+                "sub_url": ""
+            },
+            {
+                "id": 14,
+                "subTitle": "반품진행관리",
+                "sub_url": ""
+            },
+            {
+                "id": 15,
+                "subTitle": "환불승인중관리",
+                "sub_url": ""
+            },
+            {
+                "id": 16,
+                "subTitle": "주문취소중관리",
+                "sub_url": ""
+            }
         ]
-      },
-      {
+    },
+    {
         "id": 5,
         "menuTitle": "상품관리",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "상품 관리"
-          },
-          {
-            "id": 2,
-            "sub": "상품 등록"
-          }
+            {
+                "id": 17,
+                "subTitle": "상품관리",
+                "sub_url": "/product"
+            },
+            {
+                "id": 18,
+                "subTitle": "상품등록",
+                "sub_url": ""
+            }
         ]
-      },
-      {
+    },
+    {
         "id": 6,
         "menuTitle": "고객응대관리",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "Q&A 관리"
-          },
-          {
-            "id": 2,
-            "sub": "텍스트 리뷰"
-          }
+            {
+                "id": 19,
+                "subTitle": "Q&A관리",
+                "sub_url": ""
+            },
+            {
+                "id": 20,
+                "subTitle": "텍스트리뷰",
+                "sub_url": ""
+            },
+            {
+                "id": 21,
+                "subTitle": "포토리뷰",
+                "sub_url": ""
+            }
         ]
-      },
-      {
-        "id": 7,
-        "menuTitle": "기획전/쿠폰관리",
+    },
+    {
+        "id": 10,
+        "menuTitle": "정산관리",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "기획전 관리"
-          },
-          {
-            "id": 2,
-            "sub": "쿠폰 관리"
-          }
+            {
+                "id": 28,
+                "subTitle": "정산 관리",
+                "sub_url": ""
+            },
+            {
+                "id": 29,
+                "subTitle": "셀러별 정산요약",
+                "sub_url": ""
+            },
+            {
+                "id": 30,
+                "subTitle": "셀러별 판매수수료",
+                "sub_url": ""
+            },
+            {
+                "id": 31,
+                "subTitle": "주문별 판매수수료",
+                "sub_url": ""
+            },
+            {
+                "id": 32,
+                "subTitle": "셀러별 서버이용료",
+                "sub_url": ""
+            }
         ]
-      },
-      {
+    },
+    {
+        "id": 11,
+        "menuTitle": "진열관리",
+        "menu_url": "",
+        "subMenu": [
+            {
+                "id": 33,
+                "subTitle": "상점진열관리",
+                "sub_url": ""
+            }
+        ]
+    },
+    {
         "id": 8,
-        "menuTitle": "회원 관리",
+        "menuTitle": "회원관리",
+        "menu_url": "",
         "subMenu": [
-          {
-            "id": 1,
-            "sub": "회원관리_커뮤니티"
-          },
-          {
-            "id": 2,
-            "sub": "셀러 계정 관리"
-          }
+            {
+                "id": 39,
+                "subTitle": "셀러 정보 관리",
+                "sub_url": "/user"
+            },
+            {
+                "id": 41,
+                "subTitle": "패널티 셀러 관리",
+                "sub_url": ""
+            },
+            {
+                "id": 42,
+                "subTitle": "도매처 관리",
+                "sub_url": ""
+            }
         ]
+    },
+    {
+        "id": 12,
+        "menuTitle": "고객센터",
+        "menu_url": "",
+        "subMenu": [
+            {
+                "id": 34,
+                "subTitle": "헬피 신청 안내",
+                "sub_url": ""
+            },
+            {
+                "id": 35,
+                "subTitle": "카카오톡 문의",
+                "sub_url": ""
+            },
+            {
+                "id": 36,
+                "subTitle": "전화 1566-1910",
+                "sub_url": ""
+            },
+            {
+                "id": 37,
+                "subTitle": "MD에게 제안",
+                "sub_url": ""
+            },
+            {
+                "id": 38,
+                "subTitle": "오류/수정 제안",
+                "sub_url": ""
+            }
+        ]
+<<<<<<< HEAD
+    }
+  ]
+}
+=======
       }
     ]
   }
 }
+>>>>>>> master
