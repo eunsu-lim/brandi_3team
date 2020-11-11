@@ -1,5 +1,6 @@
 import jwt
 import bcrypt
+from config import SECRET_KEY
 
 from datetime   import datetime, timedelta
 
@@ -22,19 +23,19 @@ class AccountService:
     def get_user_info(self, account_name, db_connection):
         return self.account_dao.get_user_info(account_name, db_connection)
 
-    def generate_access_token(self, account_id):
+    def generate_access_token(self, account_id, account_type_id):
         payload = {
             'account_id' : account_id,
+            'account_type_id':account_type_id,
             'exp'        : datetime.utcnow() + timedelta(seconds = 60 * 60 * 24)
         }
-        token   = jwt.encode(payload, 'SECRET_KEY', 'HS256')
+        token   = jwt.encode(payload, SECRET_KEY, 'HS256')
 
         return token.decode('UTF-8')
 
     def get_nav_and_button(self, account_type_id, db_connection):
         # dao에서 받은 데이터를 nav_data에 선언
         nav_data = self.account_dao.get_nav_list(account_type_id, db_connection)
-        
         # nav에 url을 추가하기 위해 menu_url과 sub_url을 선언
         menu_url = {
             '홈':'/home',
@@ -85,7 +86,7 @@ class AccountService:
             '주문별 판매수수료':'',
             '셀러별 서버이용료':'',
             '상점진열관리':'',
-            '셀러 정보 관리':'/user',
+            '셀러 정보 관리':'/info',
             '패널티 셀러 관리':'',
             '도매처 관리':'',
             '헬피 신청 안내':'',

@@ -11,7 +11,7 @@ from flask_request_validator  import(
 
 from decorator            import login_required
 from connection           import get_connection
-from internal_code_sheet  import internal_code_sheet
+from internal_code_sheets  import internal_code_sheet
 from exceptions           import (
     DuplicatedDataError,
     InvalidDataError,
