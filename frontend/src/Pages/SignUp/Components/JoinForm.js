@@ -19,10 +19,12 @@ function JoinForm() {
       sellerRadio: "1",
     },
   });
+  const [password, setPassword] = useState("");
+  const [rPassword, setRpassword] = useState("");
+  const history = useHistory();
 
   // 회원가입 신청 시 실행되는 함수
   const onSubmit = async (data) => {
-    const history = useHistory();
     const signUpData = JSON.stringify(data);
 
     await axios
@@ -31,16 +33,13 @@ function JoinForm() {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => res.json())
       .then((res) => {
         res.message === "SUCCESS" ? alert("회원가입 성공") : null;
-        history.push("/login");
+        history.push("/");
       })
       .catch((err) => console.log("err >>>>>>", err));
   };
 
-  const [password, setPassword] = useState("");
-  const [rPassword, setRpassword] = useState("");
 
   return (
     <JoinFormWrap>

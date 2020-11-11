@@ -134,7 +134,6 @@ function FilterArea({ posts, filterData, setFilterData, setPosts }) {
 
   // 검색어 입력 함수
   const handleInput = (e) => {
-    ㄴㄴ;
     const { value } = e.target;
     setSearch(value);
     // setChangeValue(!changeValue);

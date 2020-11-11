@@ -27,7 +27,7 @@ function ProductContent() {
   useEffect(() => {
     axios
       .get(`${api}/products/product_list`)
-      .then((res) => setProductData(res.data.data));
+      .then((res) => setProductData(res.data));
   }, []);
 
   useEffect(() => {

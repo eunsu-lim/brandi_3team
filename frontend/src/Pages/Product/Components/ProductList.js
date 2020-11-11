@@ -129,7 +129,7 @@ function ProductList({
       <List>
         {/* 상품관리 리스트 data의 length로 전체 조회건 수 출력 */}
         <p>
-          전체 조회건 수 :<span> {productData && productData.length}</span> 건
+          전체 조회건 수 :<span> {productData && productData.total_number}</span> 건
         </p>
         {/* 상품관리 리스트 table */}
         <ListTable>
@@ -168,7 +168,7 @@ function ProductList({
             <tbody>
               {/* 상품관리 리스트 data들을 map을 사용해서 table에 한 줄씩 생성 */}
               {productData &&
-                productData.map((list, i) => {
+                productData.products.map((list, i) => {
                   return (
                     <tr key={i}>
                       <td>
@@ -222,7 +222,7 @@ function ProductList({
           <Pagination
             activePage={pageNumber} // 현재 활성화 된 page
             itemsCountPerPage={sortData && sortData.limit} // 한 페이지에 보여줄 list의 갯수
-            totalItemsCount={450} // 전체 data의 갯수
+            totalItemsCount={productData && productData.total_number} // 전체 data의 갯수
             onChange={handlePageChange} // 클릭시 해당 함수를 실행하여 현재 활성화 된 Page Number state값 변경
           />
         </PageButton>

@@ -203,16 +203,28 @@ class OrderDao:
                     get_order_count_query += add_query
             #조회 기간
             if filter_dict.get('filter_date_from', None):
-                add_query= """
-                AND orders.created_at >= %(filter_date_from)s
-                """
-                get_order_count_query += add_query
-            
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at >= %(filter_date_from)s
+                    """
+                    get_order_count_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at >= %(filter_date_from)s
+                    """
+                    get_order_count_query += add_query
+
             if filter_dict.get('filter_date_to', None):
-                add_query= """
-                AND orders.created_at <= %(filter_date_to)s
-                """
-                get_order_count_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at <= %(filter_date_to)s
+                    """
+                    get_order_count_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at <= %(filter_date_to)s
+                    """
+                    get_order_count_query += add_query
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):
@@ -339,16 +351,31 @@ class OrderDao:
                     get_order_lists_query += add_query
             #조회기간
             if filter_dict.get('filter_date_from', None):
-                add_query= """
-                AND orders.created_at >= %(filter_date_from)s
-                """
-                get_order_lists_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at >= %(filter_date_from)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query)
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at >= %(filter_date_from)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query,'1')
             
             if filter_dict.get('filter_date_to', None):
-                add_query= """
-                AND orders.created_at <= %(filter_date_to)s
-                """
-                get_order_lists_query += add_query
+                if filter_dict['order_status_id'] == '1':
+                    add_query= """
+                    AND orders.created_at <= %(filter_date_to)s
+                    """
+                    get_order_lists_query += add_query
+                else:
+                    add_query= """
+                    AND order_status_history.updated_at <= %(filter_date_to)s
+                    """
+                    get_order_lists_query += add_query
+                    print(get_order_lists_query,'2')
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):

@@ -127,9 +127,6 @@ def create_seller_endpoints(seller_service):
         finally:
             db_connection.close()
 
-
-    # 
-
     # 비밀번호 변경 엔드포인트 sellers/edit-password
 
     @seller_bp.route('/edit-password', methods=['PATCH'])
@@ -166,7 +163,7 @@ def create_seller_endpoints(seller_service):
             # request 로 들어온 seller_info(request.json프론트 요청) 받습니다.
             seller_info = request.json
             # account_id라는 key를 seller_info에 추가하고 value를 token에서 받아온 account_id를 넣어줌
-            seller_info['account_id'] = request.account_id['account_id']
+            seller_info['account_id'] = request.account_id
             # request.seller_id = seller['id'] => service
             result = seller_service.edit_seller_password(seller_info, db_connection)
             # 비밀번호 변경 성공 
