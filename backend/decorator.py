@@ -30,7 +30,8 @@ def login_required(func):
         try:
             access_token       = request.headers.get('Authorization', None) 
             payload            = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)
-            request.account_id = payload
+            request.account_type_id = payload['account_type_id']
+            request.account_id = payload['account_id']
             db_connection      = get_connection()
             seller             = SellerDao().get_seller_id(db_connection, payload)
             db_connection.close()
