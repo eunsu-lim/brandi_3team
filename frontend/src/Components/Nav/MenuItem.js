@@ -60,7 +60,7 @@ export default function MenuItem({
               {subMenu.map((list, idx) => {
                 return (
                   <li key={idx} onClick={handleActivePage}>
-                    <Link to={list.url}>{list.sub}</Link>
+                    <Link to={list.sub_url}>{list.subTitle}</Link>
                   </li>
                 );
               })}
@@ -89,7 +89,7 @@ export default function MenuItem({
               {subMenu.map((list, idx) => {
                 return (
                   <li key={idx} onClick={handleActivePage}>
-                    <Link to={list.url}>{list.sub}</Link>
+                    <Link to={list.sub_url}>{list.subTitle}</Link>
                   </li>
                 );
               })}
@@ -109,7 +109,7 @@ const ListItem = styled.li`
   font-weight: 300;
   font-size: 14px;
   color: #eee;
-  /* background-color: ${({ active }) => (active ? "#27272B" : "")}; */
+  background-color: ${({ active }) => (active ? "#27272B" : "")};
   border-bottom: 1px solid #414247;
   box-sizing: border-box;
   transition: 0.8s;
@@ -146,7 +146,7 @@ const ListMenu = styled.div`
   display: flex;
   padding: 10px 13px 10px 15px;
   /* 현재 페이지 적용 (나중에 수정 후 적용) **수정 금지 */
-  /* border-right: ${({ active }) => (active ? "4px solid #d12610" : "")}; */
+  border-right: ${({ active }) => (active ? "4px solid #d12610" : "")};
 `;
 
 const Arrow = styled.span`
@@ -191,11 +191,11 @@ const NAV_ICON = {
   홈: <Home size="16" />,
   통계: <BarChartLine size="16" />,
   주문관리: <CartCheck size="16" />,
-  "취소/환불 관리": <Cart size="16" />,
+  "취소/환불관리": <Cart size="16" />,
   상품관리: <BagCheck size="16" />,
   고객응대관리: <EmojiSmile size="16" />,
   "기획전/쿠폰관리": <Gift size="16" />,
-  "회원 관리": <People size="16" />,
+  회원관리: <People size="16" />,
   공지사항: <CardList size="16" />,
   정산관리: <Calculate size="16" />,
   진열관리: <Eye size="16" />,
