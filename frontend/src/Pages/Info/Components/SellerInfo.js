@@ -43,9 +43,10 @@ export default function SellerInfo() {
   useEffect(() => {
     axios
       .get(`${ACCOUNT_API}/sellers/seller-details`, {
-        headers: { Authorization: localStorage.getItem("Authorization") },
+        headers: { Authorization: localStorage.getItem("access_token") },
       })
       .then((res) => {
+        console.log("Res>>", res);
         setInfos(res.data.seller_data);
       });
   }, []);
@@ -70,7 +71,7 @@ export default function SellerInfo() {
           axios
             .patch(`${ACCOUNT_API}/sellers/edit-seller-details`, formData, {
               headers: {
-                Authorization: localStorage.getItem("Authorization"),
+                Authorization: localStorage.getItem("access_token"),
                 "Content-Type": "multipart/form-data",
               },
             })

@@ -23,7 +23,7 @@ export default function ChangePassword({ setIsModal }) {
             },
             {
               headers: {
-                Authorization: localStorage.getItem("Authorization"),
+                Authorization: localStorage.getItem("access_token"),
                 "Content-Type": "application/json",
               },
             }

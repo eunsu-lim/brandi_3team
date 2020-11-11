@@ -40,7 +40,7 @@ export default function Nav() {
   useEffect(() => {
     axios
       .get(`${api}/accounts/navlists`, {
-        headers: { Authorization: localStorage.getItem("Authorization") },
+        headers: { Authorization: localStorage.getItem("access_token") },
       })
       .then((res) => {
         console.log("res", res.data.nav_list);
