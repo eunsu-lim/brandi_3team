@@ -22,3 +22,15 @@ class PriceDoesNotMatchError(ErrorFormat):
 
 class InvalidSalesQuantityError(ErrorFormat):
     pass
+
+class InvalidProductInformationError(Exception):
+    pass
+
+class InvalidSellerInformationError(Exception):
+    pass
+
+class ProgrammingError(Exception):
+    pass
+
+class InvalidChoiceMade(Exception):
+    pass
