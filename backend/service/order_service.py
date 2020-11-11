@@ -34,7 +34,7 @@ class OrderService:
         updated_order_count = self.order_dao.update_order_status(db_connection, order_lists)
         
         in_charge = request.account_id
-        order_lists['account_id'] = in_charge['account_id']
+        order_lists['account_id'] = in_charge
         self.order_dao.insert_order_history(db_connection, order_lists)
         return updated_order_count
     
@@ -134,19 +134,11 @@ class OrderService:
             raise InvalidSalesQuantityError('S113')
         elif int(order_info['quantity']) < sales_quantity['min_sales_quantity']:
             raise InvalidSalesQuantityError('S112')
-
-        #주문번호 & 주문상세번호생성
-        today = datetime.datetime.today().strftime('%Y%m%d')
-        last_order_id = self.order_dao.get_order_id(db_connection)['id'] 
-        order_number = today + str(last_order_id+1).zfill(5)
-        detailed_order_number = 'B' + order_number
-        order_info['order_number'] = order_number
-        order_info['detailed_order_number'] = detailed_order_number
         
         #할인여부 확인
-        discount_check = order_info['discount_status_id']
+        discount_check = int(order_info['discount_status_id'])
         if discount_check == 2:
-            stored_retail_price = self.order_dao.get_product_price(db_connection,order_info)['price']
+            stored_retail_price = self.order_dao.get_product_price(db_connection,order_info)['sales_price']
             stored_discount_rate = self.order_dao.get_product_price(db_connection,order_info)['discount_rate']
             discount_price = stored_retail_price - (stored_retail_price * stored_discount_rate)
             
@@ -156,11 +148,19 @@ class OrderService:
                 raise PriceDoesNotMatchError('S111')
 
         elif discount_check == 3:
-            stored_retail_price = self.order_dao.get_product_price(db_connection,order_info)['price']
-            if order_info['sales_price'] != stored_retail_price:
+            stored_retail_price = self.order_dao.get_product_price(db_connection,order_info)['sales_price']
+            if float(order_info['sales_price']) != stored_retail_price:
                 raise PriceDoesNotMatchError('S111')
-            elif order_info['paid_total'] != stored_retail_price * order_info['quantity']:
+            elif float(order_info['paid_total']) != stored_retail_price * int(order_info['quantity']):
                 raise PriceDoesNotMatchError('S111')
+        
+        #주문번호 & 주문상세번호생성
+        today = datetime.datetime.today().strftime('%Y%m%d')
+        last_order_id = self.order_dao.get_order_id(db_connection)['id'] 
+        order_number = today + str(last_order_id+1).zfill(5)
+        detailed_order_number = 'B' + order_number
+        order_info['order_number'] = order_number
+        order_info['detailed_order_number'] = detailed_order_number
 
         #주문자 정보 저장
         shipment_id = self.order_dao.insert_shipment(db_connection, order_info)
@@ -175,7 +175,7 @@ class OrderService:
             'order_status_id' : new_order_history['order_status_id'],
             'order_id' : new_order_history['id'],
             'updated_at': new_order_history['created_at'],
-            'account_id' : in_charge['account_id']
+            'account_id' : in_charge
         }
         order_history = self.order_dao.insert_order_history(db_connection, order_history_info)
         updated_stocks = self.order_dao.update_product_stock_quantity(db_connection, order_info)

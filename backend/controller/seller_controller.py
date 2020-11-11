@@ -23,6 +23,44 @@ from exceptions           import (
 
 def create_seller_endpoints(seller_service):
     seller_bp = Blueprint('sellers', __name__, url_prefix = '/sellers')
+
+    @seller_bp.route('/home', methods=['GET'])
+    @login_required
+    def get_seller_order_status(*args):
+        """
+        셀러의 주문 현황를 조회합니다. 
+            Args:
+                seller_id: 셀러 아이디
+             
+            Returns:
+                {
+                    "date": 날짜,
+                    "counts": 주문건수,
+                    "amounts":주문금액
+                }   
+            Authors:
+                jisunn0130@gmail.com(최지선)
+            
+            History:
+                2020.11.08(최지선) : 초기 생성
+        """
+        try:
+            db_connection = get_connection()
+            seller_id  = request.seller_id
+            result = seller_service.get_seller_orders(db_connection, {"seller_id":seller_id})
+            return jsonify(result),(internal_code_sheet['S100']['code'])
+        
+        except NotFoundError as e:
+            db_connection.rollback()
+            message = internal_code_sheet[e.code]
+            return jsonify(message), (message['code'])
+        
+        except Exception as e:
+            db_connection.rollback()
+            return jsonify(e), 400
+
+        finally:
+            db_connection.close()
     
     @seller_bp.route('/sign-up', methods=['POST'])
     @validate_params(

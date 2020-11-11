@@ -8,11 +8,10 @@ import axios from "axios";
 import { api } from "../../Config/api";
 
 import { render } from "react-dom";
-// import Highcharts from "highcharts";
-// import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 export default function Home() {
-  // const axios = require('axios')
   const [data, setData] = useState();
   const [chartData, setChartData] = useState();
 
@@ -57,11 +56,9 @@ export default function Home() {
       text: "주문건수",
     },
     xAxis: {
-      //여기!!
       categories: chartData && chartData.date,
     },
     yAxis: {
-      //y축
       title: {
         text: "단위 (건)",
       },
@@ -72,7 +69,6 @@ export default function Home() {
     },
     series: [
       {
-        //여기!!
         data: chartData && chartData.counts,
       },
     ],
@@ -86,11 +82,9 @@ export default function Home() {
       text: "주문금액",
     },
     xAxis: {
-      //x축
       categories: chartData && chartData.date,
     },
     yAxis: {
-      //y축
       title: {
         text: "단위 (원)",
       },
