@@ -15,21 +15,29 @@ export default function ChangePassword({ setIsModal }) {
       const changePwd = confirm("비밀번호를 변경하시겠습니까?");
       if (changePwd == true) {
         try {
-          const result = await axios.patch(
-            `${ACCOUNT_API}/sellers/edit-password`,
-            {
-              password: data.password,
-              new_password: data.new_password,
-            },
-            {
-              headers: {
-                Authorization: localStorage.getItem("access_token"),
-                "Content-Type": "application/json",
+          axios
+            .patch(
+              `${ACCOUNT_API}/sellers/edit-password`,
+              {
+                password: data.password,
+                new_password: data.new_password,
               },
-            }
-          );
-          alert("비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요.");
-          history.push("/");
+              {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              if (res.status === 200) {
+                alert(
+                  "비밀번호가 변경되었습니다. 보안을 위해 재로그인해주세요."
+                );
+                window.location.reload();
+                // history.push("/");
+              }
+            });
         } catch (err) {
           console.log(err);
           alert(

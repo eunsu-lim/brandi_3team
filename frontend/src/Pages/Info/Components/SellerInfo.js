@@ -76,10 +76,11 @@ export default function SellerInfo() {
               },
             })
             .then((res) => {
-              alert("셀러 정보가 수정되었습니다.");
-              setTimeout(() => {
-                window.location.reload(), window.scrollTo(0, 0), 3000;
-              });
+              if (res.status === 200) {
+                alert("셀러 정보가 수정되었습니다.");
+                window.location.reload();
+                window.scrollTo(0, 0);
+              }
             });
         } catch (err) {
           console.log(err);
@@ -90,7 +91,7 @@ export default function SellerInfo() {
       }
     }
   };
-  // 이미지 파일 업로드
+  // 프로필 이미지 파일 업로드
   const uploadProfileImg = (e) => {
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -133,7 +134,7 @@ export default function SellerInfo() {
     setProfileChange(false);
   };
 
-  // 이미지 파일 업로드
+  // 배경 이미지 파일 업로드
   const uploadBackImg = (e) => {
     let reader = new FileReader();
     let file = e.target.files[0];

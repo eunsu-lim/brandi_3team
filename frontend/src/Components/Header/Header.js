@@ -10,7 +10,7 @@ export default function Header() {
         </LogoBox>
       </HeaderLeft>
       <HeaderRight>
-        <LoginAccount>intern_master</LoginAccount>
+        <LoginAccount></LoginAccount>
       </HeaderRight>
     </HeaderBox>
   );
