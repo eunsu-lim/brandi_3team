@@ -38,7 +38,6 @@ export default function Nav() {
 
   // 페이지 로드 시 메뉴 데이터 불러오기
   useEffect(() => {
-<<<<<<< HEAD
     axios
       .get(`${api}/accounts/navlists`, {
         headers: { Authorization: localStorage.getItem("Authorization") },
@@ -47,18 +46,6 @@ export default function Nav() {
         console.log("res", res.data.nav_list);
         setNavList(res.data.nav_list);
       });
-=======
-    const fetchData = async () => {
-      try {
-        // (`public/Data/NavData.json`) => (`/public/Data/NavData.json`)로 변경
-        const result = await axios.get(`/public/Data/NavData.json`);
-        setNavList(result.data.data.nav_data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
->>>>>>> master
   }, []);
 
   console.log("navList >>>>", navList);

@@ -90,13 +90,9 @@ export default function MenuItem({
               {subMenu.map((list, idx) => {
                 return (
                   <li key={idx} onClick={handleActivePage}>
-<<<<<<< HEAD
-                    <Link to={list.sub_url}>{list.subTitle}</Link>
-=======
                     {/* 아래 to 부분, url과 id 값으로 이동하도록 수정 - 김상준 */}
                     <Link to={`${url}/${list.id}`}>{list.sub}</Link>
                     {/* <a href={`${url}/${list.id}`}>{list.sub}</a> */}
->>>>>>> master
                   </li>
                 );
               })}
