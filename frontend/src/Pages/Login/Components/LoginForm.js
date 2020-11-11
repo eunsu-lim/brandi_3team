@@ -7,7 +7,7 @@ import axios from "axios";
 import { api } from "../../../Config/api";
 
 import { useDispatch } from "react-redux";
-import { saveAccountType } from "../../../Store/Action";
+import { saveAccountType, saveNavList } from "../../../Store/Action";
 
 export default function LoginForm() {
   const { register, handleSubmit, errors } = useForm();
@@ -19,7 +19,7 @@ export default function LoginForm() {
     const loginData = JSON.stringify(data);
 
     await axios
-      .post(`${api}/sellers/sign-in`, loginData, {
+      .post(`${api}/accounts/login`, loginData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -29,6 +29,7 @@ export default function LoginForm() {
         localStorage.setItem("access_token", res.data.access_token);
         // Account Type을 Redux에 저장하여 전역 관리
         dispatch(saveAccountType(res.data.account_type_id));
+        dispatch(saveNavList(res.data.nav_list));
         res.data.access_token
           ? history.push("/")
           : alert("아이디, 비밀번호를 확인해주세요!");

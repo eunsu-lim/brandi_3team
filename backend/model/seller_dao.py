@@ -20,6 +20,7 @@ class SellerDao:
             BETWEEN 
                 SUBDATE(NOW(), INTERVAL 30 day) AND now()
             GROUP BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
+            ORDER BY DATE_FORMAT(order_status_history.updated_at, '%%Y-%%m-%%d') 
             """
             cursor.execute(get_seller_orders_query, seller_id)
             seller_orders = cursor.fetchall()
@@ -170,4 +171,205 @@ class SellerDao:
             WHERE account_id = %(account_id)s
             """
             cursor.execute(get_seller_id_query, account_id)
+            return cursor.fetchone()
+            
+    def get_seller_data(self, seller_id, db_connection):
+        """
+        로그인 데코레이터에서 토큰에 담긴 seller_id 로 셀러의 홈 데이터를 가져오는 쿼리
+        """
+        with db_connection.cursor() as cursor:
+            get_seller_data_query = """
+            SELECT 
+                count(orders.id) as count, 
+                order_status_id
+            FROM orders
+            JOIN products ON orders.product_id = products.id
+            JOIN sellers ON products.seller_id = sellers.id
+            WHERE seller_id = %(seller_id)s
+            GROUP BY order_status_id
+            """
+            cursor.execute(get_seller_data_query, seller_id)
+            return cursor.fetchall()
+
+    
+    # 비밀번호 변경
+
+    # 기존 비밀번호 변경을 가져오는 query
+    def get_seller_password(self, seller_data, db_connection):
+        """
+        로그인 데코레이터에서 토큰에 담긴 account_name 로 비밀번호를 변경하는 쿼리
+        Args:
+            account_name : 셀러 계정 id
+            db_connection : 데이터베이스 객체
+        
+        Returns:
+            password : 셀러 정보
+
+        Authors:
+            limes1787@gmail.com(임은수)
+            
+        History:
+            2020.11.04(임은수) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            edit_seller_password_query = """
+            SELECT password
+            FROM accounts
+            WHERE id=%(account_id)s
+            """
+            cursor.execute(edit_seller_password_query, seller_data)
+            return cursor.fetchone()
+
+
+    
+    def edit_seller_password(self, seller_data, db_connection):
+        """
+        로그인 데코레이터에서 토큰에 담긴 account_name 로 비밀번호를 변경하는 쿼리
+        Args:
+            account_name : 셀러 계정 id
+            db_connection : 데이터베이스 객체
+        
+        Returns:
+            password : 셀러 정보
+
+        Authors:
+            limes1787@gmail.com(임은수)
+            
+        History:
+            2020.11.04(임은수) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            edit_seller_password_query = """
+            UPDATE accounts
+            SET password=%(password)s
+            WHERE id=%(account_id)s
+            """
+            # db 서버에 보내줌
+            cursor.execute(edit_seller_password_query, seller_data)
+             # fetchone호출로 데이터를 가져옴
+            return cursor.fetchone()
+
+
+    def get_seller_detail_infos(self, seller_data, db_connection):
+        """
+        셀러 테이블의 모든 정보를 가져오는 쿼리
+        Args:
+            account_name : 셀러 계정 id
+            db_connection : 데이터베이스 객체
+        
+        Returns:
+            sellers : 셀러 계정 정보
+
+        Authors:
+            limes1787@gmail.com(임은수)
+            
+        History:
+            2020.11.04(임은수) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            get_seller_infos_query = """
+            SELECT *
+            FROM sellers
+            LEFT JOIN accounts
+            ON sellers.account_id = accounts.id
+            LEFT JOIN contacts
+            ON sellers.id = contacts.seller_id
+            WHERE account_id = %(account_id)s
+            """
+            cursor.execute(get_seller_infos_query, seller_data)
+            return cursor.fetchone()
+
+
+    def edit_seller_profile(self, seller_data, db_connection):
+        """
+        셀러 정보의 프로필이미지를 db에 URL을 저장하는 쿼리 
+        Args:
+
+        Returns:
+
+        Authors:
+            limes1787@gmail.com(임은수)
+        
+        """
+        with db_connection.cursor() as cursor:
+            edit_seller_profile_query = """
+            UPDATE sellers
+                LEFT JOIN accounts
+                ON sellers.account_id = accounts.id
+                LEFT JOIN contacts
+                ON sellers.id = contacts.seller_id
+
+            SET
+                profile_image = %(profile_image)s
+
+            WHERE account_id = %(account_id)s   
+            """
+            cursor.execute(edit_seller_profile_query, seller_data)
+            return cursor.fetchone()
+
+
+    def edit_seller_back(self, seller_data, db_connection):
+        """
+        셀러 정보의 배경 이미지를 db에 URL을 저장하는 쿼리 
+        Args:
+
+        Returns:
+
+        Authors:
+            limes1787@gmail.com(임은수)
+        
+        """
+        with db_connection.cursor() as cursor:
+            edit_seller_back_query = """
+            UPDATE sellers
+                LEFT JOIN accounts
+                ON sellers.account_id = accounts.id
+                LEFT JOIN contacts
+                ON sellers.id = contacts.seller_id
+
+            SET
+                background_image_url = %(background_image_url)s
+
+            WHERE account_id = %(account_id)s   
+            """
+            cursor.execute(edit_seller_back_query, seller_data)
+            return cursor.fetchone()
+
+
+    def edit_seller_detail_infos(self, seller_data, db_connection):
+        """
+        가져온 셀러 정보를 수정해주는 쿼리
+        Args:
+        
+        Returns:
+
+        Authors:
+            limes1787@gmail.com(임은수)
+            
+        History:
+            2020.11.04(임은수) : 초기 생성
+        """
+        with db_connection.cursor() as cursor:
+            edit_seller_detail_infos_query = """
+            UPDATE sellers
+                LEFT JOIN accounts
+                ON sellers.account_id = accounts.id
+                LEFT JOIN contacts
+                ON sellers.id = contacts.seller_id
+
+            SET
+            short_description = %(short_description)s,
+            detailed_description = %(detailed_description)s,
+            person_in_charge = %(person_in_charge)s,
+            phone_number = %(phone_number)s,
+            email = %(email)s,
+            postal_code = %(postal_code)s,
+            address_1 = %(address_1)s,
+            address_2 = %(address_2)s,
+            delivery_description = %(delivery_description)s,
+            refund_description = %(refund_description)s
+
+            WHERE account_id=%(account_id)s         
+            """
+            cursor.execute(edit_seller_detail_infos_query, seller_data)
             return cursor.fetchone()

@@ -30,9 +30,12 @@ def login_required(func):
         try:
             access_token       = request.headers.get('Authorization', None) 
             payload            = jwt.decode(access_token, SECRET_KEY, algorithm = ALGORITHM)
-            request.account_id = payload
+            request.account_type_id = payload['account_type_id']
+            request.account_id = payload['account_id']
             db_connection      = get_connection()
             seller             = SellerDao().get_seller_id(db_connection, payload)
+            db_connection.close()
+            
             if seller['is_delete'] == 0: 
                 request.seller_id = seller['id']
             else:
@@ -43,9 +46,5 @@ def login_required(func):
 
         except NotFoundError:
             return jsonify(internal_code_sheet['S108']), (internal_code_sheet['S108']['code'])
-       
-        finally:
-            db_connection.close()
-
         return func(*args, **kwargs)
     return wrapper 

@@ -20,7 +20,7 @@ function CheckBox({
             // allChecked가 false일 경우(선택되어 있지 않은 경우)
           } else {
             const checkedObj = {};
-            productData.product_list.map((el) => {
+            productData.map((el) => {
               checkedObj[el.id] = true;
             });
             // isChecked에서 allChecked의 value를 true로 지정하고 모든 list의 id를 key, value로 true를 지정

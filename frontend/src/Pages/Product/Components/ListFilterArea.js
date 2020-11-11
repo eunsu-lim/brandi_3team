@@ -14,6 +14,8 @@ function ListFilterArea({
 }) {
   const [startDate, setStartDate] = useState(); // 조회기간 시작일 state
   const [endDate, setEndDate] = useState(); // 조회기간 종료일 state
+  const [select, setSelect] = useState(); // 상품명, 상품코드, 상품번호 select state
+  const [selectFilter, setSelectFilter] = useState(); // 상품명, 상품코드, 상품번호 검색어 state
   const [sellerTypeBtn, setSellerTypeBtn] = useState({ 전체: true }); // 셀러속성 button state
   const [saleBtn, setSaleBtn] = useState({ 전체: true }); // 판매여부 button state
   const [displayBtn, setDisplayBtn] = useState({ 전체: true }); // 진열여부 button state
@@ -82,6 +84,20 @@ function ListFilterArea({
         setSortData({ ...sortData, sellerType: ["1"] }) // 전체 button으로 바뀌면 sortData에서 sellerType의 value를 [1]로 변경
       : null;
   }, [sellerTypeBtn]);
+
+  // 상품이름, 상품번호, 상품코드 select 변경될 때마다 sortData 변경
+  useEffect(() => {
+    // 기존에 선택된 select가 있을 경우, 해당 key와 value를 삭제 후 새로 선택된 select를 sortData에 추가
+    sortData.productName && delete sortData.productName;
+    sortData.product_id && delete sortData.product_id;
+    sortData.productCode && delete sortData.productCode;
+    setSortData({ ...sortData, [select]: selectFilter });
+  }, [select]);
+
+  // 상품이름, 상품번호, 상품코드 검색어 변경될 때마다 sortData 변경
+  useEffect(() => {
+    setSortData({ ...sortData, [select]: selectFilter });
+  }, [selectFilter]);
 
   // 선택한 조회기간 날짜를 서버에서 원하는 형식으로 바꿔주는 함수(ex. yyyy-mm-dd)
   const getFormattedDate = (date) => {
@@ -153,14 +169,10 @@ function ListFilterArea({
         </SearchInput>
         {/* 상품명, 상품번호, 상품코드 select */}
         <SearchSelect>
-          <select
-            onChange={(e) =>
-              setSortData({ ...sortData, select: e.target.value })
-            }
-          >
+          <select onChange={(e) => setSelect(e.target.value)}>
             <option>Select</option>
             <option value="productName">상품명</option>
-            <option value="productNo">상품번호</option>
+            <option value="product_id">상품번호</option>
             <option value="productCode">상품코드</option>
           </select>
         </SearchSelect>
@@ -170,8 +182,8 @@ function ListFilterArea({
             placeholder="검색어를 입력하세요."
             autoComplete="off"
             onChange={(e) =>
-              // 입력한 값을 sortData에 저장
-              setSortData({ ...sortData, selectFilter: e.target.value })
+              // 입력한 값을 selectFilter에 저장
+              setSelectFilter(e.target.value)
             }
           />
         </SelectInput>

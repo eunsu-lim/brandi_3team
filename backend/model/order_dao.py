@@ -30,7 +30,6 @@ class OrderDao:
                 raise NotFoundError('S000')
             return order
     
-
     def insert_order_history(self, db_connection, order_history_info):
         """
         새 주문이 생성된 시점 / 기존 주문이 변경되는 시점에 주문 상태 기록을 생성합니다. 
@@ -61,12 +60,30 @@ class OrderDao:
                 %(account_id)s
             )
             """
-            cursor.execute(insert_order_history_query, order_history_info)
-            if not cursor.lastrowid:
-                raise NotFoundError('S000')
-            return cursor.lastrowid
+            #order_id 가 여러 개
+            if type(order_history_info['order_id']) == tuple:
+                row_list = []
+                for order in order_history_info['order_id']:
+                    new_dict = {
+                        "order_status_id" : order_history_info['order_status_id'],
+                        'order_id' : order,
+                        'account_id' : order_history_info['account_id']
+                    }
 
-    def update_order_status(self, db_connection, orders_dict):
+                    cursor.execute(insert_order_history_query, new_dict)
+                    row_list.append(cursor.lastrowid)
+                if len(row_list) != len(order_history_info['order_id']):
+                    raise NotFoundError('S000')
+                return row_list
+
+            # order_id 1 개
+            else:
+                cursor.execute(insert_order_history_query, order_history_info)
+                if not cursor.lastrowid:
+                    raise NotFoundError('S000')
+                return cursor.lastrowid
+
+    def update_order_status(self, db_connection, order_lists):
         """
         주문 상태를 변경합니다. 
         Args:
@@ -85,9 +102,9 @@ class OrderDao:
             update_order_status_query = """ 
             UPDATE orders
             SET order_status_id = %(order_status_id)s
-            WHERE id = %(order_id)s
+            WHERE id in %(order_id)s
             """
-            cursor.execute(update_order_status_query, orders_dict)
+            cursor.execute(update_order_status_query, order_lists)
             return cursor.rowcount
     
     def get_order_counts(self, db_connection, filter_dict):
@@ -135,7 +152,7 @@ class OrderDao:
                 """
                 get_order_count_query += add_query
             
-            if filter_dict['order_status_id'] in [3,4,5]:
+            if filter_dict['order_status_id'] in [2,3,4,5]:
                 add_query = """
                 AND order_status_history.order_status_id=%(order_status_id)s
                 """
@@ -193,10 +210,13 @@ class OrderDao:
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):
-                add_query = """
-                AND sellers.seller_attribute_id in %(seller_attribute_id)s
-                """
-                get_order_count_query += add_query
+                if filter_dict['seller_attribute_id'][0] == '1':
+                    get_order_count_query += ''
+                else:
+                    add_query = """
+                    AND sellers.seller_attribute_id in %(seller_attribute_id)s
+                    """
+                    get_order_count_query += add_query
             
             cursor.execute(get_order_count_query,filter_dict)
             orders = cursor.fetchone()
@@ -250,19 +270,18 @@ class OrderDao:
             INNER JOIN sellers ON products.seller_id = sellers.id
             INNER JOIN shipments ON orders.shipment_id = shipments.id
             INNER JOIN order_status_history ON orders.id = order_status_history.order_id
-            WHERE orders.id >= 1
+            WHERE 1 = 1
             """
     
             #주문상태
             if filter_dict.get('order_status_id', None):
-                print(filter_dict['order_status_id'])
                 add_query = """
                 AND orders.order_status_id=%(order_status_id)s
                 """
                 get_order_lists_query += add_query
             
             #주문상태 변경시각 
-            if filter_dict['order_status_id'] in [3,4,5]:
+            if filter_dict['order_status_id'] in [2,3,4,5]:
                 add_query = """
                 AND order_status_history.order_status_id=%(order_status_id)s
                 """
@@ -305,7 +324,7 @@ class OrderDao:
                     AND products.name = %(searching)s
                     """
                     get_order_lists_query += add_query
-            #조회 기간
+            #조회기간
             if filter_dict.get('filter_date_from', None):
                 add_query= """
                 AND orders.created_at >= %(filter_date_from)s
@@ -320,10 +339,13 @@ class OrderDao:
 
             #셀러 속성
             if filter_dict.get('seller_attribute_id', None):
-                add_query = """
-                AND sellers.seller_attribute_id in %(seller_attribute_id)s
-                """
-                get_order_lists_query += add_query
+                if filter_dict['seller_attribute_id'][0] == '1':
+                    get_order_lists_query += ''
+                else:
+                    add_query = """
+                    AND sellers.seller_attribute_id in %(seller_attribute_id)s
+                    """
+                    get_order_lists_query += add_query
             
             #오더링
             if filter_dict.get('filter_ordering', None):
@@ -353,9 +375,7 @@ class OrderDao:
                     LIMIT %(limit)s
                     """
                     get_order_lists_query += add_query
-            
             cursor.execute(get_order_lists_query,filter_dict)
-            
             return cursor.fetchall()
 
     def get_order_id(self, db_connection):
