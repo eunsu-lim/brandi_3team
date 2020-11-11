@@ -1,5 +1,7 @@
 import jwt
 import bcrypt
+import boto3
+import config
 
 from utils      import validate_password
 from exceptions import (
