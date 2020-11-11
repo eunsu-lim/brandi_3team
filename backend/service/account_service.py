@@ -29,7 +29,6 @@ class AccountService:
             'account_type_id':account_type_id,
             'exp'        : datetime.utcnow() + timedelta(seconds = 60 * 60 * 24)
         }
-        print(payload, 'PAYPAY')
         token   = jwt.encode(payload, SECRET_KEY, 'HS256')
 
         return token.decode('UTF-8')
@@ -37,7 +36,6 @@ class AccountService:
     def get_nav_and_button(self, account_type_id, db_connection):
         # dao에서 받은 데이터를 nav_data에 선언
         nav_data = self.account_dao.get_nav_list(account_type_id, db_connection)
-        print(nav_data)
         # nav에 url을 추가하기 위해 menu_url과 sub_url을 선언
         menu_url = {
             '홈':'/home',
