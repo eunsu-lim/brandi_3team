@@ -41,4 +41,5 @@
 ## <span style="color:#004680"> ✅ &nbsp; 프로젝트 후기 </span>
 
 [브랜디 기업협업 후기](https://velog.io/@limes/%EB%B8%8C%EB%9E%9C%EB%94%94-%EC%9D%B8%ED%84%B4%EC%8B%AD-%ED%9B%84%EA%B8%B0-%EA%B8%B0%EC%97%85%ED%98%91%EC%97%85)
+<br />
 [프로젝트 영상](https://youtu.be/-JzUsCzMmHI)
