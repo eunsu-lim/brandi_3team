@@ -39,11 +39,12 @@ export default function Nav() {
   // 페이지 로드 시 메뉴 데이터 불러오기
   useEffect(() => {
     axios
-      .get(`${api}/accounts/navlists`, {
+      // .get(`${api}/accounts/navlists`, {
+      .get(`public/Data/NavData.json`, {
         headers: { Authorization: localStorage.getItem("access_token") },
       })
       .then((res) => {
-        console.log("res", res.data.nav_list);
+        console.log("res", res);
         setNavList(res.data.nav_list);
       });
   }, []);
